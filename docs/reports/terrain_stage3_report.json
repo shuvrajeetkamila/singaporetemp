@@ -1,0 +1,85 @@
+{
+  "caveats": [
+    "Digital Surface Model: includes buildings and vegetation, not bare ground",
+    "30 m source resolution"
+  ],
+  "generated_utc": "2026-10-15T14:10:42+00:00",
+  "grid": {
+    "crs": "EPSG:3414",
+    "height": 1327,
+    "resolution_m": 30.0,
+    "width": 2190
+  },
+  "input": {
+    "bytes": 5647803,
+    "file": "output_hh.tif",
+    "sha256": "29cd77a28e7b855e37a429e9fad8392d79c5f8410f495b04d3c144161cdeda27"
+  },
+  "output": {
+    "file": "singapore_dsm_svy21_30m.tif",
+    "path": "/home/user/data/cop30/singapore_dsm_svy21_30m.tif",
+    "stored_in_git": false
+  },
+  "schema_version": 1,
+  "source": "Copernicus GLO-30 DSM via OpenTopography (DGED 2023_1), user-downloaded",
+  "stats": {
+    "bounds_svy21_m": [
+      -3548.5,
+      11484.1,
+      62151.5,
+      51294.1
+    ],
+    "cells_below_0m": 2047,
+    "max_m": 188.85,
+    "mean_m": 7.71,
+    "min_m": -37.0,
+    "percentiles_m": {
+      "p1": 0.0,
+      "p5": 0.0,
+      "p50": 0.0,
+      "p95": 32.95,
+      "p99": 54.05
+    },
+    "spot_checks": [
+      {
+        "dsm_m": 154.64,
+        "lat": 1.352,
+        "lon": 103.777,
+        "name": "Bukit Timah Hill summit area (~163 m official)"
+      },
+      {
+        "dsm_m": 4.46,
+        "lat": 1.334,
+        "lon": 103.988,
+        "name": "Changi coast (near sea level)"
+      },
+      {
+        "dsm_m": 4.01,
+        "lat": 1.281,
+        "lon": 103.86,
+        "name": "Marina Bay (near sea level)"
+      },
+      {
+        "dsm_m": 3.13,
+        "lat": 1.316,
+        "lon": 103.637,
+        "name": "Tuas (low, flat)"
+      },
+      {
+        "dsm_m": 27.45,
+        "lat": 1.437,
+        "lon": 103.786,
+        "name": "Woodlands (low, built-up)"
+      },
+      {
+        "dsm_m": 3.92,
+        "lat": 1.419,
+        "lon": 103.733,
+        "name": "Kranji Reservoir (water)"
+      }
+    ],
+    "total_cells": 2906130,
+    "valid_cells": 2904803
+  },
+  "vertical_reference": "EGM2008 geoid (EPSG:3855) per OpenTopography page"
+}
