@@ -70,7 +70,8 @@ jobs:
             --sqlite /tmp/data/buildings.sqlite \
             --dsm /tmp/data/singapore_dsm_svy21_30m.tif \
             --out /tmp/data/island_out \
-            --stride 2
+            --stride 2 \
+            --boundary-osm singapore_boundary.osm
 
       - name: Pack island and pilot assets into the app
         working-directory: android-vk

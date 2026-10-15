@@ -242,7 +242,13 @@ void onAppCmd(android_app* app, int32_t cmd) {
                     break;
                 }
                 diagSetStage("RUNNING");
-                st->renderer.setClearColor(0.62f, 0.78f, 0.92f);
+                // With the island, the background is the sea colour: the sea plane then runs to the horizon.
+                // Pilot only: sky blue.
+                if (st->islandLoaded) {
+                    st->renderer.setClearColor(0.14f, 0.40f, 0.62f);
+                } else {
+                    st->renderer.setClearColor(0.62f, 0.78f, 0.92f);
+                }
             }
             break;
         case APP_CMD_TERM_WINDOW:

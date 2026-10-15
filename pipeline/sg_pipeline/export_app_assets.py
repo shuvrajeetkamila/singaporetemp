@@ -66,7 +66,19 @@ def sample_dsm(full: np.ndarray, left: float, top: float, cell: float, xs: np.nd
     return out
 
 
-def export(sqlite_path: Path, tif: Path, out_dir: Path, stride: int) -> dict:
+def load_country_polygon(boundary_osm: Path):
+    """Singapore country boundary (SVY21), from the uploaded OSM relation 536780 export."""
+    from shapely.ops import transform as shp_transform
+
+    from sg_pipeline.osm_buildings import WGS84_TO_SVY21, load_boundary_from_osm_xml
+
+    ll = load_boundary_from_osm_xml(boundary_osm)
+    poly = shapely.make_valid(shp_transform(lambda x, y, *z: WGS84_TO_SVY21(x, y), ll))
+    shapely.prepare(poly)
+    return poly
+
+
+def export(sqlite_path: Path, tif: Path, out_dir: Path, stride: int, country=None) -> dict:
     full, cell, left, top, th, tw = load_terrain(tif, stride)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -74,9 +86,19 @@ def export(sqlite_path: Path, tif: Path, out_dir: Path, stride: int) -> dict:
     filled = np.where(np.isnan(full), 0.0, full)
     south_first = filled[::-1, :]
     sub = south_first[::stride, ::stride].astype("<f4")
-    (out_dir / "terrain.f32").write_bytes(sub.tobytes())
     origin_e = left
     origin_n = top - th * cell  # south edge
+
+    # Singapore only: grid nodes outside the country boundary (Johor, Indonesian waters) become sea level.
+    outside_nodes = 0
+    if country is not None:
+        cols, rows = np.meshgrid(np.arange(sub.shape[1]), np.arange(sub.shape[0]))
+        xs = origin_e + cols * (cell * stride)
+        ys = origin_n + rows * (cell * stride)
+        inside = shapely.contains_xy(country, xs, ys)
+        outside_nodes = int((~inside).sum())
+        sub = np.where(inside, sub, np.float32(0.0)).astype("<f4")
+    (out_dir / "terrain.f32").write_bytes(sub.tobytes())
 
     # --- buildings ---
     con = sqlite3.connect(sqlite_path)
@@ -129,7 +151,10 @@ def export(sqlite_path: Path, tif: Path, out_dir: Path, stride: int) -> dict:
         "origin_n": round(origin_n, 3),
         "terrain": {"file": "terrain.f32", "width": int(sub.shape[1]), "height": int(sub.shape[0]),
                     "cell_m": cell * stride, "row_order": "south_to_north", "dtype": "float32le",
-                    "source": "Copernicus GLO-30 DSM (surface model: includes buildings and trees)"},
+                    "source": "Copernicus GLO-30 DSM (surface model: includes buildings and trees)",
+                    "country_mask": ("Singapore boundary: nodes outside set to 0 m (sea)" if country is not None
+                                     else "none"),
+                    "nodes_outside_country": outside_nodes},
         "buildings": {"file": "buildings.bin", "records": len(records), **stats,
                       "height_m_p50": round(float(np.percentile(hs, 50)), 2),
                       "height_m_p95": round(float(np.percentile(hs, 95)), 2),
@@ -150,8 +175,11 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--dsm", type=Path, required=True)
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--stride", type=int, default=2)
+    p.add_argument("--boundary-osm", type=Path, default=None,
+                   help="Singapore boundary (OSM relation 536780 XML). Terrain outside it becomes sea.")
     args = p.parse_args(argv)
-    meta = export(args.sqlite, args.dsm, args.out, args.stride)
+    country = load_country_polygon(args.boundary_osm) if args.boundary_osm else None
+    meta = export(args.sqlite, args.dsm, args.out, args.stride, country)
     print(json.dumps({"terrain": meta["terrain"], "buildings": meta["buildings"]}, indent=2))
     return 0
 
