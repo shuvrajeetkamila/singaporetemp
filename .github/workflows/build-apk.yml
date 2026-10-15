@@ -1,0 +1,119 @@
+name: Build island APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [arena/4e2ebeb1-singaporetemp]
+    paths:
+      - "android/**"
+      - "pipeline/**"
+      - ".github/workflows/build-apk.yml"
+      - "singapore_boundary.osm"
+      - "rasters_COP30.tar.gz"
+      - "Singapore.osm.pbf.001"
+      - "Singapore.osm.pbf.002"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      PBF_SHA256: 83770003e51ee0eb3cee0b891646e0b7c4d4518fc78bc7fabecb3ce8cc81e417
+      PBF_BYTES: 38807616
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Rebuild and verify the Singapore OSM extract
+        run: |
+          mkdir -p /tmp/data
+          cat Singapore.osm.pbf.001 Singapore.osm.pbf.002 > /tmp/data/Singapore.osm.pbf
+          test "$(stat -c %s /tmp/data/Singapore.osm.pbf)" = "$PBF_BYTES"
+          echo "$PBF_SHA256  /tmp/data/Singapore.osm.pbf" | sha256sum -c -
+
+      - name: Unpack Copernicus GLO-30 surface model
+        run: |
+          tar -xzf rasters_COP30.tar.gz -C /tmp/data
+          ls -la /tmp/data
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pipeline dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r pipeline/requirements-build.txt
+
+      - name: Stage 2 - building footprints (clipped to the uploaded Singapore boundary)
+        run: |
+          PYTHONPATH=pipeline python -m sg_pipeline.osm_buildings /tmp/data/Singapore.osm.pbf \
+            --out-db /tmp/data/buildings.sqlite \
+            --report /tmp/data/buildings_report.json \
+            --boundary-osm singapore_boundary.osm
+
+      - name: Stage 3 - surface model to SVY21 grid
+        run: |
+          PYTHONPATH=pipeline python -m sg_pipeline.cop30_terrain /tmp/data/output_hh.tif \
+            --out /tmp/data/singapore_dsm_svy21_30m.tif \
+            --report /tmp/data/terrain_report.json
+
+      - name: Stage 4 - export app assets
+        run: |
+          PYTHONPATH=pipeline python -m sg_pipeline.export_app_assets \
+            --sqlite /tmp/data/buildings.sqlite \
+            --dsm /tmp/data/singapore_dsm_svy21_30m.tif \
+            --out android/app/src/main/assets/island \
+            --stride 2
+          cp /tmp/data/buildings_report.json /tmp/data/terrain_report.json android/app/src/main/assets/island/
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android platform and build tools
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
+
+      - name: Build debug APK
+        working-directory: android
+        run: gradle --no-daemon :app:assembleDebug
+
+      - name: Name and keep the APK
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk "singapore-1to1-run${GITHUB_RUN_NUMBER}.apk"
+          ls -la singapore-1to1-run*.apk
+
+      - name: Upload APK as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: singapore-1to1-apk
+          path: singapore-1to1-run*.apk
+
+      - name: Publish APK as a GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="island-run-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" "singapore-1to1-run${GITHUB_RUN_NUMBER}.apk" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --prerelease \
+            --title "Singapore 1:1 island APK (run ${GITHUB_RUN_NUMBER})" \
+            --notes "Debug APK built by GitHub Actions from commit ${GITHUB_SHA}. Building heights are estimates. Elevation is a surface model (includes buildings and trees). Data: OpenStreetMap contributors (ODbL); Copernicus DEM GLO-30 DLR/ESA via OpenTopography."
+          echo "APK link: https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/singapore-1to1-run${GITHUB_RUN_NUMBER}.apk"

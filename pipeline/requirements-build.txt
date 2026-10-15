@@ -1,0 +1,6 @@
+# Pinned versions used by the island APK build (GitHub Actions and local runs).
+numpy==2.4.6
+osmium==4.3.1
+shapely==2.2.0
+rasterio==1.4.3
+pyproj==3.7.2

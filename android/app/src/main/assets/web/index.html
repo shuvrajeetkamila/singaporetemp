@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Singapore 1:1 (prototype)</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #a9d0f5; font-family: sans-serif; }
+    canvas { display: block; touch-action: none; }
+    #status { position: fixed; left: 8px; top: 8px; right: 140px; background: rgba(0,0,0,0.65); color: #fff;
+              padding: 6px 10px; border-radius: 6px; font-size: 14px; z-index: 2; }
+    #controls { position: fixed; right: 8px; top: 8px; z-index: 2; }
+    button { font-size: 14px; padding: 6px 10px; margin-left: 4px; border: 0; border-radius: 6px;
+             background: rgba(255,255,255,0.9); }
+    #note { position: fixed; left: 0; right: 0; bottom: 0; font-size: 11px; color: #222;
+            background: rgba(255,255,255,0.75); padding: 4px 8px; z-index: 2; }
+  </style>
+</head>
+<body>
+  <div id="status">Loading...</div>
+  <div id="controls">
+    <button id="btnReset">Reset view</button>
+    <button id="btnBuildings">Buildings: on</button>
+  </div>
+  <div id="note">Building heights are ESTIMATES. Elevation is a surface model (includes buildings and trees).
+    Data: OpenStreetMap contributors (ODbL); Copernicus DEM GLO-30 &copy; DLR/ESA via OpenTopography.</div>
+  <script src="three.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
