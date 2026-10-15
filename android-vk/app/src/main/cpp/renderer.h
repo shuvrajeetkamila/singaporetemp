@@ -1,5 +1,5 @@
-// Minimal Vulkan 1.1 renderer for Android: one static mesh (terrain, buildings, roads)
-// plus a per-frame dynamic mesh (agents). Depth-tested, no textures.
+// Minimal Vulkan 1.0 renderer for Android. Indexed meshes live in device-local memory,
+// uploaded once through a staging buffer. Agents use a small per-frame host-visible buffer.
 #pragma once
 
 #include <android/native_window.h>
@@ -22,21 +22,23 @@ public:
     // Creates the instance, surface, device, render pass and swapchain. Clears work after this,
     // even before a scene exists, so the screen can show status colours.
     bool init(ANativeWindow* window);
-    // Builds the pipeline and uploads the static mesh. May be called again later.
-    bool setScene(const ShaderBlobs& shaders, const std::vector<Vertex>& staticMesh);
+
+    // Builds the pipeline and uploads the meshes. May be called again later.
+    bool setScene(const ShaderBlobs& shaders, const std::vector<MeshBlob>& meshes);
+
     void setClearColor(float r, float g, float b) {
         clear_[0] = r;
         clear_[1] = g;
         clear_[2] = b;
     }
     bool hasScene() const { return pipeline_ != VK_NULL_HANDLE; }
-    void destroy();
-
     bool ready() const { return ready_; }
     const std::string& lastError() const { return err_; }
+    void destroy();
 
-    // Draws one frame. Returns false when the frame was skipped (for example, a minimised window).
-    bool drawFrame(const Mat4& viewProj, const std::vector<Vertex>& agents);
+    // Draws one frame. Meshes are drawn with their own offsets; agents with `agentOffset`.
+    // Returns false when the frame was skipped (for example, a minimised window).
+    bool drawFrame(const Mat4& viewProj, const float agentOffset[3], const std::vector<Vertex>& agents);
 
 private:
     struct Buffer {
@@ -44,6 +46,12 @@ private:
         VkDeviceMemory mem = VK_NULL_HANDLE;
         void* mapped = nullptr;
         VkDeviceSize size = 0;
+    };
+    struct GpuMesh {
+        Buffer vb;
+        Buffer ib;
+        uint32_t indexCount = 0;
+        float offset[3] = {0.0f, 0.0f, 0.0f};
     };
 
     static constexpr int kFramesInFlight = 2;
@@ -58,6 +66,8 @@ private:
     bool createPipeline(const ShaderBlobs& shaders);
     bool createFrameResources();
     bool createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags props, Buffer& out);
+    bool uploadDeviceLocal(const void* data, VkDeviceSize bytes, VkBufferUsageFlags usage, Buffer& out);
+    void freeMeshes();
     bool findMemoryType(uint32_t typeBits, VkMemoryPropertyFlags props, uint32_t& index) const;
     bool buildSwapchain();
     void destroySwapchain();
@@ -102,6 +112,5 @@ private:
     Buffer agents_[kFramesInFlight];
     int frame_ = 0;
 
-    Buffer staticMesh_;
-    uint32_t staticVertexCount_ = 0;
+    std::vector<GpuMesh> meshes_;
 };

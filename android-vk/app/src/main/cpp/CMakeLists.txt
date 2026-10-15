@@ -10,6 +10,7 @@ add_library(vkisland SHARED
     main.cpp
     renderer.cpp
     world.cpp
+    island.cpp
     sim.cpp
     agents.cpp
     ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c

@@ -1,4 +1,8 @@
 // NativeActivity entry point: asset loading, the frame loop, touch camera.
+//
+// Scene frame: metres, x east, y up, z = -north, origin at the island grid's south-west corner.
+// The pilot district (full detail, with roads and traffic) is placed in that frame by a fixed
+// offset; the rest of the island is drawn at base detail with the pilot rectangle cut out.
 #include <android/asset_manager.h>
 #include <android/input.h>
 #include <android/log.h>
@@ -15,6 +19,7 @@
 
 #include "agents.h"
 #include "core_math.h"
+#include "island.h"
 #include "renderer.h"
 #include "sim.h"
 #include "world.h"
@@ -31,19 +36,23 @@ constexpr float kFovY = 0.87266f;  // 50 degrees
 
 struct AppState {
     android_app* app = nullptr;
-    bool assetsLoaded = false;
+    bool assetsLoaded = false;   // pilot district and shaders
+    bool islandLoaded = false;   // base-detail island layer (optional)
 
     ShaderBlobs shaders;
-    District district;
+    District pilot;
+    District island;
+    IslandLayout layout;
     TrafficSim sim;
-    std::vector<Vertex> staticMesh;
+    std::vector<MeshBlob> meshes;  // pilot static mesh first, then the island layer
     std::vector<Vertex> agentMesh;
+    float pilotOffset[3] = {0.0f, 0.0f, 0.0f};
     Renderer renderer;
 
-    // Orbit camera around `target`. Scene units are metres: x east, y up, z = -north.
+    // Orbit camera around `target` (scene frame).
     Vec3 target{0.0f, 0.0f, 0.0f};
     float yaw = 0.6f;
-    float pitch = 0.75f;
+    float pitch = 0.9f;
     float dist = 2200.0f;
 
     // Touch gesture state.
@@ -74,6 +83,17 @@ bool readSpirv(AAssetManager* mgr, const char* name, std::vector<uint32_t>& out)
     return true;
 }
 
+MeshBlob toMesh(const std::vector<Vertex>& verts, const float offset[3]) {
+    MeshBlob m;
+    m.vertices = verts;
+    m.indices.resize(verts.size());
+    for (size_t i = 0; i < verts.size(); ++i) m.indices[i] = static_cast<uint32_t>(i);
+    for (int k = 0; k < 3; ++k) m.offset[k] = offset[k];
+    return m;
+}
+
+// Pilot district files are required. Island files are optional: without them the app shows the
+// pilot alone, in its own frame.
 bool loadAssets(AppState& st) {
     AAssetManager* mgr = st.app->activity->assetManager;
     if (!readSpirv(mgr, "shaders/mesh.vert.spv", st.shaders.vert) ||
@@ -82,35 +102,63 @@ bool loadAssets(AppState& st) {
     }
 
     std::vector<uint8_t> terrain, buildings, roads;
-    if (!readAsset(mgr, "district/terrain.bin", terrain) ||
-        !readAsset(mgr, "district/buildings.bin", buildings) ||
+    if (!readAsset(mgr, "district/terrain.bin", terrain) || !readAsset(mgr, "district/buildings.bin", buildings) ||
         !readAsset(mgr, "district/roads.bin", roads)) {
         return false;
     }
     std::string err;
-    if (!parseTerrain(terrain, st.district, err) || !parseBuildings(buildings, st.district, err) ||
-        !parseRoads(roads, st.district, err)) {
-        LOGE("district data rejected: %s", err.c_str());
+    if (!parseTerrain(terrain, st.pilot, err) || !parseBuildings(buildings, st.pilot, err) ||
+        !parseRoads(roads, st.pilot, err)) {
+        LOGE("pilot district rejected: %s", err.c_str());
         return false;
     }
 
-    buildStaticMesh(st.district, st.staticMesh);
-    st.sim.init(&st.district.roads, 20251015u, kCars, kPeople);
-    st.target = {st.district.sizeX * 0.5f, 0.0f, -st.district.sizeZ * 0.5f};
-    st.assetsLoaded = true;
-    LOGI("loaded: %zu buildings, %zu road edges, %zu static vertices, %zu agents", st.district.buildings.size(),
-         st.district.roads.edges.size(), st.staticMesh.size(), st.sim.agents().size());
-    return true;
-}
+    // Island layer (optional).
+    std::vector<uint8_t> iTerrain, iBuildings, iLayout;
+    bool haveIsland = readAsset(mgr, "island/terrain.bin", iTerrain) &&
+                      readAsset(mgr, "island/buildings.bin", iBuildings) &&
+                      readAsset(mgr, "island/layout.txt", iLayout);
+    IslandLayout layout;
+    if (haveIsland && parseLayout(iLayout, layout) && parseTerrain(iTerrain, st.island, err) &&
+        parseBuildings(iBuildings, st.island, err)) {
+        st.layout = layout;
+        st.islandLoaded = true;
+        st.pilotOffset[0] = layout.dx;
+        st.pilotOffset[1] = 0.0f;
+        st.pilotOffset[2] = -layout.dn;  // scene z = -north
+        LOGI("island layer: %ux%u terrain, %zu buildings", st.island.tw, st.island.th, st.island.buildings.size());
+    } else {
+        LOGI("island layer not available (%s); showing the pilot district only", err.c_str());
+        st.island = District{};
+        st.islandLoaded = false;
+        st.pilotOffset[0] = st.pilotOffset[1] = st.pilotOffset[2] = 0.0f;
+    }
 
-Mat4 computeViewProj(const AppState& st, float aspect) {
-    const float cp = std::cos(st.pitch), sp = std::sin(st.pitch);
-    const float sy = std::sin(st.yaw), cy = std::cos(st.yaw);
-    const Vec3 offset{cp * sy, sp, cp * cy};
-    const Vec3 eye = st.target + offset * st.dist;
-    const Mat4 view = mat4LookAt(eye, st.target, Vec3{0.0f, 1.0f, 0.0f});
-    const Mat4 proj = mat4Perspective(kFovY, aspect, 2.0f, 40000.0f);
-    return mat4Mul(proj, view);
+    // Meshes.
+    std::vector<Vertex> pilotVerts;
+    buildStaticMesh(st.pilot, pilotVerts);
+    st.meshes.clear();
+    st.meshes.push_back(toMesh(pilotVerts, st.pilotOffset));
+    if (st.islandLoaded) {
+        Rect exclude{st.layout.dx, st.layout.dn, st.layout.dx + st.layout.sx, st.layout.dn + st.layout.sz};
+        MeshBlob islandMesh;
+        buildIslandMesh(st.island, exclude, islandMesh);
+        st.meshes.push_back(std::move(islandMesh));
+        LOGI("island mesh: %zu vertices, %zu indices", st.meshes.back().vertices.size(),
+             st.meshes.back().indices.size());
+
+        st.target = {st.island.sizeX * 0.5f, 0.0f, -st.island.sizeZ * 0.5f};
+        st.dist = 60000.0f;
+    } else {
+        st.target = {st.pilot.sizeX * 0.5f, 0.0f, -st.pilot.sizeZ * 0.5f};
+        st.dist = 2200.0f;
+    }
+
+    st.sim.init(&st.pilot.roads, 20251015u, kCars, kPeople);
+    st.assetsLoaded = true;
+    LOGI("loaded: pilot %zu buildings, %zu road edges, %zu agents", st.pilot.buildings.size(),
+         st.pilot.roads.edges.size(), st.sim.agents().size());
+    return true;
 }
 
 // Paints the whole window one colour without Vulkan. Used only when Vulkan cannot start,
@@ -129,6 +177,18 @@ void paintWindowSolid(ANativeWindow* win, uint8_t r, uint8_t g, uint8_t b) {
     ANativeWindow_unlockAndPost(win);
 }
 
+Mat4 computeViewProj(const AppState& st, float aspect) {
+    const float cp = std::cos(st.pitch), sp = std::sin(st.pitch);
+    const float sy = std::sin(st.yaw), cy = std::cos(st.yaw);
+    const Vec3 offset{cp * sy, sp, cp * cy};
+    const Vec3 eye = st.target + offset * st.dist;
+    const Mat4 view = mat4LookAt(eye, st.target, Vec3{0.0f, 1.0f, 0.0f});
+    // Near plane scales with distance so depth stays precise from street level to the whole island.
+    const float zNear = std::min(std::max(st.dist * 0.05f, 1.0f), 2000.0f);
+    const Mat4 proj = mat4Perspective(kFovY, aspect, zNear, 1.5e6f);
+    return mat4Mul(proj, view);
+}
+
 void onAppCmd(android_app* app, int32_t cmd) {
     AppState* st = static_cast<AppState*>(app->userData);
     if (!st) return;
@@ -136,10 +196,10 @@ void onAppCmd(android_app* app, int32_t cmd) {
         case APP_CMD_INIT_WINDOW:
             if (app->window) {
                 // Screen colour is the status: blue = Vulkan up, magenta = data failed,
-                // orange = shaders/pipeline failed, sky blue = scene running.
+                // orange = shaders/pipeline failed, sky blue = scene running, red = no Vulkan.
                 if (!st->renderer.init(app->window)) {
                     LOGE("renderer init failed: %s", st->renderer.lastError().c_str());
-                    paintWindowSolid(app->window, 255, 0, 0);  // red: Vulkan could not start
+                    paintWindowSolid(app->window, 255, 0, 0);
                     break;
                 }
                 st->renderer.setClearColor(0.10f, 0.30f, 0.90f);
@@ -148,7 +208,7 @@ void onAppCmd(android_app* app, int32_t cmd) {
                     LOGE("assets failed to load");
                     break;
                 }
-                if (!st->renderer.setScene(st->shaders, st->staticMesh)) {
+                if (!st->renderer.setScene(st->shaders, st->meshes)) {
                     st->renderer.setClearColor(1.0f, 0.5f, 0.0f);
                     LOGE("scene setup failed: %s", st->renderer.lastError().c_str());
                     break;
@@ -200,7 +260,7 @@ int32_t onInput(android_app* app, AInputEvent* event) {
             const float dPrev = std::hypot(st->g1x - st->g0x, st->g1y - st->g0y);
             const float dNow = std::hypot(x1 - x0, y1 - y0);
             if (dPrev > 1.0f && dNow > 1.0f) {
-                st->dist = std::min(std::max(st->dist * dPrev / dNow, 60.0f), 15000.0f);
+                st->dist = std::min(std::max(st->dist * dPrev / dNow, 60.0f), 120000.0f);
             }
             const float mx = ((x0 + x1) - (st->g0x + st->g1x)) * 0.5f;
             const float my = ((y0 + y1) - (st->g0y + st->g1y)) * 0.5f;
@@ -255,7 +315,7 @@ void android_main(struct android_app* app) {
 
         if (st.renderer.hasScene()) {
             st.sim.step(dt);
-            buildAgentMesh(st.district, st.sim, st.agentMesh);
+            buildAgentMesh(st.pilot, st.sim, st.agentMesh);
         } else {
             st.agentMesh.clear();
         }
@@ -263,7 +323,7 @@ void android_main(struct android_app* app) {
         const int32_t w = ANativeWindow_getWidth(app->window);
         const int32_t h = ANativeWindow_getHeight(app->window);
         const float aspect = (w > 0 && h > 0) ? static_cast<float>(w) / static_cast<float>(h) : 1.0f;
-        if (!st.renderer.drawFrame(computeViewProj(st, aspect), st.agentMesh)) {
+        if (!st.renderer.drawFrame(computeViewProj(st, aspect), st.pilotOffset, st.agentMesh)) {
             usleep(16000);  // skipped frame (minimised or resizing); avoid spinning
         }
     }

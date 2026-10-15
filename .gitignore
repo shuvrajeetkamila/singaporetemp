@@ -18,3 +18,5 @@ android-vk/build/
 android-vk/local.properties
 android-vk/app/src/main/assets/shaders/
 android-vk/host_test
+# Island layer (packed from the Stage 4 export by CI, not committed)
+android-vk/app/src/main/assets/island/

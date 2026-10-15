@@ -66,20 +66,28 @@ void heightColor(float h, float* c) {
     c[0] = 0.60f; c[1] = 0.52f; c[2] = 0.46f;                             // higher ground
 }
 
-Vertex makeVertex(Vec3 p, Vec3 n, const float* col) {
+uint8_t toByte(float v) {
+    float c = std::min(std::max(v, 0.0f), 1.0f);
+    return static_cast<uint8_t>(c * 255.0f + 0.5f);
+}
+
+Vertex makeVertex(Vec3 p, const float* col) {
     Vertex v;
-    v.pos[0] = p.x; v.pos[1] = p.y; v.pos[2] = p.z;
-    v.nrm[0] = n.x; v.nrm[1] = n.y; v.nrm[2] = n.z;
-    v.col[0] = col[0]; v.col[1] = col[1]; v.col[2] = col[2];
+    v.pos[0] = p.x;
+    v.pos[1] = p.y;
+    v.pos[2] = p.z;
+    v.rgba[0] = toByte(col[0]);
+    v.rgba[1] = toByte(col[1]);
+    v.rgba[2] = toByte(col[2]);
+    v.rgba[3] = 255;
     return v;
 }
 
-// Emit one triangle with its face normal.
+// Emit one triangle (non-indexed).
 void pushTriangle(std::vector<Vertex>& out, Vec3 a, Vec3 b, Vec3 c, const float* col) {
-    Vec3 n = normalize(cross(b - a, c - a));
-    out.push_back(makeVertex(a, n, col));
-    out.push_back(makeVertex(b, n, col));
-    out.push_back(makeVertex(c, n, col));
+    out.push_back(makeVertex(a, col));
+    out.push_back(makeVertex(b, col));
+    out.push_back(makeVertex(c, col));
 }
 
 // Scene mapping from district metres: x = east, y = height, z = -north.
@@ -331,4 +339,10 @@ void buildStaticMesh(const District& d, std::vector<Vertex>& out) {
             pushTriangle(out, B, D, C, col);
         }
     }
+}
+
+void terrainColour(float heightM, float* rgb) { heightColor(heightM, rgb); }
+
+void triangulatePolygon(const std::vector<Vec2f>& ring, std::vector<uint32_t>& tris) {
+    triangulateRing(ring, tris);
 }

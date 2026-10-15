@@ -9,7 +9,12 @@
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-static_assert(sizeof(Vertex) == 36, "Vertex must be 9 floats, tightly packed");
+static_assert(sizeof(Vertex) == 16, "Vertex must be 3 floats + 4 bytes, tightly packed");
+struct PushData {
+    float viewProj[16];
+    float offset[4];
+};
+static_assert(sizeof(PushData) == 80, "push constants: mat4 + vec4");
 static_assert(sizeof(Mat4) == 64, "push constant is one mat4");
 
 namespace {
@@ -57,7 +62,82 @@ bool Renderer::init(ANativeWindow* window) {
     return true;
 }
 
-bool Renderer::setScene(const ShaderBlobs& shaders, const std::vector<Vertex>& staticMesh) {
+bool Renderer::uploadDeviceLocal(const void* data, VkDeviceSize bytes, VkBufferUsageFlags usage, Buffer& out) {
+    Buffer staging;
+    if (!createBuffer(bytes, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, staging)) {
+        return false;
+    }
+    std::memcpy(staging.mapped, data, static_cast<size_t>(bytes));
+
+    VkBufferCreateInfo bci{};
+    bci.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bci.size = bytes;
+    bci.usage = usage | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+    bci.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    VkResult cr = vkCreateBuffer(device_, &bci, nullptr, &out.buf);
+    if (cr != VK_SUCCESS) {
+        freeBuffer(device_, staging.buf, staging.mem, staging.mapped);
+        return fail("vkCreateBuffer(device-local)", cr);
+    }
+    VkMemoryRequirements req{};
+    vkGetBufferMemoryRequirements(device_, out.buf, &req);
+    uint32_t type = 0;
+    if (!findMemoryType(req.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, type)) {
+        freeBuffer(device_, staging.buf, staging.mem, staging.mapped);
+        err_ = "no device-local memory for mesh";
+        return false;
+    }
+    VkMemoryAllocateInfo mai{};
+    mai.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    mai.allocationSize = req.size;
+    mai.memoryTypeIndex = type;
+    VkResult ar = vkAllocateMemory(device_, &mai, nullptr, &out.mem);
+    if (ar != VK_SUCCESS) {
+        freeBuffer(device_, staging.buf, staging.mem, staging.mapped);
+        return fail("vkAllocateMemory(mesh)", ar);
+    }
+    VK_TRY(vkBindBufferMemory(device_, out.buf, out.mem, 0), "vkBindBufferMemory(mesh)");
+    out.size = bytes;
+
+    VkCommandBufferAllocateInfo cbai{};
+    cbai.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    cbai.commandPool = cmdPool_;
+    cbai.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    cbai.commandBufferCount = 1;
+    VkCommandBuffer cb = VK_NULL_HANDLE;
+    VK_TRY(vkAllocateCommandBuffers(device_, &cbai, &cb), "vkAllocateCommandBuffers(upload)");
+    VkCommandBufferBeginInfo bi{};
+    bi.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    bi.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    vkBeginCommandBuffer(cb, &bi);
+    VkBufferCopy region{0, 0, bytes};
+    vkCmdCopyBuffer(cb, staging.buf, out.buf, 1, &region);
+    vkEndCommandBuffer(cb);
+    VkSubmitInfo si{};
+    si.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    si.commandBufferCount = 1;
+    si.pCommandBuffers = &cb;
+    VkResult sr = vkQueueSubmit(queue_, 1, &si, VK_NULL_HANDLE);
+    if (sr == VK_SUCCESS) vkQueueWaitIdle(queue_);
+    vkFreeCommandBuffers(device_, cmdPool_, 1, &cb);
+    freeBuffer(device_, staging.buf, staging.mem, staging.mapped);
+    return sr == VK_SUCCESS || fail("vkQueueSubmit(upload)", sr);
+}
+
+void Renderer::freeMeshes() {
+    if (!device_) {
+        meshes_.clear();
+        return;
+    }
+    for (GpuMesh& g : meshes_) {
+        freeBuffer(device_, g.vb.buf, g.vb.mem, g.vb.mapped);
+        freeBuffer(device_, g.ib.buf, g.ib.mem, g.ib.mapped);
+    }
+    meshes_.clear();
+}
+
+bool Renderer::setScene(const ShaderBlobs& shaders, const std::vector<MeshBlob>& meshes) {
     if (!device_) {
         err_ = "setScene before init";
         return false;
@@ -67,20 +147,28 @@ bool Renderer::setScene(const ShaderBlobs& shaders, const std::vector<Vertex>& s
     if (pipelineLayout_) vkDestroyPipelineLayout(device_, pipelineLayout_, nullptr);
     pipeline_ = VK_NULL_HANDLE;
     pipelineLayout_ = VK_NULL_HANDLE;
-    freeBuffer(device_, staticMesh_.buf, staticMesh_.mem, staticMesh_.mapped);
-    staticVertexCount_ = 0;
+    freeMeshes();
 
     if (!createPipeline(shaders)) return false;
-    staticVertexCount_ = static_cast<uint32_t>(staticMesh.size());
-    if (staticVertexCount_ > 0) {
-        VkDeviceSize bytes = static_cast<VkDeviceSize>(staticMesh.size()) * sizeof(Vertex);
-        if (!createBuffer(bytes, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-                          VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, staticMesh_)) {
+    size_t totalVerts = 0, totalIdx = 0;
+    for (const MeshBlob& m : meshes) {
+        if (m.vertices.empty() || m.indices.empty()) continue;
+        meshes_.push_back(GpuMesh{});
+        GpuMesh& g = meshes_.back();
+        g.indexCount = static_cast<uint32_t>(m.indices.size());
+        for (int k = 0; k < 3; ++k) g.offset[k] = m.offset[k];
+        if (!uploadDeviceLocal(m.vertices.data(), static_cast<VkDeviceSize>(m.vertices.size()) * sizeof(Vertex),
+                               VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, g.vb)) {
             return false;
         }
-        std::memcpy(staticMesh_.mapped, staticMesh.data(), static_cast<size_t>(bytes));
+        if (!uploadDeviceLocal(m.indices.data(), static_cast<VkDeviceSize>(m.indices.size()) * sizeof(uint32_t),
+                               VK_BUFFER_USAGE_INDEX_BUFFER_BIT, g.ib)) {
+            return false;
+        }
+        totalVerts += m.vertices.size();
+        totalIdx += m.indices.size();
     }
-    LOGI("scene set: %u static vertices", staticVertexCount_);
+    LOGI("scene set: %zu meshes, %zu vertices, %zu indices", meshes_.size(), totalVerts, totalIdx);
     return true;
 }
 
@@ -284,16 +372,15 @@ bool Renderer::createPipeline(const ShaderBlobs& shaders) {
     stages[1].pName = "main";
 
     VkVertexInputBindingDescription binding{0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX};
-    VkVertexInputAttributeDescription attrs[3] = {
+    VkVertexInputAttributeDescription attrs[2] = {
         {0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0},
-        {1, 0, VK_FORMAT_R32G32B32_SFLOAT, 12},
-        {2, 0, VK_FORMAT_R32G32B32_SFLOAT, 24},
+        {1, 0, VK_FORMAT_R8G8B8A8_UNORM, 12},
     };
     VkPipelineVertexInputStateCreateInfo vis{};
     vis.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vis.vertexBindingDescriptionCount = 1;
     vis.pVertexBindingDescriptions = &binding;
-    vis.vertexAttributeDescriptionCount = 3;
+    vis.vertexAttributeDescriptionCount = 2;
     vis.pVertexAttributeDescriptions = attrs;
 
     VkPipelineInputAssemblyStateCreateInfo ia{};
@@ -339,7 +426,7 @@ bool Renderer::createPipeline(const ShaderBlobs& shaders) {
     VkPushConstantRange pcr{};
     pcr.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     pcr.offset = 0;
-    pcr.size = sizeof(Mat4);
+    pcr.size = sizeof(PushData);
     VkPipelineLayoutCreateInfo plci{};
     plci.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     plci.pushConstantRangeCount = 1;
@@ -586,7 +673,7 @@ void Renderer::destroySwapchain() {
     swapchain_ = VK_NULL_HANDLE;
 }
 
-bool Renderer::drawFrame(const Mat4& viewProj, const std::vector<Vertex>& agents) {
+bool Renderer::drawFrame(const Mat4& viewProj, const float agentOffset[3], const std::vector<Vertex>& agents) {
     if (!ready_) return false;
     if (needsRecreate_) {
         vkDeviceWaitIdle(device_);
@@ -649,14 +736,26 @@ bool Renderer::drawFrame(const Mat4& viewProj, const std::vector<Vertex>& agents
         VkRect2D sc{{0, 0}, extent_};
         vkCmdSetViewport(cb, 0, 1, &vp);
         vkCmdSetScissor(cb, 0, 1, &sc);
-        vkCmdPushConstants(cb, pipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Mat4), viewProj.m);
 
+        PushData pd{};
+        std::memcpy(pd.viewProj, viewProj.m, sizeof(pd.viewProj));
         VkDeviceSize offset = 0;
-        if (staticVertexCount_ > 0) {
-            vkCmdBindVertexBuffers(cb, 0, 1, &staticMesh_.buf, &offset);
-            vkCmdDraw(cb, staticVertexCount_, 1, 0, 0);
+        for (const GpuMesh& g : meshes_) {
+            pd.offset[0] = g.offset[0];
+            pd.offset[1] = g.offset[1];
+            pd.offset[2] = g.offset[2];
+            pd.offset[3] = 0.0f;
+            vkCmdPushConstants(cb, pipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushData), &pd);
+            vkCmdBindVertexBuffers(cb, 0, 1, &g.vb.buf, &offset);
+            vkCmdBindIndexBuffer(cb, g.ib.buf, 0, VK_INDEX_TYPE_UINT32);
+            vkCmdDrawIndexed(cb, g.indexCount, 1, 0, 0, 0);
         }
         if (agentVerts > 0) {
+            pd.offset[0] = agentOffset[0];
+            pd.offset[1] = agentOffset[1];
+            pd.offset[2] = agentOffset[2];
+            pd.offset[3] = 0.0f;
+            vkCmdPushConstants(cb, pipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushData), &pd);
             vkCmdBindVertexBuffers(cb, 0, 1, &agents_[f].buf, &offset);
             vkCmdDraw(cb, agentVerts, 1, 0, 0);
         }
@@ -727,7 +826,7 @@ void Renderer::destroy() {
         pipeline_ = VK_NULL_HANDLE;
         pipelineLayout_ = VK_NULL_HANDLE;
         renderPass_ = VK_NULL_HANDLE;
-        freeBuffer(device_, staticMesh_.buf, staticMesh_.mem, staticMesh_.mapped);
+        freeMeshes();
         vkDestroyDevice(device_, nullptr);
         device_ = VK_NULL_HANDLE;
     }
@@ -737,6 +836,5 @@ void Renderer::destroy() {
     instance_ = VK_NULL_HANDLE;
     physical_ = VK_NULL_HANDLE;
     queue_ = VK_NULL_HANDLE;
-    staticVertexCount_ = 0;
     frame_ = 0;
 }

@@ -10,10 +10,17 @@ struct Vec2f {
     float x, y;
 };
 
+// 16 bytes. Normals are not stored: the fragment shader derives them from screen derivatives.
 struct Vertex {
     float pos[3];
-    float nrm[3];
-    float col[3];
+    uint8_t rgba[4];
+};
+
+// A mesh ready for upload. `offset` moves the mesh into the common scene frame (metres).
+struct MeshBlob {
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
+    float offset[3] = {0.0f, 0.0f, 0.0f};
 };
 
 struct RoadEdge {
@@ -61,3 +68,7 @@ float terrainHeightAt(const District& d, float x, float north);
 void buildStaticMesh(const District& d, std::vector<Vertex>& out);
 
 // Scene coordinates: x = east, y = height, z = -north (both in metres).
+
+// Shared helpers (defined in world.cpp).
+void terrainColour(float heightM, float* rgb);
+void triangulatePolygon(const std::vector<Vec2f>& ring, std::vector<uint32_t>& tris);

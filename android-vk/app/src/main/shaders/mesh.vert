@@ -1,18 +1,19 @@
 #version 450
-// Flat pass-through with a single mat4 (view * projection) in push constants.
+// Each mesh is moved into the scene frame by `offset`, then transformed by the view-projection.
 layout(location = 0) in vec3 inPos;
-layout(location = 1) in vec3 inNrm;
-layout(location = 2) in vec3 inCol;
+layout(location = 1) in vec4 inCol;   // unorm8 colour from the vertex buffer
 
 layout(push_constant) uniform Push {
     mat4 viewProj;
+    vec4 offset;     // xyz used
 } pc;
 
-layout(location = 0) out vec3 vNrm;
+layout(location = 0) out vec3 vWorld;
 layout(location = 1) out vec3 vCol;
 
 void main() {
-    gl_Position = pc.viewProj * vec4(inPos, 1.0);
-    vNrm = inNrm;
-    vCol = inCol;
+    vec3 world = inPos + pc.offset.xyz;
+    gl_Position = pc.viewProj * vec4(world, 1.0);
+    vWorld = world;
+    vCol = inCol.rgb;
 }

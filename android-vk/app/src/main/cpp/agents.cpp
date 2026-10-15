@@ -15,21 +15,25 @@ const float kCarColours[4][3] = {
 const float kPersonColour[3] = {0.95f, 0.45f, 0.15f};
 const float kAgentLift = 0.6f;  // agents sit slightly above the road surface
 
-Vertex makeVertex(Vec3 p, Vec3 n, const float* col) {
+Vertex makeVertex(Vec3 p, const float* col) {
     Vertex v;
-    v.pos[0] = p.x; v.pos[1] = p.y; v.pos[2] = p.z;
-    v.nrm[0] = n.x; v.nrm[1] = n.y; v.nrm[2] = n.z;
-    v.col[0] = col[0]; v.col[1] = col[1]; v.col[2] = col[2];
+    v.pos[0] = p.x;
+    v.pos[1] = p.y;
+    v.pos[2] = p.z;
+    for (int k = 0; k < 3; ++k) {
+        float c = col[k] < 0.0f ? 0.0f : (col[k] > 1.0f ? 1.0f : col[k]);
+        v.rgba[k] = static_cast<uint8_t>(c * 255.0f + 0.5f);
+    }
+    v.rgba[3] = 255;
     return v;
 }
 
-// Axis-aligned (in the agent's own frame) box centred at `base` + up * h/2.
-// Half extents: hl along fwd, hw along side, h/2 along up. Six quads, two triangles each.
+// Box centred at `base` + up * h/2 in the agent's own frame: half extents hl (fwd), hw (side),
+// h/2 (up). Six quads, two triangles each. Positions are in the pilot frame.
 void emitBox(Vec3 base, Vec3 fwd, Vec3 side, Vec3 up, float hl, float hw, float h, const float* col,
              std::vector<Vertex>& out) {
     const Vec3 c = base + up * (h * 0.5f);
     const Vec3 ext[3] = {fwd * hl, side * hw, up * (h * 0.5f)};
-    const Vec3 dir[3] = {fwd, side, up};
     const int corners[4][2] = {{-1, -1}, {1, -1}, {1, 1}, {-1, 1}};
     for (int k = 0; k < 3; ++k) {
         const int i = (k + 1) % 3, j = (k + 2) % 3;
@@ -42,13 +46,12 @@ void emitBox(Vec3 base, Vec3 fwd, Vec3 side, Vec3 up, float hl, float hw, float 
                 v[j] = static_cast<float>(corners[m][1]);
                 q[m] = c + ext[0] * v[0] + ext[1] * v[1] + ext[2] * v[2];
             }
-            Vec3 n = dir[k] * static_cast<float>(s);
-            out.push_back(makeVertex(q[0], n, col));
-            out.push_back(makeVertex(q[1], n, col));
-            out.push_back(makeVertex(q[2], n, col));
-            out.push_back(makeVertex(q[0], n, col));
-            out.push_back(makeVertex(q[2], n, col));
-            out.push_back(makeVertex(q[3], n, col));
+            out.push_back(makeVertex(q[0], col));
+            out.push_back(makeVertex(q[1], col));
+            out.push_back(makeVertex(q[2], col));
+            out.push_back(makeVertex(q[0], col));
+            out.push_back(makeVertex(q[2], col));
+            out.push_back(makeVertex(q[3], col));
         }
     }
 }
@@ -66,8 +69,7 @@ void buildAgentMesh(const District& d, const TrafficSim& sim, std::vector<Vertex
         Vec3 side = normalize(cross(fwd, up));
         Vec3 base{pos.x, terrainHeightAt(d, pos.x, pos.y) + kAgentLift, -pos.y};
         if (a.kind == 0) {
-            const float* col = kCarColours[a.tint % 4];
-            emitBox(base, fwd, side, up, 2.25f, 0.9f, 1.5f, col, out);
+            emitBox(base, fwd, side, up, 2.25f, 0.9f, 1.5f, kCarColours[a.tint % 4], out);
         } else {
             emitBox(base, fwd, side, up, 0.25f, 0.25f, 1.7f, kPersonColour, out);
         }

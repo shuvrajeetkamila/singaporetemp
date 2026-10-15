@@ -1,6 +1,6 @@
-// Host-side tests for the portable core (parsers, mesh, simulation).
+// Host-side tests for the portable core (parsers, meshes, island layer, simulation, camera).
 // Build and run from android-vk/ (one command):
-//   g++ -std=c++17 -O2 -Wall -Wextra -Iapp/src/main/cpp tests/host_test.cpp app/src/main/cpp/world.cpp app/src/main/cpp/sim.cpp app/src/main/cpp/agents.cpp -o host_test
+//   g++ -std=c++17 -O2 -Wall -Wextra -Iapp/src/main/cpp tests/host_test.cpp app/src/main/cpp/world.cpp app/src/main/cpp/sim.cpp app/src/main/cpp/agents.cpp app/src/main/cpp/island.cpp -o host_test
 //   ./host_test <dir containing terrain.bin, buildings.bin, roads.bin>
 #include <algorithm>
 #include <cmath>
@@ -12,6 +12,7 @@
 
 #include "agents.h"
 #include "core_math.h"
+#include "island.h"
 #include "sim.h"
 #include "world.h"
 
@@ -35,16 +36,18 @@ static bool finite3(const float* p) {
     return std::isfinite(p[0]) && std::isfinite(p[1]) && std::isfinite(p[2]);
 }
 
-// Area of triangles whose normal is near vertical, projected onto the x/z plane.
+// Projected (x/z) area of near-horizontal triangles, i.e. roofs.
 static double roofArea(const std::vector<Vertex>& mesh) {
     double area = 0.0;
     for (size_t i = 0; i + 2 < mesh.size(); i += 3) {
-        if (std::fabs(mesh[i].nrm[1]) < 0.99f) continue;
         const Vertex& a = mesh[i];
         const Vertex& b = mesh[i + 1];
         const Vertex& c = mesh[i + 2];
-        double ax = a.pos[0], az = a.pos[2], bx = b.pos[0], bz = b.pos[2], cx = c.pos[0], cz = c.pos[2];
-        area += 0.5 * std::fabs((bx - ax) * (cz - az) - (cx - ax) * (bz - az));
+        Vec3 pa{a.pos[0], a.pos[1], a.pos[2]}, pb{b.pos[0], b.pos[1], b.pos[2]}, pc{c.pos[0], c.pos[1], c.pos[2]};
+        Vec3 n = cross(pb - pa, pc - pa);
+        float len = std::sqrt(dot(n, n));
+        if (len < 1e-6f || std::fabs(n.y) < 0.99f * len) continue;
+        area += 0.5 * std::fabs(n.y);
     }
     return area;
 }
@@ -75,13 +78,11 @@ static void testConcaveRoof() {
 static void testMatrices() {
     Mat4 v = mat4LookAt({10, 5, 10}, {0, 0, 0}, {0, 1, 0});
     Vec3 eye{10, 5, 10};
-    // Transform the eye point: view-space should be the origin.
     float x = v.m[0] * eye.x + v.m[4] * eye.y + v.m[8] * eye.z + v.m[12];
     float y = v.m[1] * eye.x + v.m[5] * eye.y + v.m[9] * eye.z + v.m[13];
     float z = v.m[2] * eye.x + v.m[6] * eye.y + v.m[10] * eye.z + v.m[14];
     CHECK(std::fabs(x) < 1e-4f && std::fabs(y) < 1e-4f && std::fabs(z) < 1e-4f, "lookAt eye not at origin");
-    // Target should lie on the negative z axis in view space.
-    float tz = v.m[2] * 0 + v.m[6] * 0 + v.m[10] * 0 + v.m[14];
+    float tz = v.m[14];  // view-space z of the origin (the target)
     CHECK(tz < 0.0f, "lookAt target not in front");
 }
 
@@ -95,41 +96,48 @@ static void testParserRejectsTruncated(const std::vector<uint8_t>& roads) {
     CHECK(!parseRoads(bad, d, err), "bad magic accepted");
 }
 
-// Same camera as the app's first frame (yaw 0.6, pitch 0.75, 2200 m, 50 degree FOV).
-static void testFirstFrameCamera(const District& d, const std::vector<Vertex>& mesh) {
-    const float yaw = 0.6f, pitch = 0.75f, dist = 2200.0f, aspect = 2.2f;
-    const Vec3 target{d.sizeX * 0.5f, 0.0f, -d.sizeZ * 0.5f};
-    const float cp = std::cos(pitch), sp = std::sin(pitch), sy = std::sin(yaw), cy = std::cos(yaw);
-    const Vec3 eye = target + Vec3{cp * sy, sp, cp * cy} * dist;
-    const Mat4 vp = mat4Mul(mat4Perspective(0.87266f, aspect, 2.0f, 40000.0f),
-                            mat4LookAt(eye, target, Vec3{0.0f, 1.0f, 0.0f}));
-    // Returns clip-space w; writes NDC x, y, z.
-    auto project = [&](const float* p, float* ndc) -> float {
-        float x = p[0], y = p[1], z = p[2];
-        float cx = vp.m[0] * x + vp.m[4] * y + vp.m[8] * z + vp.m[12];
-        float cyy = vp.m[1] * x + vp.m[5] * y + vp.m[9] * z + vp.m[13];
-        float cz = vp.m[2] * x + vp.m[6] * y + vp.m[10] * z + vp.m[14];
-        float cw = vp.m[3] * x + vp.m[7] * y + vp.m[11] * z + vp.m[15];
-        ndc[0] = cx / cw;
-        ndc[1] = cyy / cw;
-        ndc[2] = cz / cw;
-        return cw;
-    };
-    float ndc[3];
-    float wCenter = project(&target.x, ndc);
-    std::printf("camera: target NDC (%.3f, %.3f) w %.1f\n", ndc[0], ndc[1], wCenter);
-    CHECK(wCenter > 0.0f && std::fabs(ndc[0]) < 1.0f && std::fabs(ndc[1]) < 1.0f, "target not on screen");
+static void testLayoutParse() {
+    std::string text = "33180.0 17010.0 2430.0 2100.0\n";
+    std::vector<uint8_t> bytes(text.begin(), text.end());
+    IslandLayout l;
+    CHECK(parseLayout(bytes, l), "layout rejected");
+    CHECK(l.dx == 33180.0f && l.dn == 17010.0f && l.sx == 2430.0f && l.sz == 2100.0f, "layout values wrong");
+    std::string bad = "12 oops";
+    std::vector<uint8_t> badBytes(bad.begin(), bad.end());
+    CHECK(!parseLayout(badBytes, l), "bad layout accepted");
+}
 
-    size_t inView = 0, total = 0;
-    for (size_t i = 0; i < mesh.size(); i += 3) {
-        ++total;
-        float n2[3];
-        float w = project(mesh[i].pos, n2);
-        if (w > 0.0f && std::fabs(n2[0]) <= 1.0f && std::fabs(n2[1]) <= 1.0f && n2[2] >= 0.0f && n2[2] <= 1.0f)
-            ++inView;
-    }
-    std::printf("first frame: %zu of %zu triangles start inside the view\n", inView, total);
-    CHECK(inView > total / 10, "almost nothing in the first-frame view");
+// Small synthetic island: 4x4 terrain at 60 m, two square buildings, one inside the pilot rectangle.
+static void testIslandLayer() {
+    District island;
+    island.tw = 4;
+    island.th = 4;
+    island.cell = 60.0f;
+    island.heights.assign(16, 3.0f);
+    island.sizeX = 3 * 60.0f;
+    island.sizeZ = 3 * 60.0f;
+    Building inside;
+    inside.base = 0.0f;
+    inside.height = 12.0f;
+    inside.ring = {{100, 100}, {120, 100}, {120, 120}, {100, 120}};
+    Building outside = inside;
+    outside.ring = {{300, 300}, {320, 300}, {320, 320}, {300, 320}};
+    island.buildings = {inside, outside};
+
+    MeshBlob all, cut;
+    buildIslandMesh(island, Rect{1.0f, 1.0f, 0.0f, 0.0f}, all);  // empty rectangle: nothing excluded
+    buildIslandMesh(island, Rect{90.0f, 90.0f, 130.0f, 130.0f}, cut);  // pilot rectangle over `inside`
+
+    // Each building adds 3n = 12 vertices (roof, wall top, wall bottom) for n = 4.
+    CHECK(all.vertices.size() - cut.vertices.size() == 12, "excluded building did not drop 12 vertices (%zu vs %zu)",
+          all.vertices.size(), cut.vertices.size());
+    CHECK(all.indices.size() % 3 == 0 && cut.indices.size() % 3 == 0, "index count not a multiple of 3");
+    bool validAll = true, validCut = true;
+    for (uint32_t i : all.indices) validAll = validAll && i < all.vertices.size();
+    for (uint32_t i : cut.indices) validCut = validCut && i < cut.vertices.size();
+    CHECK(validAll && validCut, "island index out of range");
+    std::printf("island test: %zu vertices / %zu indices (all), %zu / %zu (pilot cut out)\n", all.vertices.size(),
+                all.indices.size(), cut.vertices.size(), cut.indices.size());
 }
 
 int main(int argc, char** argv) {
@@ -138,6 +146,8 @@ int main(int argc, char** argv) {
 
     testConcaveRoof();
     testMatrices();
+    testLayoutParse();
+    testIslandLayer();
 
     std::vector<uint8_t> terrainBytes = readFile(dir + "/terrain.bin");
     std::vector<uint8_t> buildingBytes = readFile(dir + "/buildings.bin");
@@ -168,11 +178,10 @@ int main(int argc, char** argv) {
     CHECK(mesh.size() % 3 == 0, "vertex count not a multiple of 3");
     size_t badVerts = 0;
     for (const Vertex& v : mesh) {
-        if (!finite3(v.pos) || !finite3(v.nrm) || !finite3(v.col)) ++badVerts;
+        if (!finite3(v.pos)) ++badVerts;
     }
     CHECK(badVerts == 0, "%zu non-finite mesh vertices", badVerts);
 
-    // Road edges: lengths positive, mode and class in range.
     size_t vehicle = 0, foot = 0;
     for (const RoadEdge& e : d.roads.edges) {
         CHECK(e.length > 0.0f, "zero-length edge");
@@ -224,18 +233,52 @@ int main(int argc, char** argv) {
     CHECK(maxViolations == 0, "%zu simulation invariant violations", maxViolations);
     CHECK(carSamples > 0 && sumCarSpeed / carSamples > 1.0, "cars are not moving");
 
-    // Agent boxes: 36 finite vertices per agent.
     std::vector<Vertex> agentMesh;
     buildAgentMesh(d, sim, agentMesh);
     CHECK(agentMesh.size() == sim.agents().size() * 36, "agent mesh has %zu vertices, expected %zu",
           agentMesh.size(), sim.agents().size() * 36);
     size_t badAgentVerts = 0;
     for (const Vertex& v : agentMesh) {
-        if (!finite3(v.pos) || !finite3(v.nrm)) ++badAgentVerts;
+        if (!finite3(v.pos)) ++badAgentVerts;
     }
     CHECK(badAgentVerts == 0, "%zu non-finite agent vertices", badAgentVerts);
     std::printf("agent mesh vertices %zu\n", agentMesh.size());
-    testFirstFrameCamera(d, mesh);
+
+    // First-frame camera (same as the app): the district centre must be on screen and most of
+    // the mesh must start inside the view.
+    {
+        const float yaw = 0.6f, pitch = 0.9f, dist = 2200.0f, aspect = 2.2f;
+        const Vec3 target{d.sizeX * 0.5f, 0.0f, -d.sizeZ * 0.5f};
+        const float cp = std::cos(pitch), sp = std::sin(pitch), sy = std::sin(yaw), cy = std::cos(yaw);
+        const Vec3 eye = target + Vec3{cp * sy, sp, cp * cy} * dist;
+        const Mat4 vp = mat4Mul(mat4Perspective(0.87266f, aspect, 2.0f, 40000.0f),
+                                mat4LookAt(eye, target, Vec3{0.0f, 1.0f, 0.0f}));
+        auto project = [&](const float* p, float* ndc) -> float {
+            float x = p[0], y = p[1], z = p[2];
+            float cx = vp.m[0] * x + vp.m[4] * y + vp.m[8] * z + vp.m[12];
+            float cyy = vp.m[1] * x + vp.m[5] * y + vp.m[9] * z + vp.m[13];
+            float cz = vp.m[2] * x + vp.m[6] * y + vp.m[10] * z + vp.m[14];
+            float cw = vp.m[3] * x + vp.m[7] * y + vp.m[11] * z + vp.m[15];
+            ndc[0] = cx / cw;
+            ndc[1] = cyy / cw;
+            ndc[2] = cz / cw;
+            return cw;
+        };
+        float ndc[3];
+        float wCenter = project(&target.x, ndc);
+        std::printf("camera: target NDC (%.3f, %.3f) w %.1f\n", ndc[0], ndc[1], wCenter);
+        CHECK(wCenter > 0.0f && std::fabs(ndc[0]) < 1.0f && std::fabs(ndc[1]) < 1.0f, "target not on screen");
+        size_t inView = 0, total = 0;
+        for (size_t i = 0; i < mesh.size(); i += 3) {
+            ++total;
+            float n2[3];
+            float w = project(mesh[i].pos, n2);
+            if (w > 0.0f && std::fabs(n2[0]) <= 1.0f && std::fabs(n2[1]) <= 1.0f && n2[2] >= 0.0f && n2[2] <= 1.0f)
+                ++inView;
+        }
+        std::printf("first frame: %zu of %zu triangles start inside the view\n", inView, total);
+        CHECK(inView > total / 10, "almost nothing in the first-frame view");
+    }
 
     if (g_fail) {
         std::printf("%d failure(s)\n", g_fail);
