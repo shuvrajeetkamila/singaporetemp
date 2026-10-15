@@ -113,19 +113,47 @@ Mat4 computeViewProj(const AppState& st, float aspect) {
     return mat4Mul(proj, view);
 }
 
+// Paints the whole window one colour without Vulkan. Used only when Vulkan cannot start,
+// so a failure still shows up on screen (red).
+void paintWindowSolid(ANativeWindow* win, uint8_t r, uint8_t g, uint8_t b) {
+    ANativeWindow_Buffer buf;
+    if (ANativeWindow_lock(win, &buf, nullptr) != 0) return;
+    if (buf.format == WINDOW_FORMAT_RGBA_8888 || buf.format == WINDOW_FORMAT_RGBX_8888) {
+        const uint32_t px = static_cast<uint32_t>(r) | (static_cast<uint32_t>(g) << 8) |
+                            (static_cast<uint32_t>(b) << 16) | (0xFFu << 24);
+        for (int32_t y = 0; y < buf.height; ++y) {
+            uint32_t* row = static_cast<uint32_t*>(buf.bits) + static_cast<size_t>(y) * buf.stride;
+            for (int32_t x = 0; x < buf.width; ++x) row[x] = px;
+        }
+    }
+    ANativeWindow_unlockAndPost(win);
+}
+
 void onAppCmd(android_app* app, int32_t cmd) {
     AppState* st = static_cast<AppState*>(app->userData);
     if (!st) return;
     switch (cmd) {
         case APP_CMD_INIT_WINDOW:
             if (app->window) {
-                if (!st->assetsLoaded && !loadAssets(*st)) {
-                    LOGE("assets failed to load; nothing will be drawn");
+                // Screen colour is the status: blue = Vulkan up, magenta = data failed,
+                // orange = shaders/pipeline failed, sky blue = scene running.
+                if (!st->renderer.init(app->window)) {
+                    LOGE("renderer init failed: %s", st->renderer.lastError().c_str());
+                    paintWindowSolid(app->window, 255, 0, 0);  // red: Vulkan could not start
                     break;
                 }
-                if (!st->renderer.init(app->window, st->shaders, st->staticMesh)) {
-                    LOGE("renderer init failed: %s", st->renderer.lastError().c_str());
+                st->renderer.setClearColor(0.10f, 0.30f, 0.90f);
+                if (!st->assetsLoaded && !loadAssets(*st)) {
+                    st->renderer.setClearColor(1.0f, 0.0f, 1.0f);
+                    LOGE("assets failed to load");
+                    break;
                 }
+                if (!st->renderer.setScene(st->shaders, st->staticMesh)) {
+                    st->renderer.setClearColor(1.0f, 0.5f, 0.0f);
+                    LOGE("scene setup failed: %s", st->renderer.lastError().c_str());
+                    break;
+                }
+                st->renderer.setClearColor(0.62f, 0.78f, 0.92f);
             }
             break;
         case APP_CMD_TERM_WINDOW:
@@ -225,8 +253,12 @@ void android_main(struct android_app* app) {
         const float dt = std::min(std::chrono::duration<float>(now - last).count(), 0.05f);
         last = now;
 
-        st.sim.step(dt);
-        buildAgentMesh(st.district, st.sim, st.agentMesh);
+        if (st.renderer.hasScene()) {
+            st.sim.step(dt);
+            buildAgentMesh(st.district, st.sim, st.agentMesh);
+        } else {
+            st.agentMesh.clear();
+        }
 
         const int32_t w = ANativeWindow_getWidth(app->window);
         const int32_t h = ANativeWindow_getHeight(app->window);

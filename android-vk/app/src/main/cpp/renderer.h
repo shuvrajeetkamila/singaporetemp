@@ -19,8 +19,17 @@ struct ShaderBlobs {
 
 class Renderer {
 public:
-    // Creates the instance, surface, device, swapchain and pipeline, and uploads the static mesh.
-    bool init(ANativeWindow* window, const ShaderBlobs& shaders, const std::vector<Vertex>& staticMesh);
+    // Creates the instance, surface, device, render pass and swapchain. Clears work after this,
+    // even before a scene exists, so the screen can show status colours.
+    bool init(ANativeWindow* window);
+    // Builds the pipeline and uploads the static mesh. May be called again later.
+    bool setScene(const ShaderBlobs& shaders, const std::vector<Vertex>& staticMesh);
+    void setClearColor(float r, float g, float b) {
+        clear_[0] = r;
+        clear_[1] = g;
+        clear_[2] = b;
+    }
+    bool hasScene() const { return pipeline_ != VK_NULL_HANDLE; }
     void destroy();
 
     bool ready() const { return ready_; }
@@ -57,6 +66,7 @@ private:
     ANativeWindow* window_ = nullptr;
     bool ready_ = false;
     bool needsRecreate_ = false;
+    float clear_[3] = {0.62f, 0.78f, 0.92f};
     std::string err_;
 
     VkInstance instance_ = VK_NULL_HANDLE;

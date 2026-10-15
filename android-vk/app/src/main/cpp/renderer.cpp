@@ -39,7 +39,7 @@ bool Renderer::fail(const char* what, VkResult r) {
         if (vr_ != VK_SUCCESS) return fail(what, vr_); \
     } while (0)
 
-bool Renderer::init(ANativeWindow* window, const ShaderBlobs& shaders, const std::vector<Vertex>& staticMesh) {
+bool Renderer::init(ANativeWindow* window) {
     destroy();
     window_ = window;
     err_.clear();
@@ -47,35 +47,40 @@ bool Renderer::init(ANativeWindow* window, const ShaderBlobs& shaders, const std
         err_ = "no window";
         return false;
     }
-    if (!createInstance() || !createSurface()) {
+    if (!createInstance() || !createSurface() || !pickDevice() || !createDevice() ||
+        !createRenderPass() || !createFrameResources() || !buildSwapchain()) {
         destroy();
         return false;
     }
-    // Device, queue and surface formats.
-    if (!pickDevice() || !createDevice()) {
-        destroy();
+    ready_ = true;  // a swapchain exists: clears work even before the scene is set
+    LOGI("renderer ready: %ux%u", extent_.width, extent_.height);
+    return true;
+}
+
+bool Renderer::setScene(const ShaderBlobs& shaders, const std::vector<Vertex>& staticMesh) {
+    if (!device_) {
+        err_ = "setScene before init";
         return false;
     }
-    if (!createRenderPass() || !createPipeline(shaders) || !createFrameResources()) {
-        destroy();
-        return false;
-    }
+    vkDeviceWaitIdle(device_);
+    if (pipeline_) vkDestroyPipeline(device_, pipeline_, nullptr);
+    if (pipelineLayout_) vkDestroyPipelineLayout(device_, pipelineLayout_, nullptr);
+    pipeline_ = VK_NULL_HANDLE;
+    pipelineLayout_ = VK_NULL_HANDLE;
+    freeBuffer(device_, staticMesh_.buf, staticMesh_.mem, staticMesh_.mapped);
+    staticVertexCount_ = 0;
+
+    if (!createPipeline(shaders)) return false;
     staticVertexCount_ = static_cast<uint32_t>(staticMesh.size());
     if (staticVertexCount_ > 0) {
         VkDeviceSize bytes = static_cast<VkDeviceSize>(staticMesh.size()) * sizeof(Vertex);
         if (!createBuffer(bytes, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
                           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, staticMesh_)) {
-            destroy();
             return false;
         }
         std::memcpy(staticMesh_.mapped, staticMesh.data(), static_cast<size_t>(bytes));
     }
-    if (!buildSwapchain()) {
-        destroy();
-        return false;
-    }
-    ready_ = true;
-    LOGI("renderer ready: %ux%u, %u static vertices", extent_.width, extent_.height, staticVertexCount_);
+    LOGI("scene set: %u static vertices", staticVertexCount_);
     return true;
 }
 
@@ -85,7 +90,7 @@ bool Renderer::createInstance() {
     app.pApplicationName = "SingaporeVulkanPilot";
     app.applicationVersion = 1;
     app.pEngineName = "none";
-    app.apiVersion = VK_API_VERSION_1_1;
+    app.apiVersion = VK_API_VERSION_1_0;  // only core 1.0 is used, so older drivers still load
 
     const char* extensions[] = {VK_KHR_SURFACE_EXTENSION_NAME, VK_KHR_ANDROID_SURFACE_EXTENSION_NAME};
     VkInstanceCreateInfo ci{};
@@ -627,7 +632,7 @@ bool Renderer::drawFrame(const Mat4& viewProj, const std::vector<Vertex>& agents
     vkBeginCommandBuffer(cb, &bi);
 
     VkClearValue clears[2]{};
-    clears[0].color = {{0.62f, 0.78f, 0.92f, 1.0f}};
+    clears[0].color = {{clear_[0], clear_[1], clear_[2], 1.0f}};
     clears[1].depthStencil = {1.0f, 0};
     VkRenderPassBeginInfo rpb{};
     rpb.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -638,21 +643,23 @@ bool Renderer::drawFrame(const Mat4& viewProj, const std::vector<Vertex>& agents
     rpb.pClearValues = clears;
     vkCmdBeginRenderPass(cb, &rpb, VK_SUBPASS_CONTENTS_INLINE);
 
-    vkCmdBindPipeline(cb, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_);
-    VkViewport vp{0.0f, 0.0f, static_cast<float>(extent_.width), static_cast<float>(extent_.height), 0.0f, 1.0f};
-    VkRect2D sc{{0, 0}, extent_};
-    vkCmdSetViewport(cb, 0, 1, &vp);
-    vkCmdSetScissor(cb, 0, 1, &sc);
-    vkCmdPushConstants(cb, pipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Mat4), viewProj.m);
+    if (pipeline_) {
+        vkCmdBindPipeline(cb, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_);
+        VkViewport vp{0.0f, 0.0f, static_cast<float>(extent_.width), static_cast<float>(extent_.height), 0.0f, 1.0f};
+        VkRect2D sc{{0, 0}, extent_};
+        vkCmdSetViewport(cb, 0, 1, &vp);
+        vkCmdSetScissor(cb, 0, 1, &sc);
+        vkCmdPushConstants(cb, pipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Mat4), viewProj.m);
 
-    VkDeviceSize offset = 0;
-    if (staticVertexCount_ > 0) {
-        vkCmdBindVertexBuffers(cb, 0, 1, &staticMesh_.buf, &offset);
-        vkCmdDraw(cb, staticVertexCount_, 1, 0, 0);
-    }
-    if (agentVerts > 0) {
-        vkCmdBindVertexBuffers(cb, 0, 1, &agents_[f].buf, &offset);
-        vkCmdDraw(cb, agentVerts, 1, 0, 0);
+        VkDeviceSize offset = 0;
+        if (staticVertexCount_ > 0) {
+            vkCmdBindVertexBuffers(cb, 0, 1, &staticMesh_.buf, &offset);
+            vkCmdDraw(cb, staticVertexCount_, 1, 0, 0);
+        }
+        if (agentVerts > 0) {
+            vkCmdBindVertexBuffers(cb, 0, 1, &agents_[f].buf, &offset);
+            vkCmdDraw(cb, agentVerts, 1, 0, 0);
+        }
     }
     vkCmdEndRenderPass(cb);
     if (vkEndCommandBuffer(cb) != VK_SUCCESS) {

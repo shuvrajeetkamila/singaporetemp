@@ -95,6 +95,43 @@ static void testParserRejectsTruncated(const std::vector<uint8_t>& roads) {
     CHECK(!parseRoads(bad, d, err), "bad magic accepted");
 }
 
+// Same camera as the app's first frame (yaw 0.6, pitch 0.75, 2200 m, 50 degree FOV).
+static void testFirstFrameCamera(const District& d, const std::vector<Vertex>& mesh) {
+    const float yaw = 0.6f, pitch = 0.75f, dist = 2200.0f, aspect = 2.2f;
+    const Vec3 target{d.sizeX * 0.5f, 0.0f, -d.sizeZ * 0.5f};
+    const float cp = std::cos(pitch), sp = std::sin(pitch), sy = std::sin(yaw), cy = std::cos(yaw);
+    const Vec3 eye = target + Vec3{cp * sy, sp, cp * cy} * dist;
+    const Mat4 vp = mat4Mul(mat4Perspective(0.87266f, aspect, 2.0f, 40000.0f),
+                            mat4LookAt(eye, target, Vec3{0.0f, 1.0f, 0.0f}));
+    // Returns clip-space w; writes NDC x, y, z.
+    auto project = [&](const float* p, float* ndc) -> float {
+        float x = p[0], y = p[1], z = p[2];
+        float cx = vp.m[0] * x + vp.m[4] * y + vp.m[8] * z + vp.m[12];
+        float cyy = vp.m[1] * x + vp.m[5] * y + vp.m[9] * z + vp.m[13];
+        float cz = vp.m[2] * x + vp.m[6] * y + vp.m[10] * z + vp.m[14];
+        float cw = vp.m[3] * x + vp.m[7] * y + vp.m[11] * z + vp.m[15];
+        ndc[0] = cx / cw;
+        ndc[1] = cyy / cw;
+        ndc[2] = cz / cw;
+        return cw;
+    };
+    float ndc[3];
+    float wCenter = project(&target.x, ndc);
+    std::printf("camera: target NDC (%.3f, %.3f) w %.1f\n", ndc[0], ndc[1], wCenter);
+    CHECK(wCenter > 0.0f && std::fabs(ndc[0]) < 1.0f && std::fabs(ndc[1]) < 1.0f, "target not on screen");
+
+    size_t inView = 0, total = 0;
+    for (size_t i = 0; i < mesh.size(); i += 3) {
+        ++total;
+        float n2[3];
+        float w = project(mesh[i].pos, n2);
+        if (w > 0.0f && std::fabs(n2[0]) <= 1.0f && std::fabs(n2[1]) <= 1.0f && n2[2] >= 0.0f && n2[2] <= 1.0f)
+            ++inView;
+    }
+    std::printf("first frame: %zu of %zu triangles start inside the view\n", inView, total);
+    CHECK(inView > total / 10, "almost nothing in the first-frame view");
+}
+
 int main(int argc, char** argv) {
     std::string dir = argc > 1 ? argv[1] : "app/src/main/assets/district";
     std::printf("data dir: %s\n", dir.c_str());
@@ -198,6 +235,7 @@ int main(int argc, char** argv) {
     }
     CHECK(badAgentVerts == 0, "%zu non-finite agent vertices", badAgentVerts);
     std::printf("agent mesh vertices %zu\n", agentMesh.size());
+    testFirstFrameCamera(d, mesh);
 
     if (g_fail) {
         std::printf("%d failure(s)\n", g_fail);
