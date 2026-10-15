@@ -13,12 +13,14 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <cstdio>
 #include <cstring>
 #include <string>
 #include <vector>
 
 #include "agents.h"
 #include "core_math.h"
+#include "diag.h"
 #include "island.h"
 #include "renderer.h"
 #include "sim.h"
@@ -66,13 +68,21 @@ bool readAsset(AAssetManager* mgr, const char* name, std::vector<uint8_t>& out) 
     AAsset* asset = AAssetManager_open(mgr, name, AASSET_MODE_BUFFER);
     if (!asset) {
         LOGE("missing asset: %s", name);
+        char msg[160];
+        std::snprintf(msg, sizeof msg, "MISSING FILE %s", name);
+        diagSetDetail(msg);
         return false;
     }
     off_t len = AAsset_getLength(asset);
     out.resize(static_cast<size_t>(len > 0 ? len : 0));
     bool ok = !out.empty() && AAsset_read(asset, out.data(), out.size()) == static_cast<int>(out.size());
     AAsset_close(asset);
-    if (!ok) LOGE("could not read asset: %s", name);
+    if (!ok) {
+        LOGE("could not read asset: %s", name);
+        char msg[160];
+        std::snprintf(msg, sizeof msg, "CANNOT READ %s", name);
+        diagSetDetail(msg);
+    }
     return ok;
 }
 
@@ -97,11 +107,13 @@ MeshBlob toMesh(const std::vector<Vertex>& verts, const float offset[3]) {
 // pilot alone, in its own frame.
 bool loadAssets(AppState& st) {
     AAssetManager* mgr = st.app->activity->assetManager;
+    diagSetStage("LOADING SHADERS");
     if (!readSpirv(mgr, "shaders/mesh.vert.spv", st.shaders.vert) ||
         !readSpirv(mgr, "shaders/mesh.frag.spv", st.shaders.frag)) {
         return false;
     }
 
+    diagSetStage("LOADING PILOT DISTRICT");
     std::vector<uint8_t> terrain, buildings, roads;
     if (!readAsset(mgr, "district/terrain.bin", terrain) || !readAsset(mgr, "district/buildings.bin", buildings) ||
         !readAsset(mgr, "district/roads.bin", roads)) {
@@ -111,10 +123,14 @@ bool loadAssets(AppState& st) {
     if (!parseTerrain(terrain, st.pilot, err) || !parseBuildings(buildings, st.pilot, err) ||
         !parseRoads(roads, st.pilot, err)) {
         LOGE("pilot district rejected: %s", err.c_str());
+        char msg[160];
+        std::snprintf(msg, sizeof msg, "PILOT FILES REJECTED: %s", err.c_str());
+        diagSetDetail(msg);
         return false;
     }
 
     // Island layer (optional).
+    diagSetStage("LOADING ISLAND");
     std::vector<uint8_t> iTerrain, iBuildings, iLayout;
     bool haveIsland = readAsset(mgr, "island/terrain.bin", iTerrain) &&
                       readAsset(mgr, "island/buildings.bin", iBuildings) &&
@@ -136,6 +152,7 @@ bool loadAssets(AppState& st) {
     }
 
     // Meshes.
+    diagSetStage("BUILDING PILOT MESH");
     std::vector<Vertex> pilotVerts;
     buildStaticMesh(st.pilot, pilotVerts);
     st.meshes.clear();
@@ -143,6 +160,7 @@ bool loadAssets(AppState& st) {
     if (st.islandLoaded) {
         Rect exclude{st.layout.dx, st.layout.dn, st.layout.dx + st.layout.sx, st.layout.dn + st.layout.sz};
         MeshBlob islandMesh;
+        diagSetStage("BUILDING ISLAND MESH");
         buildIslandMesh(st.island, exclude, islandMesh);
         st.meshes.push_back(std::move(islandMesh));
         LOGI("island mesh: %zu vertices, %zu indices", st.meshes.back().vertices.size(),
@@ -160,22 +178,6 @@ bool loadAssets(AppState& st) {
     LOGI("loaded: pilot %zu buildings, %zu road edges, %zu agents", st.pilot.buildings.size(),
          st.pilot.roads.edges.size(), st.sim.agents().size());
     return true;
-}
-
-// Paints the whole window one colour without Vulkan. Used only when Vulkan cannot start,
-// so a failure still shows up on screen (red).
-void paintWindowSolid(ANativeWindow* win, uint8_t r, uint8_t g, uint8_t b) {
-    ANativeWindow_Buffer buf;
-    if (ANativeWindow_lock(win, &buf, nullptr) != 0) return;
-    if (buf.format == WINDOW_FORMAT_RGBA_8888 || buf.format == WINDOW_FORMAT_RGBX_8888) {
-        const uint32_t px = static_cast<uint32_t>(r) | (static_cast<uint32_t>(g) << 8) |
-                            (static_cast<uint32_t>(b) << 16) | (0xFFu << 24);
-        for (int32_t y = 0; y < buf.height; ++y) {
-            uint32_t* row = static_cast<uint32_t*>(buf.bits) + static_cast<size_t>(y) * buf.stride;
-            for (int32_t x = 0; x < buf.width; ++x) row[x] = px;
-        }
-    }
-    ANativeWindow_unlockAndPost(win);
 }
 
 // Distance at which a bounding sphere around the island centre fits inside the view, for this aspect.
@@ -202,6 +204,18 @@ Mat4 computeViewProj(const AppState& st, float aspect) {
     return mat4Mul(proj, view);
 }
 
+// Shows a failure on screen: the renderer is torn down first so the window is free for plain pixels.
+void showFailure(AppState& st, uint32_t background, const char* title, const char* detail) {
+    st.renderer.destroy();
+    char l2[200], l3[240], l4[320];
+    std::snprintf(l2, sizeof l2, "STAGE: %s", diagStage());
+    std::snprintf(l3, sizeof l3, "DETAIL: %s", detail && *detail ? detail : diagDetail());
+    std::snprintf(l4, sizeof l4, "%s", "CLOSE AND REOPEN THE APP");
+    const char* lines[] = {title, l2, l3, l4};
+    LOGE("failure: %s / %s / %s", title, l2, l3);
+    diagPaint(st.app->window, background, lines, 4);
+}
+
 void onAppCmd(android_app* app, int32_t cmd) {
     AppState* st = static_cast<AppState*>(app->userData);
     if (!st) return;
@@ -210,26 +224,29 @@ void onAppCmd(android_app* app, int32_t cmd) {
             if (app->window) {
                 // Screen colour is the status: blue = Vulkan up, magenta = data failed,
                 // orange = shaders/pipeline failed, sky blue = scene running, red = no Vulkan.
+                // Failures also write the stage and the detail on screen as text.
+                diagSetWindow(app->window);
+                diagSetStage("STARTING VULKAN");
                 if (!st->renderer.init(app->window)) {
-                    LOGE("renderer init failed: %s", st->renderer.lastError().c_str());
-                    paintWindowSolid(app->window, 255, 0, 0);
+                    showFailure(*st, packRgba(190, 0, 0), "VULKAN DID NOT START", st->renderer.lastError().c_str());
                     break;
                 }
                 st->renderer.setClearColor(0.10f, 0.30f, 0.90f);
                 if (!st->assetsLoaded && !loadAssets(*st)) {
-                    st->renderer.setClearColor(1.0f, 0.0f, 1.0f);
-                    LOGE("assets failed to load");
+                    showFailure(*st, packRgba(200, 0, 200), "DATA DID NOT LOAD", "");
                     break;
                 }
+                diagSetStage("UPLOADING TO GPU");
                 if (!st->renderer.setScene(st->shaders, st->meshes)) {
-                    st->renderer.setClearColor(1.0f, 0.5f, 0.0f);
-                    LOGE("scene setup failed: %s", st->renderer.lastError().c_str());
+                    showFailure(*st, packRgba(230, 120, 0), "GPU UPLOAD FAILED", st->renderer.lastError().c_str());
                     break;
                 }
+                diagSetStage("RUNNING");
                 st->renderer.setClearColor(0.62f, 0.78f, 0.92f);
             }
             break;
         case APP_CMD_TERM_WINDOW:
+            diagSetWindow(nullptr);
             st->renderer.destroy();
             break;
         default:
@@ -300,6 +317,7 @@ int32_t onInput(android_app* app, AInputEvent* event) {
 }  // namespace
 
 void android_main(struct android_app* app) {
+    diagInstallCrashHandler();
     AppState st;
     st.app = app;
     app->userData = &st;

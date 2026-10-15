@@ -1,6 +1,6 @@
 // Host-side tests for the portable core (parsers, meshes, island layer, simulation, camera).
 // Build and run from android-vk/ (one command):
-//   g++ -std=c++17 -O2 -Wall -Wextra -Iapp/src/main/cpp tests/host_test.cpp app/src/main/cpp/world.cpp app/src/main/cpp/sim.cpp app/src/main/cpp/agents.cpp app/src/main/cpp/island.cpp -o host_test
+//   g++ -std=c++17 -O2 -Wall -Wextra -Iapp/src/main/cpp tests/host_test.cpp app/src/main/cpp/world.cpp app/src/main/cpp/sim.cpp app/src/main/cpp/agents.cpp app/src/main/cpp/island.cpp app/src/main/cpp/diag.cpp -o host_test
 //   ./host_test <dir containing terrain.bin, buildings.bin, roads.bin>
 #include <algorithm>
 #include <cmath>
@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "agents.h"
+#include "diag.h"
 #include "core_math.h"
 #include "island.h"
 #include "sim.h"
@@ -140,10 +141,56 @@ static void testIslandLayer() {
                 all.indices.size(), cut.vertices.size(), cut.indices.size());
 }
 
+// On-screen text: glyph coverage, scale, pixel placement, and clipping to the buffer.
+static void testText() {
+    for (char c = 'A'; c <= 'Z'; ++c) CHECK(hasGlyph(c), "no glyph for %c", c);
+    for (char c = '0'; c <= '9'; ++c) CHECK(hasGlyph(c), "no glyph for %c", c);
+    CHECK(hasGlyph('a'), "lowercase should map to capitals");
+    CHECK(!hasGlyph('~'), "unexpected glyph for ~");
+
+    // 40x40 buffer, one letter "I": margin 4, scale 4 (height limited). Top row is ".###." so the
+    // middle column is inked and the left column is not.
+    const int W = 40, H = 40;
+    std::vector<uint32_t> px(static_cast<size_t>(W) * H, 0u);
+    PixelBuffer b{px.data(), W, H, W};
+    const uint32_t bg = packRgba(0, 0, 0), fg = packRgba(255, 255, 255);
+    fillPixels(b, bg);
+    const char* one[] = {"I"};
+    const int scale = drawTextLines(b, one, 1, fg);
+    CHECK(scale == 4, "scale %d, expected 4", scale);
+    CHECK(px[static_cast<size_t>(4) * W + (4 + 2 * 4 + 1)] == fg, "middle of top bar not inked");
+    CHECK(px[static_cast<size_t>(4) * W + (4 + 0 * 4 + 1)] == bg, "left of top bar should be blank");
+
+    // Padding beyond the stride must never be written.
+    const int SW = 30, SS = 40, SH = 20;
+    std::vector<uint32_t> pad(static_cast<size_t>(SS) * SH, 0x12345678u);
+    PixelBuffer pb{pad.data(), SW, SH, SS};
+    fillPixels(pb, bg);
+    const char* words[] = {"WWW", "MMM"};
+    drawTextLines(pb, words, 2, fg);
+    bool untouched = true;
+    for (int y = 0; y < SH; ++y)
+        for (int x = SW; x < SS; ++x)
+            if (pad[static_cast<size_t>(y) * SS + x] != 0x12345678u) untouched = false;
+    CHECK(untouched, "text wrote into stride padding");
+
+    // A line too long for the width draws nothing (scale would be below 1).
+    std::vector<uint32_t> small(100 * 20, 0u);
+    PixelBuffer sb{small.data(), 100, 20, 100};
+    fillPixels(sb, bg);
+    std::string longLine(200, 'W');
+    const char* longText[] = {longLine.c_str()};
+    CHECK(drawTextLines(sb, longText, 1, fg) == 0, "too-long line should draw nothing");
+    bool blank = true;
+    for (uint32_t v : small) if (v != bg) blank = false;
+    CHECK(blank, "too-long line changed pixels");
+}
+
 int main(int argc, char** argv) {
     std::string dir = argc > 1 ? argv[1] : "app/src/main/assets/district";
     std::printf("data dir: %s\n", dir.c_str());
 
+    testText();
     testConcaveRoof();
     testMatrices();
     testLayoutParse();
