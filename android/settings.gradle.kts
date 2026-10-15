@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SingaporeOneToOne"
 include(":app")
+include(":island")
