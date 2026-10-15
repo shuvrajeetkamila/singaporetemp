@@ -111,41 +111,16 @@ jobs:
           RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
           RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-        run: gradle --no-daemon :app:assembleDebug :app:bundleRelease
+        run: gradle --no-daemon :app:bundleRelease
 
-      - name: Build sideloadable universal APK from the bundle (includes island data)
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Build sideloadable APK with island data inside
+        working-directory: android
+        run: gradle --no-daemon :app:assembleDebug -PinlineIsland=true
+
+      - name: Name the sideloadable APK
         run: |
-          exec > >(tee /tmp/data/bundletool.log) 2>&1
-          set -x
-          BT_URL=$(gh api repos/google/bundletool/releases/latest --jq '.assets[] | select(.name | test("^bundletool-all-.*[.]jar$")) | .browser_download_url')
-          echo "bundletool: $BT_URL"
-          curl -fsSL -o bundletool.jar "$BT_URL"
-          ls -la bundletool.jar "$HOME/.android/" || true
-          java -version
-          java -jar bundletool.jar version
-          java -jar bundletool.jar build-apks \
-            --bundle=android/app/build/outputs/bundle/release/app-release.aab \
-            --output=/tmp/data/app.apks \
-            --mode=universal \
-            --ks="$HOME/.android/debug.keystore" \
-            --ks-key-alias=androiddebugkey \
-            --ks-pass=pass:android \
-            --key-pass=pass:android
-          unzip -p /tmp/data/app.apks universal.apk > "singapore-1to1-run${GITHUB_RUN_NUMBER}.apk"
+          cp android/app/build/outputs/apk/debug/app-debug.apk "singapore-1to1-run${GITHUB_RUN_NUMBER}.apk"
           ls -la singapore-1to1-run*.apk
-
-      - name: Keep bundletool log for diagnosis
-        if: always()
-        run: cp /tmp/data/bundletool.log ./bundletool.log 2>/dev/null || echo "no log" > ./bundletool.log
-
-      - name: Upload bundletool log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: bundletool-log
-          path: bundletool.log
 
       - name: Keep the release app bundle
         run: |

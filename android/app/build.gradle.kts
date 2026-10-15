@@ -6,6 +6,10 @@ plugins {
 // repository secrets exist. Without them, the release bundle is built unsigned.
 val releaseKeystore: String? = System.getenv("RELEASE_KEYSTORE_PATH")
 
+// -PinlineIsland=true builds a sideloadable APK that carries the island data inside the APK.
+// The normal build delivers the island as an install-time asset pack (for Google Play).
+val inlineIsland: Boolean = (project.findProperty("inlineIsland") as String?) == "true"
+
 android {
     namespace = "sg.onetoone.island"
     compileSdk = 35
@@ -18,7 +22,15 @@ android {
         versionName = "0.1.0-prototype"
     }
 
-    assetPacks += listOf(":island")
+    if (!inlineIsland) {
+        assetPacks += listOf(":island")
+    } else {
+        sourceSets {
+            getByName("main") {
+                assets.srcDirs("../island/src/main/assets")
+            }
+        }
+    }
 
     signingConfigs {
         if (releaseKeystore != null) {
