@@ -1,0 +1,60 @@
+{
+  "attribution": [
+    "Building and road data: OpenStreetMap contributors (ODbL)",
+    "Elevation: Copernicus DEM GLO-30 (c) DLR/ESA, via OpenTopography"
+  ],
+  "buildings": {
+    "file": "buildings.bin",
+    "height_m_max": 245.0,
+    "height_m_p50": 15.0,
+    "heights": "ESTIMATED from OSM tags and building-type defaults",
+    "records": 761
+  },
+  "crs": "EPSG:3414 (SVY21), metres relative to origin",
+  "district": {
+    "name": "Marina Bay (pilot)",
+    "wgs84_west_south_east_north": [
+      103.848,
+      1.274,
+      103.87,
+      1.293
+    ]
+  },
+  "generated_utc": "2026-10-15T15:55:30+00:00",
+  "origin_e": 29631.518,
+  "origin_n": 28494.117,
+  "roads": {
+    "edges": 5383,
+    "edges_by_class": {
+      "0": 65,
+      "1": 124,
+      "2": 321,
+      "3": 257,
+      "4": 211,
+      "5": 1662,
+      "6": 2743
+    },
+    "edges_foot": 2743,
+    "edges_vehicle": 2640,
+    "file": "roads.bin",
+    "foot_speed_mps": 1.3,
+    "nodes": 4442,
+    "total_length_km": 226.78,
+    "vehicle_speeds": "maxspeed tag where present, otherwise class defaults",
+    "ways_read": 9871
+  },
+  "schema_version": 1,
+  "size_m": [
+    2460.0,
+    2130.0
+  ],
+  "terrain": {
+    "cell_m": 30.0,
+    "dtype": "float32le",
+    "file": "terrain.bin",
+    "height": 71,
+    "row_order": "south_to_north",
+    "source": "Copernicus GLO-30 DSM at full 30 m resolution (surface model: buildings and trees included)",
+    "width": 82
+  }
+}
