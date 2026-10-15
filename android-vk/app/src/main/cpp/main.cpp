@@ -54,6 +54,7 @@ struct AppState {
     float yaw = 0.6f;
     float pitch = 0.9f;
     float dist = 2200.0f;
+    bool distFitted = false;  // island start distance is fitted to the screen aspect once
 
     // Touch gesture state.
     bool gestureValid = false;
@@ -177,6 +178,18 @@ void paintWindowSolid(ANativeWindow* win, uint8_t r, uint8_t g, uint8_t b) {
     ANativeWindow_unlockAndPost(win);
 }
 
+// Distance at which a bounding sphere around the island centre fits inside the view, for this aspect.
+// Conservative: every point of the island lies within the sphere, so it is inside both view half-angles.
+float islandFitDistance(const District& island, float aspect) {
+    const float halfX = island.sizeX * 0.5f, halfZ = island.sizeZ * 0.5f;
+    const float radius = std::sqrt(halfX * halfX + halfZ * halfZ) * 1.1f;
+    const float tanV = std::tan(kFovY * 0.5f);
+    const float halfV = kFovY * 0.5f;
+    const float halfH = std::atan(tanV * std::max(aspect, 0.05f));
+    const float half = std::min(halfV, halfH);
+    return radius / std::sin(half);
+}
+
 Mat4 computeViewProj(const AppState& st, float aspect) {
     const float cp = std::cos(st.pitch), sp = std::sin(st.pitch);
     const float sy = std::sin(st.yaw), cy = std::cos(st.yaw);
@@ -260,7 +273,7 @@ int32_t onInput(android_app* app, AInputEvent* event) {
             const float dPrev = std::hypot(st->g1x - st->g0x, st->g1y - st->g0y);
             const float dNow = std::hypot(x1 - x0, y1 - y0);
             if (dPrev > 1.0f && dNow > 1.0f) {
-                st->dist = std::min(std::max(st->dist * dPrev / dNow, 60.0f), 120000.0f);
+                st->dist = std::min(std::max(st->dist * dPrev / dNow, 60.0f), 400000.0f);
             }
             const float mx = ((x0 + x1) - (st->g0x + st->g1x)) * 0.5f;
             const float my = ((y0 + y1) - (st->g0y + st->g1y)) * 0.5f;
@@ -323,6 +336,11 @@ void android_main(struct android_app* app) {
         const int32_t w = ANativeWindow_getWidth(app->window);
         const int32_t h = ANativeWindow_getHeight(app->window);
         const float aspect = (w > 0 && h > 0) ? static_cast<float>(w) / static_cast<float>(h) : 1.0f;
+        if (st.islandLoaded && !st.distFitted && w > 0 && h > 0) {
+            st.dist = islandFitDistance(st.island, aspect);
+            st.distFitted = true;
+            LOGI("island start distance %.0f m for aspect %.2f", st.dist, aspect);
+        }
         if (!st.renderer.drawFrame(computeViewProj(st, aspect), st.pilotOffset, st.agentMesh)) {
             usleep(16000);  // skipped frame (minimised or resizing); avoid spinning
         }
