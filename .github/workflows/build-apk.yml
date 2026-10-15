@@ -114,8 +114,12 @@ jobs:
         run: gradle --no-daemon :app:assembleDebug :app:bundleRelease
 
       - name: Build sideloadable universal APK from the bundle (includes island data)
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          curl -fsSL -o bundletool.jar https://github.com/google/bundletool/releases/latest/download/bundletool-all.jar
+          BT_URL=$(gh api repos/google/bundletool/releases/latest --jq '.assets[] | select(.name | test("^bundletool-all-.*[.]jar$")) | .browser_download_url')
+          echo "bundletool: $BT_URL"
+          curl -fsSL -o bundletool.jar "$BT_URL"
           java -jar bundletool.jar build-apks \
             --bundle=android/app/build/outputs/bundle/release/app-release.aab \
             --output=/tmp/data/app.apks \
