@@ -1,0 +1,1914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="openstreetmap-cgimap 2.1.0 (1311 spike-07.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+ <node id="424313428" visible="true" version="79" changeset="190480454" timestamp="2026-10-14T01:12:39Z" user="L Leung" uid="24636355" lat="1.3571070" lon="103.8194992">
+  <tag k="capital_city" v="Singapore City"/>
+  <tag k="country_code_fips" v="SN"/>
+  <tag k="country_code_iso3166_1_alpha_2" v="SG"/>
+  <tag k="name" v="Singapore"/>
+  <tag k="name:ace" v="Singapura"/>
+  <tag k="name:af" v="Singapoer"/>
+  <tag k="name:ak" v="Singapɔ"/>
+  <tag k="name:als" v="Singapur"/>
+  <tag k="name:am" v="ሲንጋፖር"/>
+  <tag k="name:an" v="Singapur"/>
+  <tag k="name:ar" v="سنغافورة"/>
+  <tag k="name:arz" v="سينجابوره"/>
+  <tag k="name:ast" v="Singapur"/>
+  <tag k="name:az" v="Sinqapur"/>
+  <tag k="name:az-Arab" v="سنقاپور"/>
+  <tag k="name:azb" v="سنقاپور"/>
+  <tag k="name:ba" v="Сингапур"/>
+  <tag k="name:bar" v="Singapur"/>
+  <tag k="name:bat-smg" v="Singapūrs"/>
+  <tag k="name:bcl" v="Singapore"/>
+  <tag k="name:be" v="Сінгапур"/>
+  <tag k="name:be-tarask" v="Сынгапур"/>
+  <tag k="name:bg" v="Сингапур"/>
+  <tag k="name:bi" v="Singapore"/>
+  <tag k="name:bjn" v="Singapura"/>
+  <tag k="name:bm" v="Sɛngapuri"/>
+  <tag k="name:bn" v="সিঙ্গাপুর"/>
+  <tag k="name:bo" v="སིངྒ་པུར།"/>
+  <tag k="name:bpy" v="সিঙ্গাপুর"/>
+  <tag k="name:br" v="Singapour"/>
+  <tag k="name:bs" v="Singapur"/>
+  <tag k="name:bug" v="Singapura"/>
+  <tag k="name:bxr" v="Сингапур"/>
+  <tag k="name:ca" v="Singapur"/>
+  <tag k="name:cdo" v="Sĭng-gă-pŏ̤"/>
+  <tag k="name:ce" v="Сингапур"/>
+  <tag k="name:ceb" v="Singgapura"/>
+  <tag k="name:chr" v="ᏏᏂᎦᏉᎵ"/>
+  <tag k="name:ckb" v="سینگاپور"/>
+  <tag k="name:crh" v="Singapur"/>
+  <tag k="name:cs" v="Singapur"/>
+  <tag k="name:csb" v="Singapùr"/>
+  <tag k="name:cv" v="Сингапур"/>
+  <tag k="name:cy" v="Singapore"/>
+  <tag k="name:da" v="Singapore"/>
+  <tag k="name:de" v="Singapur"/>
+  <tag k="name:diq" v="Singapur"/>
+  <tag k="name:dsb" v="Singapur"/>
+  <tag k="name:dv" v="ސިންގަޕޫރު"/>
+  <tag k="name:dz" v="སིང་ག་པོར"/>
+  <tag k="name:ee" v="Singapɔr nutome"/>
+  <tag k="name:el" v="Σιγκαπούρη"/>
+  <tag k="name:en" v="Singapore"/>
+  <tag k="name:eo" v="Singapuro"/>
+  <tag k="name:es" v="Singapur"/>
+  <tag k="name:et" v="Singapur"/>
+  <tag k="name:eu" v="Singapur"/>
+  <tag k="name:ext" v="Singapul"/>
+  <tag k="name:fa" v="سنگاپور"/>
+  <tag k="name:ff" v="Sinngapuur"/>
+  <tag k="name:fi" v="Singapore"/>
+  <tag k="name:fo" v="Singapor"/>
+  <tag k="name:fr" v="Singapour"/>
+  <tag k="name:frp" v="Singapor"/>
+  <tag k="name:fy" v="Singapoer"/>
+  <tag k="name:ga" v="Singeapór"/>
+  <tag k="name:gag" v="Singapur"/>
+  <tag k="name:gan" v="新加坡"/>
+  <tag k="name:gd" v="Siongapòr"/>
+  <tag k="name:gl" v="Singapur"/>
+  <tag k="name:gu" v="સિંગાપુર"/>
+  <tag k="name:gv" v="Singapore"/>
+  <tag k="name:ha" v="Singapur"/>
+  <tag k="name:hak" v="Sîn-kâ-po"/>
+  <tag k="name:haw" v="Sinapoa"/>
+  <tag k="name:he" v="סינגפור"/>
+  <tag k="name:hi" v="सिंगापुर"/>
+  <tag k="name:hif" v="Singapore"/>
+  <tag k="name:hr" v="Singapur"/>
+  <tag k="name:ht" v="Sengapou"/>
+  <tag k="name:hu" v="Szingapúr"/>
+  <tag k="name:hy" v="Սինգապուր"/>
+  <tag k="name:ia" v="Singapur"/>
+  <tag k="name:id" v="Singapura"/>
+  <tag k="name:ie" v="Singapor"/>
+  <tag k="name:ilo" v="Singapur"/>
+  <tag k="name:io" v="Singapur"/>
+  <tag k="name:is" v="Singapúr"/>
+  <tag k="name:it" v="Singapore"/>
+  <tag k="name:ja" v="シンガポール"/>
+  <tag k="name:jbo" v="singapura"/>
+  <tag k="name:jv" v="Singapura"/>
+  <tag k="name:ka" v="სინგაპური"/>
+  <tag k="name:kab" v="Singafur"/>
+  <tag k="name:ki" v="Singapoo"/>
+  <tag k="name:kk" v="Сингапур"/>
+  <tag k="name:kk-Arab" v="سىينگاپۋر"/>
+  <tag k="name:kl" v="Singapore"/>
+  <tag k="name:km" v="សិង្ហបុរី"/>
+  <tag k="name:kn" v="ಸಿಂಗಪುರ"/>
+  <tag k="name:ko" v="싱가포르"/>
+  <tag k="name:ks" v="ٛسِنٛگاپوٗر"/>
+  <tag k="name:ksh" v="Singjapuur"/>
+  <tag k="name:ku" v="Singapûr"/>
+  <tag k="name:kv" v="Сингапур"/>
+  <tag k="name:kw" v="Singapor"/>
+  <tag k="name:ky" v="Сингапур"/>
+  <tag k="name:la" v="Singapura"/>
+  <tag k="name:lb" v="Singapur"/>
+  <tag k="name:lez" v="Сингапур"/>
+  <tag k="name:lfn" v="Singapor"/>
+  <tag k="name:lg" v="Singapowa"/>
+  <tag k="name:li" v="Singapore"/>
+  <tag k="name:lij" v="Scingapô"/>
+  <tag k="name:lmo" v="Singapur"/>
+  <tag k="name:ln" v="Singapurɛ"/>
+  <tag k="name:lo" v="ສິງກະໂປ"/>
+  <tag k="name:lt" v="Singapūras"/>
+  <tag k="name:lv" v="Singapūra"/>
+  <tag k="name:lzh" v="新加坡"/>
+  <tag k="name:map-bms" v="Singapura"/>
+  <tag k="name:mg" v="Singaporo"/>
+  <tag k="name:mhr" v="Сингапур"/>
+  <tag k="name:mi" v="Hingapoa"/>
+  <tag k="name:min" v="Singapura"/>
+  <tag k="name:mk" v="Сингапур"/>
+  <tag k="name:ml" v="സിംഗപ്പുർ"/>
+  <tag k="name:mn" v="Сингапур"/>
+  <tag k="name:mr" v="सिंगापूर"/>
+  <tag k="name:ms" v="Singapura"/>
+  <tag k="name:mt" v="Singapor"/>
+  <tag k="name:my" v="စင်္ကာပူ"/>
+  <tag k="name:mzn" v="سنگاپور(شهر)"/>
+  <tag k="name:na" v="Tsingapoar"/>
+  <tag k="name:nah" v="Singapur"/>
+  <tag k="name:nan" v="Sin-ka-pho"/>
+  <tag k="name:nan-Hant" v="新加坡"/>
+  <tag k="name:nan-Latn-pehoeji" v="Sin-ka-pho"/>
+  <tag k="name:nan-Latn-tailo" v="Sin-ka-pho"/>
+  <tag k="name:nds" v="Singapur"/>
+  <tag k="name:ne" v="सिङ्गापुर"/>
+  <tag k="name:nl" v="Singapore"/>
+  <tag k="name:nn" v="Singapore"/>
+  <tag k="name:no" v="Singapore"/>
+  <tag k="name:nov" v="Singapore"/>
+  <tag k="name:nv" v="Táłkááʼ Yadaazʼáhí"/>
+  <tag k="name:oc" v="Singapor"/>
+  <tag k="name:or" v="ସିଙ୍ଗାପୁର୍"/>
+  <tag k="name:os" v="Сингапур"/>
+  <tag k="name:pa" v="ਸਿੰਘਾਪੁਰ"/>
+  <tag k="name:pam" v="Singapur"/>
+  <tag k="name:pih" v="Singapur"/>
+  <tag k="name:pl" v="Singapur"/>
+  <tag k="name:pms" v="Singapor"/>
+  <tag k="name:pnb" v="سنگاپور"/>
+  <tag k="name:ps" v="سينګاپور"/>
+  <tag k="name:pt" v="Singapura"/>
+  <tag k="name:qu" v="Singapur"/>
+  <tag k="name:rm" v="Singapur"/>
+  <tag k="name:rn" v="Singapuru"/>
+  <tag k="name:ro" v="Singapore"/>
+  <tag k="name:roa-rup" v="Singapore"/>
+  <tag k="name:roa-tara" v="Singapore"/>
+  <tag k="name:ru" v="Сингапур"/>
+  <tag k="name:rue" v="Сінґапур"/>
+  <tag k="name:rw" v="Singapore"/>
+  <tag k="name:sa" v="सिङ्गापुरम्"/>
+  <tag k="name:sah" v="Сингапур"/>
+  <tag k="name:scn" v="Singapura"/>
+  <tag k="name:sco" v="Singapore"/>
+  <tag k="name:se" v="Singapore"/>
+  <tag k="name:sg" v="Sïngäpûru"/>
+  <tag k="name:sh" v="Singapur"/>
+  <tag k="name:si" v="සිංගප්පූරුව"/>
+  <tag k="name:sk" v="Singapur"/>
+  <tag k="name:sl" v="Singapur"/>
+  <tag k="name:sm" v="Sigapoa"/>
+  <tag k="name:smn" v="Singapore"/>
+  <tag k="name:sms" v="Singapore"/>
+  <tag k="name:so" v="Singaboor"/>
+  <tag k="name:sq" v="Singapor"/>
+  <tag k="name:sr" v="Сингапур"/>
+  <tag k="name:ss" v="ISingapholo"/>
+  <tag k="name:su" v="Singapura"/>
+  <tag k="name:sv" v="Singapore"/>
+  <tag k="name:sw" v="Singapoo"/>
+  <tag k="name:szl" v="Singapur"/>
+  <tag k="name:ta" v="சிங்கப்பூர்"/>
+  <tag k="name:te" v="సింగపూర్"/>
+  <tag k="name:tg" v="Сингапур"/>
+  <tag k="name:th" v="สิงคโปร์"/>
+  <tag k="name:ti" v="ሲንጋፖር"/>
+  <tag k="name:tk" v="Singapur"/>
+  <tag k="name:tl" v="Singapore"/>
+  <tag k="name:to" v="Singapoa"/>
+  <tag k="name:tr" v="Singapur"/>
+  <tag k="name:tt" v="Сингапур"/>
+  <tag k="name:udm" v="Сингапур"/>
+  <tag k="name:ug" v="سىنگاپور"/>
+  <tag k="name:uk" v="Сінгапур"/>
+  <tag k="name:ur" v="سنگاپور"/>
+  <tag k="name:uz" v="Singapur"/>
+  <tag k="name:vec" v="Singapore"/>
+  <tag k="name:vep" v="Singapur"/>
+  <tag k="name:vi" v="Tân Gia Ba"/>
+  <tag k="name:vls" v="Singapore"/>
+  <tag k="name:vo" v="Singapurän"/>
+  <tag k="name:vro" v="Singapur"/>
+  <tag k="name:war" v="Singgapura"/>
+  <tag k="name:wo" v="Singapoor"/>
+  <tag k="name:wuu" v="新加坡"/>
+  <tag k="name:xal" v="Сингапурмудин Орн"/>
+  <tag k="name:yi" v="סינגאפור"/>
+  <tag k="name:yo" v="Orílẹ́ède Singapo"/>
+  <tag k="name:yue" v="星架坡"/>
+  <tag k="name:zh" v="新加坡"/>
+  <tag k="name:zh-Hans" v="新加坡"/>
+  <tag k="name:zh-Hant" v="新加坡"/>
+  <tag k="name:zh-Latn-pinyin" v="Xīnjiāpō"/>
+  <tag k="name:zu" v="i-Singapore"/>
+  <tag k="official_name" v="Republic of Singapore"/>
+  <tag k="official_name:ar" v="جمهورية سنغافورة"/>
+  <tag k="official_name:be" v="Рэспубліка Сінгапур"/>
+  <tag k="official_name:br" v="Republik Singapour"/>
+  <tag k="official_name:cs" v="Singapurská republika"/>
+  <tag k="official_name:de" v="Republik Singapur"/>
+  <tag k="official_name:el" v="Δημοκρατία της Σιγκαπούρης"/>
+  <tag k="official_name:en" v="Republic of Singapore"/>
+  <tag k="official_name:eo" v="Respubliko de Singapuro"/>
+  <tag k="official_name:et" v="Singapuri Vabariik"/>
+  <tag k="official_name:eu" v="Singapurko Errepublika"/>
+  <tag k="official_name:fr" v="République de Singapour"/>
+  <tag k="official_name:id" v="Republik Singapura"/>
+  <tag k="official_name:it" v="Repubblica di Singapore"/>
+  <tag k="official_name:lb" v="Republik Singapur"/>
+  <tag k="official_name:lt" v="Singapūro Respublika"/>
+  <tag k="official_name:no" v="Republikken Singapore"/>
+  <tag k="official_name:pl" v="Republika Singapuru"/>
+  <tag k="official_name:ru" v="Республика Сингапур"/>
+  <tag k="official_name:sv" v="Republiken Singapore"/>
+  <tag k="official_name:tl" v="Republika ng Singapore"/>
+  <tag k="official_name:ur" v="جمہوریہ سنگاپور"/>
+  <tag k="official_name:vi" v="Cộng hòa Singapore"/>
+  <tag k="official_name:vls" v="Republiek Singapore"/>
+  <tag k="old_name:vi" v="Chiêu Nam"/>
+  <tag k="place" v="country"/>
+  <tag k="population" v="4839400"/>
+  <tag k="source:sqkm" v="CIA World Factbook"/>
+  <tag k="sqkm" v="697"/>
+  <tag k="wikidata" v="Q334"/>
+  <tag k="wikipedia" v="en:Singapore"/>
+ </node>
+ <node id="531668011" visible="true" version="44" changeset="190480454" timestamp="2026-10-14T01:12:39Z" user="L Leung" uid="24636355" lat="1.2899175" lon="103.8519072">
+  <tag k="admin_level" v="2"/>
+  <tag k="capital" v="yes"/>
+  <tag k="name" v="Singapore"/>
+  <tag k="name:ace" v="Singapura"/>
+  <tag k="name:af" v="Singapoer"/>
+  <tag k="name:am" v="ሲንጋፖር"/>
+  <tag k="name:an" v="Singapur"/>
+  <tag k="name:ar" v="سنغافورة"/>
+  <tag k="name:arz" v="سينجابوره"/>
+  <tag k="name:as" v="ছিংগাপুৰ"/>
+  <tag k="name:av" v="Сингапур"/>
+  <tag k="name:az" v="Sinqapur"/>
+  <tag k="name:az-Arab" v="سنقاپور"/>
+  <tag k="name:azb" v="سنقاپور"/>
+  <tag k="name:ba" v="Сингапур"/>
+  <tag k="name:bat-smg" v="Singapūrs"/>
+  <tag k="name:bcl" v="Singapore"/>
+  <tag k="name:be" v="Сінгапур"/>
+  <tag k="name:be-tarask" v="Сынгапур"/>
+  <tag k="name:bg" v="Сингапур"/>
+  <tag k="name:bh" v="सिंगापुर"/>
+  <tag k="name:bi" v="Singapore"/>
+  <tag k="name:bjn" v="Singapura"/>
+  <tag k="name:bn" v="সিঙ্গাপুর"/>
+  <tag k="name:bo" v="སེང་ག་ཕོར།"/>
+  <tag k="name:bpy" v="সিঙ্গাপুর"/>
+  <tag k="name:br" v="Singapoura"/>
+  <tag k="name:bs" v="Singapur"/>
+  <tag k="name:bug" v="Singapura"/>
+  <tag k="name:bxr" v="Сингапур"/>
+  <tag k="name:ca" v="Singapur"/>
+  <tag k="name:cdo" v="Sĭng-gă-pŏ̤"/>
+  <tag k="name:ce" v="Сингапур"/>
+  <tag k="name:ceb" v="Singgapura"/>
+  <tag k="name:ckb" v="سینگاپور"/>
+  <tag k="name:cs" v="Singapur"/>
+  <tag k="name:csb" v="Singapùr"/>
+  <tag k="name:cv" v="Сингапур"/>
+  <tag k="name:cy" v="Singapore"/>
+  <tag k="name:da" v="Singapore"/>
+  <tag k="name:de" v="Singapur"/>
+  <tag k="name:dv" v="ސިންގަޕޫރު"/>
+  <tag k="name:dz" v="སིངྒ་པུར།"/>
+  <tag k="name:el" v="Σιγκαπούρη"/>
+  <tag k="name:en" v="Singapore"/>
+  <tag k="name:eo" v="Singapuro"/>
+  <tag k="name:es" v="Singapur"/>
+  <tag k="name:et" v="Singapur"/>
+  <tag k="name:eu" v="Singapur"/>
+  <tag k="name:ext" v="Singapul"/>
+  <tag k="name:fa" v="سنگاپور"/>
+  <tag k="name:ff" v="Sinngapuur"/>
+  <tag k="name:fi" v="Singapore"/>
+  <tag k="name:fo" v="Singapor"/>
+  <tag k="name:fr" v="Singapour"/>
+  <tag k="name:frp" v="Singapor"/>
+  <tag k="name:fy" v="Singapore"/>
+  <tag k="name:ga" v="Singeapór"/>
+  <tag k="name:gan" v="新加坡"/>
+  <tag k="name:gd" v="Singeapòr"/>
+  <tag k="name:gl" v="Singapur"/>
+  <tag k="name:gn" v="Singapúra"/>
+  <tag k="name:gu" v="સિંગાપુર"/>
+  <tag k="name:gv" v="Singapore"/>
+  <tag k="name:ha" v="Singapore"/>
+  <tag k="name:hak" v="Sîn-kâ-po"/>
+  <tag k="name:haw" v="Sinapoa"/>
+  <tag k="name:he" v="סינגפור"/>
+  <tag k="name:hi" v="सिंगापुर"/>
+  <tag k="name:hif" v="Singapore"/>
+  <tag k="name:hr" v="Singapur"/>
+  <tag k="name:ht" v="Sengapou"/>
+  <tag k="name:hu" v="Szingapúr"/>
+  <tag k="name:hy" v="Սինգապուրի Հանրապետություն"/>
+  <tag k="name:ia" v="Singapur"/>
+  <tag k="name:id" v="Singapura"/>
+  <tag k="name:ie" v="Singapor"/>
+  <tag k="name:ik" v="Siŋapura"/>
+  <tag k="name:io" v="Singapur"/>
+  <tag k="name:is" v="Singapúr"/>
+  <tag k="name:it" v="Singapore"/>
+  <tag k="name:ja" v="シンガポール"/>
+  <tag k="name:jbo" v="singapura"/>
+  <tag k="name:jv" v="Singapura"/>
+  <tag k="name:ka" v="სინგაპური"/>
+  <tag k="name:ki" v="Singapore"/>
+  <tag k="name:kk" v="Сингапур"/>
+  <tag k="name:kk-Arab" v="سىينگاپۋر"/>
+  <tag k="name:kl" v="Singapore"/>
+  <tag k="name:km" v="សិង្ហបុរី"/>
+  <tag k="name:kn" v="ಸಿಂಗಾಪುರ"/>
+  <tag k="name:ko" v="싱가포르"/>
+  <tag k="name:ks" v="سِنٛگاپور"/>
+  <tag k="name:ku" v="Singapûr"/>
+  <tag k="name:kv" v="Сингапур"/>
+  <tag k="name:kw" v="Singapour"/>
+  <tag k="name:ky" v="Сингапур"/>
+  <tag k="name:la" v="Singapura"/>
+  <tag k="name:lb" v="Singapur"/>
+  <tag k="name:lez" v="Сингапур"/>
+  <tag k="name:li" v="Singapore"/>
+  <tag k="name:lij" v="Scingapô"/>
+  <tag k="name:ln" v="Singapur"/>
+  <tag k="name:lo" v="ປະເທດສິງກະໂປ"/>
+  <tag k="name:lt" v="Singapūras"/>
+  <tag k="name:lv" v="Singapūra"/>
+  <tag k="name:map-bms" v="Singapura"/>
+  <tag k="name:mg" v="Singapaoro"/>
+  <tag k="name:mhr" v="Сингапур"/>
+  <tag k="name:mi" v="Hingapoa"/>
+  <tag k="name:mk" v="Сингапур"/>
+  <tag k="name:ml" v="സിംഗപ്പൂർ"/>
+  <tag k="name:mn" v="Сингапур"/>
+  <tag k="name:mr" v="सिंगापूर"/>
+  <tag k="name:ms" v="Singapura"/>
+  <tag k="name:mt" v="Singapor"/>
+  <tag k="name:my" v="စင်ကာပူနိုင်ငံ"/>
+  <tag k="name:mzn" v="سنگاپور"/>
+  <tag k="name:na" v="Tsingapoar"/>
+  <tag k="name:nan" v="Sin-ka-pho"/>
+  <tag k="name:nan-Hant" v="新加坡"/>
+  <tag k="name:nan-Latn-pehoeji" v="Sin-ka-pho"/>
+  <tag k="name:nan-Latn-tailo" v="Sin-ka-pho"/>
+  <tag k="name:ne" v="सिंगापुर"/>
+  <tag k="name:nl" v="Singapore"/>
+  <tag k="name:nn" v="Singapore"/>
+  <tag k="name:no" v="Singapore"/>
+  <tag k="name:nov" v="Singapore"/>
+  <tag k="name:nv" v="Táłkááʼ Yadaazʼáhí"/>
+  <tag k="name:oc" v="Singapor"/>
+  <tag k="name:om" v="Singaappoor"/>
+  <tag k="name:or" v="ସିଙ୍ଗାପୁର"/>
+  <tag k="name:os" v="Сингапур"/>
+  <tag k="name:pa" v="ਸਿੰਗਾਪੁਰ"/>
+  <tag k="name:pam" v="Singapore"/>
+  <tag k="name:pl" v="Singapur"/>
+  <tag k="name:pms" v="Singapor"/>
+  <tag k="name:pnb" v="سنگاپور"/>
+  <tag k="name:ps" v="سينګاپور"/>
+  <tag k="name:pt" v="Singapura"/>
+  <tag k="name:qu" v="Sinqapur"/>
+  <tag k="name:ro" v="Singapore"/>
+  <tag k="name:roa-rup" v="Singapore"/>
+  <tag k="name:roa-tara" v="Singapore"/>
+  <tag k="name:ru" v="Сингапур"/>
+  <tag k="name:rue" v="Сінґапур"/>
+  <tag k="name:rw" v="Singapore"/>
+  <tag k="name:sa" v="सिङ्गापुर"/>
+  <tag k="name:sah" v="Сингапур"/>
+  <tag k="name:scn" v="Singapura"/>
+  <tag k="name:sco" v="Singapore"/>
+  <tag k="name:sd" v="سينگاپور"/>
+  <tag k="name:se" v="Singapore"/>
+  <tag k="name:sg" v="Sïngäpûru"/>
+  <tag k="name:si" v="සිංගප්පූරුව"/>
+  <tag k="name:sk" v="Singapur"/>
+  <tag k="name:sl" v="Singapur"/>
+  <tag k="name:sm" v="Sigapoa"/>
+  <tag k="name:so" v="Singabuur"/>
+  <tag k="name:sq" v="Singapori"/>
+  <tag k="name:sr" v="Сингапур"/>
+  <tag k="name:ss" v="ISingapholo"/>
+  <tag k="name:su" v="Singapura"/>
+  <tag k="name:sv" v="Singapore"/>
+  <tag k="name:sw" v="Singapuri"/>
+  <tag k="name:ta" v="சிங்கப்பூர்"/>
+  <tag k="name:te" v="సింగపూరు"/>
+  <tag k="name:tg" v="Сингапур"/>
+  <tag k="name:th" v="สิงคโปร์"/>
+  <tag k="name:tk" v="Singapur"/>
+  <tag k="name:tl" v="Singgapur"/>
+  <tag k="name:to" v="Singapoa"/>
+  <tag k="name:tr" v="Singapur"/>
+  <tag k="name:tt" v="Сингапур"/>
+  <tag k="name:tzl" v="Singapura"/>
+  <tag k="name:udm" v="Сингапур"/>
+  <tag k="name:ug" v="سىنگاپور"/>
+  <tag k="name:uk" v="Сінгапур"/>
+  <tag k="name:ur" v="سنگاپور"/>
+  <tag k="name:uz" v="Singapur"/>
+  <tag k="name:vec" v="Singapore"/>
+  <tag k="name:vi" v="Tân Gia Ba"/>
+  <tag k="name:vls" v="Singapore"/>
+  <tag k="name:vo" v="Singapurän"/>
+  <tag k="name:war" v="Singgapura"/>
+  <tag k="name:wo" v="Singapoor"/>
+  <tag k="name:wuu" v="新加坡"/>
+  <tag k="name:xal" v="Сингапурмудин Орн"/>
+  <tag k="name:yi" v="סינגאפור"/>
+  <tag k="name:yo" v="Singapore"/>
+  <tag k="name:yue" v="星架坡"/>
+  <tag k="name:za" v="Sinhgyahboh"/>
+  <tag k="name:zh" v="新加坡"/>
+  <tag k="name:zh-Hans" v="新加坡"/>
+  <tag k="name:zh-Hant" v="新加坡"/>
+  <tag k="name:zh-Latn-pinyin" v="Xīnjiāpō"/>
+  <tag k="place" v="city"/>
+  <tag k="population" v="5535002"/>
+  <tag k="rank" v="0"/>
+  <tag k="source" v="Population from Singapore Statistic Department"/>
+  <tag k="wikidata" v="Q334"/>
+  <tag k="wikipedia" v="en:Singapore"/>
+ </node>
+ <node id="1836120943" visible="true" version="4" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.3872120" lon="103.6519637">
+  <tag k="ref" v="W16"/>
+ </node>
+ <node id="1836120944" visible="true" version="3" changeset="29553714" timestamp="2015-03-18T00:08:43Z" user="4rch" uid="1772211" lat="1.3912778" lon="103.6535000">
+  <tag k="ref" v="W15"/>
+ </node>
+ <node id="1836120946" visible="true" version="4" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4005454" lon="103.6565444">
+  <tag k="ref" v="W14"/>
+ </node>
+ <node id="1836120949" visible="true" version="4" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4105795" lon="103.6632944">
+  <tag k="ref" v="W13"/>
+ </node>
+ <node id="1836120956" visible="true" version="4" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4161361" lon="103.6683501">
+  <tag k="ref" v="W12"/>
+ </node>
+ <node id="1836120971" visible="true" version="4" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4283963" lon="103.6729018">
+  <tag k="ref" v="W11"/>
+ </node>
+ <node id="1836120972" visible="true" version="4" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4374002" lon="103.6820888">
+  <tag k="ref" v="W10"/>
+ </node>
+ <node id="1836120974" visible="true" version="5" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4409744" lon="103.6922336">
+  <tag k="ref" v="W9"/>
+ </node>
+ <node id="1836120975" visible="true" version="5" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4440633" lon="103.6970401">
+  <tag k="ref" v="W8"/>
+ </node>
+ <node id="1836120976" visible="true" version="7" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4545963" lon="103.7394872">
+  <tag k="ref" v="W3"/>
+ </node>
+ <node id="1836120978" visible="true" version="7" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4551668" lon="103.7389366">
+  <tag k="ref" v="W4"/>
+ </node>
+ <node id="1836120981" visible="true" version="4" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4508851" lon="103.7034281">
+  <tag k="ref" v="W7"/>
+ </node>
+ <node id="1836120985" visible="true" version="5" changeset="107659278" timestamp="2021-07-08T20:20:29Z" user="Laveure" uid="10458379" lat="1.4599673" lon="103.7283333">
+  <tag k="ref" v="W5"/>
+ </node>
+ <node id="1836120988" visible="true" version="4" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4579441" lon="103.7138107">
+  <tag k="ref" v="W6"/>
+ </node>
+ <node id="1879216355" visible="true" version="12" changeset="182161750" timestamp="2026-05-03T14:05:20Z" user="FajrAl" uid="2649988" lat="1.1303611" lon="103.7406944"/>
+ <node id="1879216356" visible="true" version="9" changeset="182161750" timestamp="2026-05-03T14:05:20Z" user="FajrAl" uid="2649988" lat="1.1714444" lon="103.8050000"/>
+ <node id="1879216357" visible="true" version="13" changeset="183811855" timestamp="2026-06-08T06:52:17Z" user="FajrAl" uid="2649988" lat="1.1794444" lon="103.6707222"/>
+ <node id="1879216359" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.1959722" lon="103.8598333"/>
+ <node id="1925161368" visible="true" version="4" changeset="170634041" timestamp="2025-08-18T18:07:07Z" user="Laveure" uid="10458379" lat="1.2804432" lon="103.6016091"/>
+ <node id="1925161384" visible="true" version="3" changeset="132884946" timestamp="2023-02-22T14:30:53Z" user="Laveure" uid="10458379" lat="1.2828957" lon="103.6033258"/>
+ <node id="1925161420" visible="true" version="2" changeset="114534661" timestamp="2021-12-03T19:31:43Z" user="Laveure" uid="10458379" lat="1.2929567" lon="103.6067734"/>
+ <node id="1925161447" visible="true" version="2" changeset="114534661" timestamp="2021-12-03T19:31:43Z" user="Laveure" uid="10458379" lat="1.3008003" lon="103.6094227"/>
+ <node id="1925161516" visible="true" version="2" changeset="114534661" timestamp="2021-12-03T19:31:43Z" user="Laveure" uid="10458379" lat="1.3059031" lon="103.6111462"/>
+ <node id="1925161547" visible="true" version="2" changeset="114534661" timestamp="2021-12-03T19:31:43Z" user="Laveure" uid="10458379" lat="1.3090707" lon="103.6122161"/>
+ <node id="1925161613" visible="true" version="3" changeset="170634041" timestamp="2025-08-18T18:07:07Z" user="Laveure" uid="10458379" lat="1.3135668" lon="103.6135445"/>
+ <node id="1925161641" visible="true" version="5" changeset="170634041" timestamp="2025-08-18T18:07:07Z" user="Laveure" uid="10458379" lat="1.3167548" lon="103.6146270">
+  <tag k="ref" v="W23"/>
+ </node>
+ <node id="2872713245" visible="true" version="8" changeset="179892022" timestamp="2026-03-15T10:53:42Z" user="Taya_S" uid="15944521" lat="1.4488536" lon="103.7604043">
+  <tag k="ref" v="W1"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="2872713246" visible="true" version="6" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4538716" lon="103.7400951">
+  <tag k="ref" v="W2"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="2872818800" visible="true" version="4" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.3801078" lon="103.6484186">
+  <tag k="ref" v="W17"/>
+ </node>
+ <node id="2872820101" visible="true" version="3" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.3631867" lon="103.6397302">
+  <tag k="ref" v="W18"/>
+ </node>
+ <node id="2872820104" visible="true" version="4" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.3442879" lon="103.6295657">
+  <tag k="ref" v="W21"/>
+ </node>
+ <node id="2872820105" visible="true" version="4" changeset="114534661" timestamp="2021-12-03T19:31:43Z" user="Laveure" uid="10458379" lat="1.3215682" lon="103.6164063">
+  <tag k="ref" v="W22"/>
+ </node>
+ <node id="2872820106" visible="true" version="5" changeset="170634041" timestamp="2025-08-18T18:07:07Z" user="Laveure" uid="10458379" lat="1.3145919" lon="103.6138680">
+  <tag k="ref" v="W24"/>
+ </node>
+ <node id="2872820107" visible="true" version="6" changeset="170634041" timestamp="2025-08-18T18:07:07Z" user="Laveure" uid="10458379" lat="1.2693120" lon="103.5856950">
+  <tag k="ref" v="W25"/>
+ </node>
+ <node id="2922323909" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4454088" lon="103.8778899"/>
+ <node id="3404763110" visible="true" version="21" changeset="185370521" timestamp="2026-07-08T21:24:43Z" user="Laveure" uid="10458379" lat="1.1873193" lon="103.6602652"/>
+ <node id="3404763146" visible="true" version="5" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.3468930" lon="104.0864243">
+  <tag k="ref" v="E46"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763149" visible="true" version="6" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.3576073" lon="104.0814389">
+  <tag k="ref" v="E45"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763150" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.3686427" lon="104.0838408">
+  <tag k="ref" v="E44"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763151" visible="true" version="2" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.3845657" lon="104.0900491">
+  <tag k="ref" v="E43"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763152" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.3940140" lon="104.0931803">
+  <tag k="ref" v="E42"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763154" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.3998700" lon="104.0936715">
+  <tag k="ref" v="E41"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763155" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4060731" lon="104.0931817">
+  <tag k="ref" v="E40"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763158" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4126160" lon="104.0915225">
+  <tag k="ref" v="E39"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763159" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4156502" lon="104.0902119">
+  <tag k="ref" v="E38"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763160" visible="true" version="5" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4177335" lon="104.0892266">
+  <tag k="ref" v="E37"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763161" visible="true" version="6" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4276959" lon="103.9998864">
+  <tag k="ref" v="E31"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763162" visible="true" version="2" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4224807" lon="103.9724811">
+  <tag k="ref" v="E24"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763163" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4221667" lon="103.9668056">
+  <tag k="ref" v="E23"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763164" visible="true" version="2" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4256035" lon="103.9950354">
+  <tag k="ref" v="E30"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763165" visible="true" version="2" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4247283" lon="103.9835404">
+  <tag k="ref" v="E26"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763166" visible="true" version="1" changeset="29553622" timestamp="2015-03-17T23:58:07Z" user="4rch" uid="1772211" lat="1.4244167" lon="103.9575556">
+  <tag k="ref" v="E21"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763167" visible="true" version="1" changeset="29553622" timestamp="2015-03-17T23:58:07Z" user="4rch" uid="1772211" lat="1.4244167" lon="103.9799167">
+  <tag k="ref" v="E25"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763168" visible="true" version="2" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4243639" lon="103.9606667">
+  <tag k="ref" v="E22"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763169" visible="true" version="2" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.4249494" lon="103.9891136">
+  <tag k="ref" v="E28"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763170" visible="true" version="1" changeset="29553622" timestamp="2015-03-17T23:58:07Z" user="4rch" uid="1772211" lat="1.4249167" lon="103.9861667">
+  <tag k="ref" v="E27"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763171" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4250000" lon="103.9929167">
+  <tag k="ref" v="E29"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763172" visible="true" version="1" changeset="29553622" timestamp="2015-03-17T23:58:07Z" user="4rch" uid="1772211" lat="1.4253611" lon="103.9525278">
+  <tag k="ref" v="E20"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763173" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4273531" lon="103.9168333">
+  <tag k="ref" v="E15"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763174" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4274486" lon="103.9200435"/>
+ <node id="3404763175" visible="true" version="1" changeset="29553622" timestamp="2015-03-17T23:58:07Z" user="4rch" uid="1772211" lat="1.4275278" lon="103.9127500">
+  <tag k="ref" v="E14"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763176" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4278250" lon="103.9021275"/>
+ <node id="3404763177" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4278333" lon="103.9425278">
+  <tag k="ref" v="E19"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763178" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4284163" lon="103.8982473">
+  <tag k="ref" v="E13"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763179" visible="true" version="1" changeset="29553622" timestamp="2015-03-17T23:58:07Z" user="4rch" uid="1772211" lat="1.4282500" lon="103.9233333">
+  <tag k="ref" v="E16"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763180" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4304167" lon="103.9334167">
+  <tag k="ref" v="E17"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763181" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4304722" lon="103.9376944">
+  <tag k="ref" v="E18"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763182" visible="true" version="5" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4313394" lon="104.0776756">
+  <tag k="ref" v="E36"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763183" visible="true" version="5" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4355694" lon="104.0713923">
+  <tag k="ref" v="E35"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763184" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4351389" lon="103.8861389">
+  <tag k="ref" v="E12"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763185" visible="true" version="6" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4421652" lon="104.0221913">
+  <tag k="ref" v="E32"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763186" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4402268" lon="104.0576472">
+  <tag k="ref" v="E34"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763187" visible="true" version="6" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4465999" lon="104.0406831">
+  <tag k="ref" v="E33"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763188" visible="true" version="1" changeset="29553622" timestamp="2015-03-17T23:58:08Z" user="4rch" uid="1772211" lat="1.4489722" lon="103.8750278">
+  <tag k="ref" v="E11"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763190" visible="true" version="6" changeset="179892022" timestamp="2026-03-15T10:53:42Z" user="Taya_S" uid="15944521" lat="1.4534428" lon="103.7709394">
+  <tag k="ref" v="E1"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763191" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4565278" lon="103.8681667">
+  <tag k="ref" v="E10"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763192" visible="true" version="1" changeset="29553622" timestamp="2015-03-17T23:58:08Z" user="4rch" uid="1772211" lat="1.4588611" lon="103.8649722">
+  <tag k="ref" v="E9"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763693" visible="true" version="1" changeset="29553622" timestamp="2015-03-17T23:58:08Z" user="4rch" uid="1772211" lat="1.4629444" lon="103.8586667">
+  <tag k="ref" v="E8"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763696" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4661667" lon="103.8520000">
+  <tag k="ref" v="E7"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763697" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4730000" lon="103.8341667">
+  <tag k="ref" v="E6"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763699" visible="true" version="7" changeset="181214050" timestamp="2026-04-12T04:44:21Z" user="Laveure" uid="10458379" lat="1.4770312" lon="103.8033899">
+  <tag k="ref" v="E3"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763700" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4766944" lon="103.8221667">
+  <tag k="ref" v="E5"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="3404763701" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4787511" lon="103.8126238">
+  <tag k="ref" v="E4"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </node>
+ <node id="5097279853" visible="true" version="7" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4525798" lon="103.7691160">
+  <tag k="boundary" v="country_border"/>
+  <tag k="information" v="board"/>
+  <tag k="name" v="Woodlands (SGP) - Johor Bahru (MAL)"/>
+  <tag k="name:en" v="Woodlands (SGP) - Johor Bahru (MAL)"/>
+  <tag k="name:ms" v="Woodlands (SGP) - Johor Bahru (MAL)"/>
+  <tag k="tourism" v="information"/>
+ </node>
+ <node id="5097279854" visible="true" version="4" changeset="148252396" timestamp="2024-03-05T14:08:56Z" user="cnvery" uid="3627342" lat="1.4526275" lon="103.7692542">
+  <tag k="boundary" v="country_border"/>
+  <tag k="information" v="board"/>
+  <tag k="name" v="Johor Bahru (MAL) - Woodlands (SGP)"/>
+  <tag k="name:en" v="Johor Bahru (MAL) - Woodlands (SGP)"/>
+  <tag k="name:ms" v="Johor Bahru (MAL) - Woodlands (SGP)"/>
+  <tag k="tourism" v="information"/>
+ </node>
+ <node id="5097279856" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4525660" lon="103.7690553">
+  <tag k="boundary" v="country_border"/>
+  <tag k="name" v="Woodlands (SGP) - Johor Bahru (MAL)"/>
+ </node>
+ <node id="5097279857" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4526701" lon="103.7693966"/>
+ <node id="5097279858" visible="true" version="1" changeset="51931183" timestamp="2017-09-11T08:15:20Z" user="Jay May" uid="694371" lat="1.4525248" lon="103.7688817"/>
+ <node id="6387810536" visible="true" version="3" changeset="107362272" timestamp="2021-07-03T16:58:28Z" user="Laveure" uid="10458379" lat="1.3553195" lon="103.6351992">
+  <tag k="ref" v="W20"/>
+ </node>
+ <node id="6387810539" visible="true" version="4" changeset="132884946" timestamp="2023-02-22T14:30:53Z" user="Laveure" uid="10458379" lat="1.3380349" lon="103.6261594"/>
+ <node id="6402524810" visible="true" version="1" changeset="69181319" timestamp="2019-04-13T16:08:55Z" user="Lejojooo" uid="9584575" lat="1.3740192" lon="103.6462478"/>
+ <node id="6402524820" visible="true" version="3" changeset="114534661" timestamp="2021-12-03T19:31:43Z" user="Laveure" uid="10458379" lat="1.2864360" lon="103.6045709"/>
+ <node id="6815495504" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4525463" lon="103.7689724"/>
+ <node id="6970178344" visible="true" version="2" changeset="84089561" timestamp="2020-04-25T04:49:20Z" user="Retired Account" uid="741163" lat="1.3506631" lon="103.6332025">
+  <tag k="information" v="office"/>
+  <tag k="name" v="Tuas (SGP) - Tanjung Kupang (MAL)"/>
+  <tag k="tourism" v="information"/>
+ </node>
+ <node id="6970178345" visible="true" version="2" changeset="84089561" timestamp="2020-04-25T04:49:20Z" user="Retired Account" uid="741163" lat="1.3507535" lon="103.6332482">
+  <tag k="information" v="office"/>
+  <tag k="name" v="Tanjung Kupang (MAL) / Tuas (SGP)"/>
+  <tag k="tourism" v="information"/>
+ </node>
+ <node id="7443755973" visible="true" version="2" changeset="84089561" timestamp="2020-04-25T04:49:20Z" user="Retired Account" uid="741163" lat="1.3504685" lon="103.6331044"/>
+ <node id="7443755974" visible="true" version="2" changeset="84089561" timestamp="2020-04-25T04:49:20Z" user="Retired Account" uid="741163" lat="1.3508234" lon="103.6332834"/>
+ <node id="7445001170" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4651069" lon="103.8541927"/>
+ <node id="7990406418" visible="true" version="1" changeset="92200903" timestamp="2020-10-09T02:06:56Z" user="angys" uid="3191182" lat="1.4522383" lon="103.7428572"/>
+ <node id="7990406419" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.4510385" lon="103.7447632"/>
+ <node id="8647772472" visible="true" version="7" changeset="181214050" timestamp="2026-04-12T04:44:21Z" user="Laveure" uid="10458379" lat="1.4597707" lon="103.7804204"/>
+ <node id="9309285631" visible="true" version="2" changeset="170634041" timestamp="2025-08-18T18:07:07Z" user="Laveure" uid="10458379" lat="1.3179048" lon="103.6150063"/>
+ <node id="10680286235" visible="true" version="2" changeset="133310178" timestamp="2023-03-05T00:26:37Z" user="Laveure" uid="10458379" lat="1.3213718" lon="104.3459327"/>
+ <node id="10680286236" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.3484708" lon="104.3556855"/>
+ <node id="10680286237" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.3716245" lon="104.3638987"/>
+ <node id="10680286238" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.3747577" lon="104.3650038"/>
+ <node id="10680286239" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.3832773" lon="104.3679918"/>
+ <node id="10680286240" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.3833708" lon="104.3680246"/>
+ <node id="10680286241" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.3847107" lon="104.3687537"/>
+ <node id="10680286242" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.4017352" lon="104.3780629"/>
+ <node id="10680286243" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.4241048" lon="104.3901981"/>
+ <node id="10680286244" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.4329738" lon="104.3985073"/>
+ <node id="10680286245" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.4411079" lon="104.4061142"/>
+ <node id="10680286246" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.4551242" lon="104.4192387"/>
+ <node id="10680286247" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:21:55Z" user="hanzlan" uid="629849" lat="1.5001081" lon="104.4656395"/>
+ <node id="10680295468" visible="true" version="4" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.2636372" lon="103.5774028"/>
+ <node id="10680295487" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4628014" lon="104.5569115"/>
+ <node id="10680295543" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:07:15Z" user="FajrAl" uid="2649988" lat="1.4441580" lon="104.5699662"/>
+ <node id="10680295575" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4603966" lon="104.5589604"/>
+ <node id="10680295625" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4720868" lon="104.5483470"/>
+ <node id="10680295626" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.5016332" lon="104.5115089"/>
+ <node id="10680295642" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4869646" lon="104.5320233"/>
+ <node id="10680295690" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4529915" lon="104.5648778"/>
+ <node id="10680295723" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4651734" lon="104.5548251"/>
+ <node id="10680295727" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4786844" lon="104.5415514"/>
+ <node id="10680295750" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4808109" lon="104.5392183"/>
+ <node id="10680295791" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4504616" lon="104.5667722"/>
+ <node id="10680295828" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4999436" lon="104.5141714"/>
+ <node id="10680295876" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.5032804" lon="104.5088202"/>
+ <node id="10680295891" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4829001" lon="104.5368522"/>
+ <node id="10680295936" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4743218" lon="104.5461163"/>
+ <node id="10680295939" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4453132" lon="104.5704409"/>
+ <node id="10680295979" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4982119" lon="104.5168072"/>
+ <node id="10680296019" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4479019" lon="104.5686267"/>
+ <node id="10680296042" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4908740" lon="104.5270695"/>
+ <node id="10680296047" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4765212" lon="104.5438509"/>
+ <node id="10680296078" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4675120" lon="104.5527019"/>
+ <node id="10680296079" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.5135898" lon="104.4893247"/>
+ <node id="10680296109" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4946243" lon="104.5219958"/>
+ <node id="10680296128" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4698167" lon="104.5505424"/>
+ <node id="10680296194" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.4421489" lon="104.5278685"/>
+ <node id="10680296203" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:00Z" user="hanzlan" uid="629849" lat="1.4579596" lon="104.5609715"/>
+ <node id="10680296233" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.4927693" lon="104.5245474"/>
+ <node id="10680296291" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.5048848" lon="104.5061060"/>
+ <node id="10680296320" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.5079634" lon="104.5006040"/>
+ <node id="10680296362" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.5108660" lon="104.4950084"/>
+ <node id="10680296390" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.5143183" lon="104.4877070"/>
+ <node id="10680296531" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.5094369" lon="104.4978176"/>
+ <node id="10680296548" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.5064459" lon="104.5033671"/>
+ <node id="10680296571" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.4849515" lon="104.5344536"/>
+ <node id="10680296600" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.4964387" lon="104.5194156"/>
+ <node id="10680296639" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.4889389" lon="104.5295617"/>
+ <node id="10680296663" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.5122504" lon="104.4921772"/>
+ <node id="10680296777" visible="true" version="1" changeset="132783435" timestamp="2023-02-20T10:20:01Z" user="hanzlan" uid="629849" lat="1.4554910" lon="104.5629441"/>
+ <node id="10680297101" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3166493" lon="104.4092711"/>
+ <node id="10680297102" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3167670" lon="104.4103425"/>
+ <node id="10680297103" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3168688" lon="104.4062841"/>
+ <node id="10680297104" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3169998" lon="104.4051639"/>
+ <node id="10680297105" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3171070" lon="104.4112970"/>
+ <node id="10680297106" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3173175" lon="104.4042835"/>
+ <node id="10680297107" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3176025" lon="104.4120890"/>
+ <node id="10680297108" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3178206" lon="104.4034747"/>
+ <node id="10680297109" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3182306" lon="104.4127443"/>
+ <node id="10680297110" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3190020" lon="104.4132737"/>
+ <node id="10680297111" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3198000" lon="104.4136119"/>
+ <node id="10680297112" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3206120" lon="104.4137867"/>
+ <node id="10680297113" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3213711" lon="104.4138133"/>
+ <node id="10680297114" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3221823" lon="104.4136985"/>
+ <node id="10680297115" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3230115" lon="104.4134151"/>
+ <node id="10680297116" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3237378" lon="104.4129993"/>
+ <node id="10680297117" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3243943" lon="104.4124357"/>
+ <node id="10680297118" visible="true" version="2" changeset="175054892" timestamp="2025-11-24T08:15:12Z" user="FajrAl" uid="2649988" lat="1.3248152" lon="104.4119274"/>
+ <node id="10686033172" visible="true" version="1" changeset="132884946" timestamp="2023-02-22T14:30:53Z" user="Laveure" uid="10458379" lat="1.2830821" lon="103.6033913"/>
+ <node id="13327687568" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4441433" lon="104.5712337"/>
+ <node id="13327687569" visible="true" version="11" changeset="182161750" timestamp="2026-05-03T14:05:20Z" user="FajrAl" uid="2649988" lat="1.2726318" lon="104.1290145"/>
+ <node id="13327687570" visible="true" version="13" changeset="185370473" timestamp="2026-07-08T21:24:02Z" user="Laveure" uid="10458379" lat="1.2654096" lon="104.0259210"/>
+ <node id="13327687571" visible="true" version="6" changeset="181700777" timestamp="2026-04-23T05:55:50Z" user="Laveure" uid="10458379" lat="1.2210595" lon="103.9170735"/>
+ <node id="13327687572" visible="true" version="7" changeset="182161750" timestamp="2026-05-03T14:05:20Z" user="FajrAl" uid="2649988" lat="1.1809141" lon="103.8261698"/>
+ <node id="13327687573" visible="true" version="10" changeset="182161750" timestamp="2026-05-03T14:05:20Z" user="FajrAl" uid="2649988" lat="1.1956685" lon="103.5655797"/>
+ <node id="13327687580" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4441796" lon="104.5563469"/>
+ <node id="13327687581" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4441567" lon="104.5540505"/>
+ <node id="13327687582" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4440610" lon="104.5496130"/>
+ <node id="13327687583" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4438687" lon="104.5452174"/>
+ <node id="13327687584" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4435818" lon="104.5408672"/>
+ <node id="13327687585" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4431993" lon="104.5365243"/>
+ <node id="13327687586" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4427216" lon="104.5321907"/>
+ <node id="13327687587" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4414814" lon="104.5235598"/>
+ <node id="13327687588" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4411241" lon="104.5214097"/>
+ <node id="13327687589" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4405834" lon="104.5185988"/>
+ <node id="13327687590" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4394215" lon="104.5129950"/>
+ <node id="13327687591" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4388002" lon="104.5102014"/>
+ <node id="13327687592" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4378889" lon="104.5063665"/>
+ <node id="13327687594" visible="true" version="6" changeset="181700777" timestamp="2026-04-23T05:55:50Z" user="Laveure" uid="10458379" lat="1.2059736" lon="103.8817371"/>
+ <node id="13327687596" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4110870" lon="104.4804224"/>
+ <node id="13327687597" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3879383" lon="104.4653962"/>
+ <node id="13327687598" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3689872" lon="104.4514674"/>
+ <node id="13327687599" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3532767" lon="104.4384514"/>
+ <node id="13327687600" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3401164" lon="104.4261929"/>
+ <node id="13327692901" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3393199" lon="104.4254058"/>
+ <node id="13327692902" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3284095" lon="104.4140010"/>
+ <node id="13327692903" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988" lat="1.3256810" lon="104.4108014"/>
+ <node id="13327692904" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3186175" lon="104.4024464"/>
+ <node id="13327693076" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3012444" lon="104.3939354"/>
+ <node id="13327693077" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3010028" lon="104.3945280"/>
+ <node id="13327693078" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3006559" lon="104.3951145"/>
+ <node id="13327693079" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3001617" lon="104.3957064"/>
+ <node id="13327693080" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2996303" lon="104.3961643"/>
+ <node id="13327693081" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2988750" lon="104.3966124"/>
+ <node id="13327693082" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2979906" lon="104.3969189"/>
+ <node id="13327693083" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2973551" lon="104.3970200"/>
+ <node id="13327693084" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2966194" lon="104.3970232"/>
+ <node id="13327693085" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2958056" lon="104.3968841"/>
+ <node id="13327693086" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2951934" lon="104.3966721"/>
+ <node id="13327693087" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2946769" lon="104.3964100"/>
+ <node id="13327693088" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2942249" lon="104.3961042"/>
+ <node id="13327693089" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2937924" lon="104.3957253"/>
+ <node id="13327693090" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2933795" lon="104.3952523"/>
+ <node id="13327693091" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2931221" lon="104.3947561"/>
+ <node id="13327693092" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2928607" lon="104.3942450"/>
+ <node id="13327693093" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2926417" lon="104.3934081"/>
+ <node id="13327693094" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2925863" lon="104.3925615"/>
+ <node id="13327693095" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2926574" lon="104.3918852"/>
+ <node id="13327693096" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2928177" lon="104.3912624"/>
+ <node id="13327693097" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2930910" lon="104.3906184"/>
+ <node id="13327693098" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2934695" lon="104.3900127"/>
+ <node id="13327693099" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2939142" lon="104.3894990"/>
+ <node id="13327693100" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2944002" lon="104.3891228"/>
+ <node id="13327693101" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2949777" lon="104.3887163"/>
+ <node id="13327693102" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2958315" lon="104.3883708"/>
+ <node id="13327693103" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2963794" lon="104.3882484"/>
+ <node id="13327693104" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2973227" lon="104.3881992"/>
+ <node id="13327693105" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2980038" lon="104.3882879"/>
+ <node id="13327693106" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2987244" lon="104.3885026"/>
+ <node id="13327693107" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2992227" lon="104.3887336"/>
+ <node id="13327693108" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.2998886" lon="104.3891739"/>
+ <node id="13327693109" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3003394" lon="104.3895862"/>
+ <node id="13327693110" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3007084" lon="104.3900259"/>
+ <node id="13327693111" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3011757" lon="104.3909437"/>
+ <node id="13327693112" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3014363" lon="104.3920104"/>
+ <node id="13327693113" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.3014213" lon="104.3931786"/>
+ <node id="13327693114" visible="true" version="9" changeset="183811855" timestamp="2026-06-08T06:52:17Z" user="FajrAl" uid="2649988" lat="1.1955000" lon="103.5666667"/>
+ <node id="13327693115" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4378245" lon="104.5062922"/>
+ <node id="13327693116" visible="true" version="1" changeset="175054892" timestamp="2025-11-24T08:07:06Z" user="FajrAl" uid="2649988" lat="1.4218728" lon="104.4870241"/>
+ <way id="53549914" visible="true" version="21" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988">
+  <nd ref="2872820107"/>
+  <nd ref="10680295468"/>
+  <nd ref="13327687573"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="disputed" v="yes"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="note" v="course of the boundary is unclear as there may be historical titels which may affect the course of the boundary"/>
+ </way>
+ <way id="190681125" visible="true" version="22" changeset="189868278" timestamp="2026-10-02T09:38:51Z" user="FajrAl" uid="2649988">
+  <nd ref="13327687573"/>
+  <nd ref="13327693114"/>
+  <nd ref="3404763110"/>
+  <nd ref="1879216357"/>
+  <nd ref="1879216355"/>
+  <nd ref="1879216356"/>
+  <nd ref="13327687572"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="name" v="Singapore - Indonesia"/>
+  <tag k="name:de" v="Singapur - Indonesien"/>
+  <tag k="name:en" v="Singapore - Indonesia"/>
+  <tag k="name:es" v="Singapur - Indonesia"/>
+  <tag k="name:fr" v="Singapour - Indonésie"/>
+  <tag k="name:id" v="Singapura - Indonesia"/>
+  <tag k="name:lt" v="Singapūras - Indonezija"/>
+  <tag k="name:pl" v="Singapur - Indonezja"/>
+  <tag k="name:pt" v="Singapura - Indonésia"/>
+ </way>
+ <way id="288680799" visible="true" version="6" changeset="189868278" timestamp="2026-10-02T09:38:51Z" user="FajrAl" uid="2649988">
+  <nd ref="13327687571"/>
+  <nd ref="13327687570"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+ </way>
+ <way id="288680800" visible="true" version="12" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988">
+  <nd ref="3404763174"/>
+  <nd ref="3404763179"/>
+  <nd ref="3404763180"/>
+  <nd ref="3404763181"/>
+  <nd ref="3404763177"/>
+  <nd ref="3404763172"/>
+  <nd ref="3404763166"/>
+  <nd ref="3404763168"/>
+  <nd ref="3404763163"/>
+  <nd ref="3404763162"/>
+  <nd ref="3404763167"/>
+  <nd ref="3404763165"/>
+  <nd ref="3404763170"/>
+  <nd ref="3404763169"/>
+  <nd ref="3404763171"/>
+  <nd ref="3404763164"/>
+  <nd ref="3404763161"/>
+  <nd ref="3404763185"/>
+  <nd ref="3404763187"/>
+  <nd ref="3404763186"/>
+  <nd ref="3404763183"/>
+  <nd ref="3404763182"/>
+  <nd ref="3404763160"/>
+  <nd ref="3404763159"/>
+  <nd ref="3404763158"/>
+  <nd ref="3404763155"/>
+  <nd ref="3404763154"/>
+  <nd ref="3404763152"/>
+  <nd ref="3404763151"/>
+  <nd ref="3404763150"/>
+  <nd ref="3404763149"/>
+  <nd ref="3404763146"/>
+  <nd ref="13327687569"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="name" v="Singapore - Malaysia"/>
+  <tag k="name:es" v="Singapur - Malasia"/>
+  <tag k="name:fr" v="Singapour - Malaisie"/>
+  <tag k="name:lt" v="Singapūras - Malaizija"/>
+  <tag k="name:ms" v="Singapura - Malaysia"/>
+  <tag k="name:pl" v="Singapur - Malezja"/>
+  <tag k="name:pt" v="Singapura - Malásia"/>
+  <tag k="name:zh" v="新加坡 － 马来西亚"/>
+  <tag k="name:zh-Hans" v="新加坡 － 马来西亚"/>
+  <tag k="name:zh-Hant" v="新加坡 － 馬來西亞"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </way>
+ <way id="288680802" visible="true" version="4" changeset="175164251" timestamp="2025-11-26T18:00:57Z" user="FajrAl" uid="2649988">
+  <nd ref="3404763176"/>
+  <nd ref="3404763175"/>
+  <nd ref="3404763173"/>
+  <nd ref="3404763174"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </way>
+ <way id="288680803" visible="true" version="4" changeset="175164251" timestamp="2025-11-26T18:00:57Z" user="FajrAl" uid="2649988">
+  <nd ref="2922323909"/>
+  <nd ref="3404763184"/>
+  <nd ref="3404763178"/>
+  <nd ref="3404763176"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </way>
+ <way id="333364480" visible="true" version="16" changeset="175164251" timestamp="2025-11-26T18:00:57Z" user="FajrAl" uid="2649988">
+  <nd ref="2872820107"/>
+  <nd ref="1925161368"/>
+  <nd ref="1925161384"/>
+  <nd ref="10686033172"/>
+  <nd ref="6402524820"/>
+  <nd ref="1925161420"/>
+  <nd ref="1925161447"/>
+  <nd ref="1925161516"/>
+  <nd ref="1925161547"/>
+  <nd ref="1925161613"/>
+  <nd ref="2872820106"/>
+  <nd ref="1925161641"/>
+  <nd ref="9309285631"/>
+  <nd ref="2872820105"/>
+  <nd ref="6387810539"/>
+  <nd ref="2872820104"/>
+  <nd ref="7443755973"/>
+  <nd ref="6970178344"/>
+  <nd ref="6970178345"/>
+  <nd ref="7443755974"/>
+  <nd ref="6387810536"/>
+  <nd ref="2872820101"/>
+  <nd ref="6402524810"/>
+  <nd ref="2872818800"/>
+  <nd ref="1836120943"/>
+  <nd ref="1836120944"/>
+  <nd ref="1836120946"/>
+  <nd ref="1836120949"/>
+  <nd ref="1836120956"/>
+  <nd ref="1836120971"/>
+  <nd ref="1836120972"/>
+  <nd ref="1836120974"/>
+  <nd ref="1836120975"/>
+  <nd ref="1836120981"/>
+  <nd ref="1836120988"/>
+  <nd ref="1836120985"/>
+  <nd ref="1836120978"/>
+  <nd ref="1836120976"/>
+  <nd ref="2872713246"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="name" v="Singapore - Malaysia"/>
+  <tag k="name:be" v="Сінгапур - Малайзія"/>
+  <tag k="name:en" v="Singapore - Malaysia"/>
+  <tag k="name:es" v="Singapur - Malasia"/>
+  <tag k="name:fr" v="Singapour - Malaisie"/>
+  <tag k="name:id" v="Singapura - Malaysia"/>
+  <tag k="name:lt" v="Singapūras - Malaizija"/>
+  <tag k="name:lv" v="Singapūra - Malaizija"/>
+  <tag k="name:ms" v="Singapura - Malaysia"/>
+  <tag k="name:pl" v="Singapur - Malezja"/>
+  <tag k="name:pt" v="Singapur - Malásia"/>
+  <tag k="name:ru" v="Сингапур - Малайзия"/>
+ </way>
+ <way id="333364481" visible="true" version="22" changeset="189868278" timestamp="2026-10-02T09:38:51Z" user="FajrAl" uid="2649988">
+  <nd ref="13327687570"/>
+  <nd ref="13327687569"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="name" v="Singapore - Indonesia"/>
+  <tag k="name:es" v="Singapur - Indonesia"/>
+  <tag k="name:fr" v="Singapour - Indonésie"/>
+  <tag k="name:id" v="Singapura - Indonesia"/>
+  <tag k="name:lt" v="Singapūras - Indonezija"/>
+  <tag k="name:pl" v="Singapur - Indonezja"/>
+  <tag k="name:pt" v="Singapura - Indonesia"/>
+  <tag k="note" v="Treaty between the Republic of Singapore and the Republic of Indonesia relating to the delimitation of the territorial seas of the two countries in the eastern part of the Strait of Singapore"/>
+ </way>
+ <way id="727301316" visible="true" version="12" changeset="181214050" timestamp="2026-04-12T04:44:21Z" user="Laveure" uid="10458379">
+  <nd ref="5097279857"/>
+  <nd ref="3404763190"/>
+  <nd ref="8647772472"/>
+  <nd ref="3404763699"/>
+  <nd ref="3404763701"/>
+  <nd ref="3404763700"/>
+  <nd ref="3404763697"/>
+  <nd ref="3404763696"/>
+  <nd ref="7445001170"/>
+  <nd ref="3404763693"/>
+  <nd ref="3404763192"/>
+  <nd ref="3404763191"/>
+  <nd ref="3404763188"/>
+  <nd ref="2922323909"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="name" v="Singapore - Malaysia"/>
+  <tag k="name:es" v="Singapur - Malasia"/>
+  <tag k="name:fr" v="Singapour - Malaisie"/>
+  <tag k="name:lt" v="Singapūras - Malaizija"/>
+  <tag k="name:ms" v="Singapura - Malaysia"/>
+  <tag k="name:pl" v="Singapur - Malezja"/>
+  <tag k="name:pt" v="Singapura - Malásia"/>
+  <tag k="name:zh" v="新加波 - 马来西亚"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </way>
+ <way id="1147865283" visible="true" version="5" changeset="175164251" timestamp="2025-11-26T18:00:57Z" user="FajrAl" uid="2649988">
+  <nd ref="13327692903"/>
+  <nd ref="13327692902"/>
+  <nd ref="13327692901"/>
+  <nd ref="13327687600"/>
+  <nd ref="13327687599"/>
+  <nd ref="13327687598"/>
+  <nd ref="13327687597"/>
+  <nd ref="13327687596"/>
+  <nd ref="13327693116"/>
+  <nd ref="13327693115"/>
+  <nd ref="13327687592"/>
+  <nd ref="13327687591"/>
+  <nd ref="13327687590"/>
+  <nd ref="13327687589"/>
+  <nd ref="13327687588"/>
+  <nd ref="13327687587"/>
+  <nd ref="10680296194"/>
+  <nd ref="13327687586"/>
+  <nd ref="13327687585"/>
+  <nd ref="13327687584"/>
+  <nd ref="13327687583"/>
+  <nd ref="13327687582"/>
+  <nd ref="13327687581"/>
+  <nd ref="13327687580"/>
+  <nd ref="10680295543"/>
+  <nd ref="13327687568"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="name" v="Singapore-Indonesia"/>
+  <tag k="note" v="Territorial waters from Pedra Branca (non-EEZ), except nautical frontier with Middle Rocks (Malaysia). Aid guaranteed for Malaysian vessels. Freedom of movement for all international vessels."/>
+  <tag k="source" v="Badan Informasi Geospasial, year 2017 agreement"/>
+ </way>
+ <way id="1147865296" visible="true" version="6" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988">
+  <nd ref="13327692904"/>
+  <nd ref="10680297108"/>
+  <nd ref="10680297106"/>
+  <nd ref="10680297104"/>
+  <nd ref="10680297103"/>
+  <nd ref="10680297101"/>
+  <nd ref="10680297102"/>
+  <nd ref="10680297105"/>
+  <nd ref="10680297107"/>
+  <nd ref="10680297109"/>
+  <nd ref="10680297110"/>
+  <nd ref="10680297111"/>
+  <nd ref="10680297112"/>
+  <nd ref="10680297113"/>
+  <nd ref="10680297114"/>
+  <nd ref="10680297115"/>
+  <nd ref="10680297116"/>
+  <nd ref="10680297117"/>
+  <nd ref="10680297118"/>
+  <nd ref="13327692903"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="note" v="12 sm Zone; 12 nautical miles boundary"/>
+  <tag k="source" v="Badan Informasi Geospasial, year 2017 agreement"/>
+ </way>
+ <way id="1147865302" visible="true" version="7" changeset="175164251" timestamp="2025-11-26T18:00:57Z" user="FajrAl" uid="2649988">
+  <nd ref="13327692904"/>
+  <nd ref="10680286235"/>
+  <nd ref="10680286236"/>
+  <nd ref="10680286237"/>
+  <nd ref="10680286238"/>
+  <nd ref="10680286239"/>
+  <nd ref="10680286240"/>
+  <nd ref="10680286241"/>
+  <nd ref="10680286242"/>
+  <nd ref="10680286243"/>
+  <nd ref="10680286244"/>
+  <nd ref="10680286245"/>
+  <nd ref="10680286246"/>
+  <nd ref="10680286247"/>
+  <nd ref="10680296390"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="name" v="Singapore - Malaysia"/>
+  <tag k="name:ms" v="Singapura - Malaysia"/>
+  <tag k="name:zh" v="新加坡-马来西亚"/>
+  <tag k="note" v="Territorial waters from Pedra Branca (non-EEZ), except nautical frontier with Middle Rocks (Malaysia). Aid guaranteed for Malaysian vessels. Freedom of movement for all international vessels."/>
+ </way>
+ <way id="1147865303" visible="true" version="4" changeset="175164251" timestamp="2025-11-26T18:00:57Z" user="FajrAl" uid="2649988">
+  <nd ref="10680296390"/>
+  <nd ref="10680296079"/>
+  <nd ref="10680296663"/>
+  <nd ref="10680296362"/>
+  <nd ref="10680296531"/>
+  <nd ref="10680296320"/>
+  <nd ref="10680296548"/>
+  <nd ref="10680296291"/>
+  <nd ref="10680295876"/>
+  <nd ref="10680295626"/>
+  <nd ref="10680295828"/>
+  <nd ref="10680295979"/>
+  <nd ref="10680296600"/>
+  <nd ref="10680296109"/>
+  <nd ref="10680296233"/>
+  <nd ref="10680296042"/>
+  <nd ref="10680296639"/>
+  <nd ref="10680295642"/>
+  <nd ref="10680296571"/>
+  <nd ref="10680295891"/>
+  <nd ref="10680295750"/>
+  <nd ref="10680295727"/>
+  <nd ref="10680296047"/>
+  <nd ref="10680295936"/>
+  <nd ref="10680295625"/>
+  <nd ref="10680296128"/>
+  <nd ref="10680296078"/>
+  <nd ref="10680295723"/>
+  <nd ref="10680295487"/>
+  <nd ref="10680295575"/>
+  <nd ref="10680296203"/>
+  <nd ref="10680296777"/>
+  <nd ref="10680295690"/>
+  <nd ref="10680295791"/>
+  <nd ref="10680296019"/>
+  <nd ref="10680295939"/>
+  <nd ref="13327687568"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="name" v="Singapore"/>
+  <tag k="note" v="Territorial waters from Pedra Branca (non-EEZ), except nautical frontier with Middle Rocks (Malaysia). Aid guaranteed for Malaysian vessels. Freedom of movement for all international vessels."/>
+ </way>
+ <way id="1414078048" visible="true" version="3" changeset="189868278" timestamp="2026-10-02T09:38:51Z" user="FajrAl" uid="2649988">
+  <nd ref="13327687572"/>
+  <nd ref="1879216359"/>
+  <nd ref="13327687594"/>
+  <nd ref="13327687571"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="name" v="Singapore - Indonesia"/>
+  <tag k="name:de" v="Singapur - Indonesien"/>
+  <tag k="name:en" v="Singapore - Indonesia"/>
+  <tag k="name:es" v="Singapur - Indonesia"/>
+  <tag k="name:fr" v="Singapour - Indonésie"/>
+  <tag k="name:id" v="Singapura - Indonesia"/>
+  <tag k="name:lt" v="Singapūras - Indonezija"/>
+  <tag k="name:pl" v="Singapur - Indonezja"/>
+  <tag k="name:pt" v="Singapura - Indonésia"/>
+ </way>
+ <way id="1453274362" visible="true" version="3" changeset="179783966" timestamp="2026-03-13T03:23:55Z" user="FajrAl" uid="2649988">
+  <nd ref="13327693113"/>
+  <nd ref="13327693112"/>
+  <nd ref="13327693111"/>
+  <nd ref="13327693110"/>
+  <nd ref="13327693109"/>
+  <nd ref="13327693108"/>
+  <nd ref="13327693107"/>
+  <nd ref="13327693106"/>
+  <nd ref="13327693105"/>
+  <nd ref="13327693104"/>
+  <nd ref="13327693103"/>
+  <nd ref="13327693102"/>
+  <nd ref="13327693101"/>
+  <nd ref="13327693100"/>
+  <nd ref="13327693099"/>
+  <nd ref="13327693098"/>
+  <nd ref="13327693097"/>
+  <nd ref="13327693096"/>
+  <nd ref="13327693095"/>
+  <nd ref="13327693094"/>
+  <nd ref="13327693093"/>
+  <nd ref="13327693092"/>
+  <nd ref="13327693091"/>
+  <nd ref="13327693090"/>
+  <nd ref="13327693089"/>
+  <nd ref="13327693088"/>
+  <nd ref="13327693087"/>
+  <nd ref="13327693086"/>
+  <nd ref="13327693085"/>
+  <nd ref="13327693084"/>
+  <nd ref="13327693083"/>
+  <nd ref="13327693082"/>
+  <nd ref="13327693081"/>
+  <nd ref="13327693080"/>
+  <nd ref="13327693079"/>
+  <nd ref="13327693078"/>
+  <nd ref="13327693077"/>
+  <nd ref="13327693076"/>
+  <nd ref="13327693113"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="note" v="12 sm Zone; 12 nautical miles boundary"/>
+  <tag k="source" v="Badan Informasi Geospasial, year 2017 agreement"/>
+ </way>
+ <way id="1455785333" visible="true" version="1" changeset="175450670" timestamp="2025-12-03T14:55:00Z" user="Aleksandar Matejevic" uid="8724788">
+  <nd ref="6815495504"/>
+  <nd ref="5097279856"/>
+  <nd ref="5097279853"/>
+  <nd ref="5097279854"/>
+  <nd ref="5097279857"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="name" v="Singapore - Malaysia"/>
+  <tag k="name:es" v="Singapur - Malasia"/>
+  <tag k="name:fr" v="Singapour - Malaisie"/>
+  <tag k="name:lt" v="Singapūras - Malaizija"/>
+  <tag k="name:ms" v="Singapura - Malaysia"/>
+  <tag k="name:pl" v="Singapur - Malezja"/>
+  <tag k="name:pt" v="Singapura - Malásia"/>
+  <tag k="name:zh" v="新加波 - 马来西亚"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </way>
+ <way id="1455785334" visible="true" version="1" changeset="175450670" timestamp="2025-12-03T14:55:00Z" user="Aleksandar Matejevic" uid="8724788">
+  <nd ref="2872713246"/>
+  <nd ref="7990406418"/>
+  <nd ref="7990406419"/>
+  <nd ref="2872713245"/>
+  <nd ref="5097279858"/>
+  <nd ref="6815495504"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="border_type" v="territorial"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="maritime" v="yes"/>
+  <tag k="name" v="Singapore - Malaysia"/>
+  <tag k="name:es" v="Singapur - Malasia"/>
+  <tag k="name:fr" v="Singapour - Malaisie"/>
+  <tag k="name:lt" v="Singapūras - Malaizija"/>
+  <tag k="name:ms" v="Singapura - Malaysia"/>
+  <tag k="name:pl" v="Singapur - Malezja"/>
+  <tag k="name:pt" v="Singapura - Malásia"/>
+  <tag k="name:zh" v="新加波 - 马来西亚"/>
+  <tag k="source" v="Agreement between the Government of Malaysia and the Government of the Republic of Singapore to delimit precisely the territorial waters boundary in accordance with the Straits Settlement and Johore Territorial Waters Agreement 2025"/>
+ </way>
+ <relation id="536780" visible="true" version="78" changeset="182040273" timestamp="2026-04-30T16:03:25Z" user="qstep" uid="22750941">
+  <member type="way" ref="1147865296" role="outer"/>
+  <member type="way" ref="1453274362" role="outer"/>
+  <member type="way" ref="1147865303" role="outer"/>
+  <member type="way" ref="1147865283" role="outer"/>
+  <member type="way" ref="1147865302" role="outer"/>
+  <member type="way" ref="190681125" role="outer"/>
+  <member type="way" ref="1414078048" role="outer"/>
+  <member type="way" ref="288680799" role="outer"/>
+  <member type="way" ref="333364481" role="outer"/>
+  <member type="way" ref="288680800" role="outer"/>
+  <member type="way" ref="288680802" role="outer"/>
+  <member type="way" ref="288680803" role="outer"/>
+  <member type="way" ref="727301316" role="outer"/>
+  <member type="way" ref="1455785333" role="outer"/>
+  <member type="way" ref="1455785334" role="outer"/>
+  <member type="way" ref="333364480" role="outer"/>
+  <member type="way" ref="53549914" role="outer"/>
+  <member type="node" ref="531668011" role="admin_centre"/>
+  <member type="node" ref="424313428" role="label"/>
+  <member type="relation" ref="3831712" role="subarea"/>
+  <member type="relation" ref="3831714" role="subarea"/>
+  <member type="relation" ref="3831716" role="subarea"/>
+  <member type="relation" ref="3831715" role="subarea"/>
+  <member type="relation" ref="3831713" role="subarea"/>
+  <tag k="admin_level" v="2"/>
+  <tag k="alt_name:cy" v="Singapore"/>
+  <tag k="alt_name:ha" v="Singapur"/>
+  <tag k="alt_name:ig" v="Singapore"/>
+  <tag k="alt_name:sd" v="سنگاپور"/>
+  <tag k="border_type" v="nation"/>
+  <tag k="boundary" v="administrative"/>
+  <tag k="driving_side" v="left"/>
+  <tag k="flag" v="https://upload.wikimedia.org/wikipedia/commons/4/48/Flag_of_Singapore.svg"/>
+  <tag k="ISO3166-1" v="SG"/>
+  <tag k="ISO3166-1:alpha2" v="SG"/>
+  <tag k="ISO3166-1:alpha3" v="SGP"/>
+  <tag k="ISO3166-1:numeric" v="702"/>
+  <tag k="name" v="Singapore"/>
+  <tag k="name:ace" v="Singapura"/>
+  <tag k="name:af" v="Singapoer"/>
+  <tag k="name:als" v="Singapur"/>
+  <tag k="name:am" v="ሲንጋፖር"/>
+  <tag k="name:an" v="Singapur"/>
+  <tag k="name:ar" v="سنغافورة"/>
+  <tag k="name:arz" v="سينجابوره"/>
+  <tag k="name:as" v="ছিংগাপুৰ"/>
+  <tag k="name:ast" v="Singapur"/>
+  <tag k="name:az" v="Sinqapur"/>
+  <tag k="name:az-Arab" v="سنقاپور"/>
+  <tag k="name:azb" v="سنقاپور"/>
+  <tag k="name:ba" v="Сингапур"/>
+  <tag k="name:bar" v="Singapur"/>
+  <tag k="name:bat-smg" v="Singapūrs"/>
+  <tag k="name:bcl" v="Singapore"/>
+  <tag k="name:be" v="Сінгапур"/>
+  <tag k="name:be-tarask" v="Сынгапур"/>
+  <tag k="name:bg" v="Сингапур"/>
+  <tag k="name:bi" v="Singapore"/>
+  <tag k="name:bjn" v="Singapura"/>
+  <tag k="name:bn" v="সিঙ্গাপুর"/>
+  <tag k="name:bo" v="སེང་ག་ཕོར།"/>
+  <tag k="name:bpy" v="সিঙ্গাপুর"/>
+  <tag k="name:br" v="Singapoura"/>
+  <tag k="name:bs" v="Singapur"/>
+  <tag k="name:bug" v="Singapura"/>
+  <tag k="name:bxr" v="Сингапур"/>
+  <tag k="name:ca" v="Singapur"/>
+  <tag k="name:cdo" v="Sĭng-gă-pŏ̤"/>
+  <tag k="name:ce" v="Сингапур"/>
+  <tag k="name:ceb" v="Singgapura"/>
+  <tag k="name:ckb" v="سینگاپور"/>
+  <tag k="name:crh" v="Singapur"/>
+  <tag k="name:cs" v="Singapur"/>
+  <tag k="name:csb" v="Singapùr"/>
+  <tag k="name:cv" v="Сингапур"/>
+  <tag k="name:cy" v="Singapôr"/>
+  <tag k="name:da" v="Singapore"/>
+  <tag k="name:de" v="Singapur"/>
+  <tag k="name:diq" v="Singapur"/>
+  <tag k="name:dsb" v="Singapur"/>
+  <tag k="name:dv" v="ސިންގަޕޫރު"/>
+  <tag k="name:el" v="Σιγκαπούρη"/>
+  <tag k="name:en" v="Singapore"/>
+  <tag k="name:eo" v="Singapuro"/>
+  <tag k="name:es" v="Singapur"/>
+  <tag k="name:et" v="Singapur"/>
+  <tag k="name:eu" v="Singapur"/>
+  <tag k="name:ext" v="Singapul"/>
+  <tag k="name:fa" v="سنگاپور"/>
+  <tag k="name:ff" v="Sinngapuur"/>
+  <tag k="name:fi" v="Singapore"/>
+  <tag k="name:fo" v="Singapor"/>
+  <tag k="name:fr" v="Singapour"/>
+  <tag k="name:frp" v="Singapor"/>
+  <tag k="name:fy" v="Singapoer"/>
+  <tag k="name:ga" v="Singeapór"/>
+  <tag k="name:gag" v="Singapur"/>
+  <tag k="name:gan" v="新加坡"/>
+  <tag k="name:gd" v="Singeapòr"/>
+  <tag k="name:gl" v="Singapur"/>
+  <tag k="name:gn" v="Singapur"/>
+  <tag k="name:gu" v="સિંગાપુર"/>
+  <tag k="name:gv" v="Singapore"/>
+  <tag k="name:ha" v="Singafora"/>
+  <tag k="name:hak" v="Sîn-kâ-po"/>
+  <tag k="name:haw" v="Sinapoa"/>
+  <tag k="name:he" v="סינגפור"/>
+  <tag k="name:hi" v="सिंगापुर"/>
+  <tag k="name:hif" v="Singapore"/>
+  <tag k="name:hr" v="Singapur"/>
+  <tag k="name:ht" v="Sengapou"/>
+  <tag k="name:hu" v="Szingapúr"/>
+  <tag k="name:hy" v="Սինգապուրի Հանրապետություն"/>
+  <tag k="name:ia" v="Singapur"/>
+  <tag k="name:id" v="Singapura"/>
+  <tag k="name:ie" v="Singapor"/>
+  <tag k="name:ig" v="Siṅgapọ"/>
+  <tag k="name:ilo" v="Singapur"/>
+  <tag k="name:io" v="Singapur"/>
+  <tag k="name:is" v="Singapúr"/>
+  <tag k="name:it" v="Singapore"/>
+  <tag k="name:iu" v="Singapuuri"/>
+  <tag k="name:ja" v="シンガポール"/>
+  <tag k="name:jbo" v="singapura"/>
+  <tag k="name:jv" v="Singapura"/>
+  <tag k="name:ka" v="სინგაპური"/>
+  <tag k="name:kab" v="Singapur"/>
+  <tag k="name:ki" v="Singapore"/>
+  <tag k="name:kk" v="Сингапур"/>
+  <tag k="name:kk-Arab" v="سىينگاپۋر"/>
+  <tag k="name:kl" v="Singapore"/>
+  <tag k="name:km" v="សិង្ហបុរី"/>
+  <tag k="name:kn" v="ಸಿಂಗಾಪುರ್"/>
+  <tag k="name:ko" v="싱가포르"/>
+  <tag k="name:kok" v="सिंगापूर"/>
+  <tag k="name:ku" v="Singapûr"/>
+  <tag k="name:kv" v="Сингапур"/>
+  <tag k="name:kw" v="Singapour"/>
+  <tag k="name:ky" v="Сингапур"/>
+  <tag k="name:la" v="Singapura"/>
+  <tag k="name:lb" v="Singapur"/>
+  <tag k="name:lez" v="Сингапур"/>
+  <tag k="name:li" v="Singapore"/>
+  <tag k="name:lij" v="Scingapô"/>
+  <tag k="name:lmo" v="Singapur"/>
+  <tag k="name:ln" v="Singapur"/>
+  <tag k="name:lt" v="Singapūras"/>
+  <tag k="name:lv" v="Singapūra"/>
+  <tag k="name:lzh" v="新加坡"/>
+  <tag k="name:map-bms" v="Singapura"/>
+  <tag k="name:mg" v="Singapaoro"/>
+  <tag k="name:mhr" v="Сингапур"/>
+  <tag k="name:mi" v="Hingapoa"/>
+  <tag k="name:min" v="Singapura"/>
+  <tag k="name:mk" v="Сингапур"/>
+  <tag k="name:ml" v="സിംഗപ്പൂർ"/>
+  <tag k="name:mn" v="Сингапур"/>
+  <tag k="name:mr" v="सिंगापूर"/>
+  <tag k="name:ms" v="Singapura"/>
+  <tag k="name:ms-Arab" v="سيڠاڤورا"/>
+  <tag k="name:mt" v="Singapor"/>
+  <tag k="name:my" v="စင်ကာပူနိုင်ငံ"/>
+  <tag k="name:mzn" v="سنگاپور(شهر)"/>
+  <tag k="name:na" v="Tsingapoar"/>
+  <tag k="name:nah" v="Singapur"/>
+  <tag k="name:nan" v="Sin-ka-pho"/>
+  <tag k="name:nan-Hans" v="新加坡"/>
+  <tag k="name:nan-Latn-pehoeji" v="Sin-ka-pho"/>
+  <tag k="name:nan-Latn-tailo" v="Sin-ka-pho"/>
+  <tag k="name:nds" v="Singapur"/>
+  <tag k="name:ne" v="सिंगापुर"/>
+  <tag k="name:nl" v="Singapore"/>
+  <tag k="name:nn" v="Singapore"/>
+  <tag k="name:no" v="Singapore"/>
+  <tag k="name:nov" v="Singapore"/>
+  <tag k="name:nv" v="Sį́ʼgaboo"/>
+  <tag k="name:oc" v="Singapor"/>
+  <tag k="name:or" v="ସିଙ୍ଗାପୁର"/>
+  <tag k="name:os" v="Сингапур"/>
+  <tag k="name:pa" v="ਸਿੰਘਾਪੁਰ"/>
+  <tag k="name:pam" v="Singapur"/>
+  <tag k="name:pih" v="Singapur"/>
+  <tag k="name:pl" v="Singapur"/>
+  <tag k="name:pms" v="Singapor"/>
+  <tag k="name:pnb" v="سنگاپور"/>
+  <tag k="name:ps" v="سينګاپور"/>
+  <tag k="name:pt" v="Singapura"/>
+  <tag k="name:qu" v="Singapur"/>
+  <tag k="name:quz" v="Singapur"/>
+  <tag k="name:ro" v="Singapore"/>
+  <tag k="name:roa-rup" v="Singapore"/>
+  <tag k="name:roa-tara" v="Singapore"/>
+  <tag k="name:ru" v="Сингапур"/>
+  <tag k="name:rue" v="Сінґапур"/>
+  <tag k="name:rw" v="Singapore"/>
+  <tag k="name:sa" v="सिङ्गापुरम्"/>
+  <tag k="name:sah" v="Сингапур"/>
+  <tag k="name:scn" v="Singapura"/>
+  <tag k="name:sco" v="Singapore"/>
+  <tag k="name:sd" v="سينگاپور"/>
+  <tag k="name:se" v="Singapore"/>
+  <tag k="name:sg" v="Sïngäpûru"/>
+  <tag k="name:sh" v="Singapur"/>
+  <tag k="name:simple" v="Singapore"/>
+  <tag k="name:sk" v="Singapur"/>
+  <tag k="name:sl" v="Singapur"/>
+  <tag k="name:sm" v="Sigapoa"/>
+  <tag k="name:smn" v="Singapore"/>
+  <tag k="name:sms" v="Singapore"/>
+  <tag k="name:so" v="Singabuur"/>
+  <tag k="name:sq" v="Singapori"/>
+  <tag k="name:sr" v="Сингапур"/>
+  <tag k="name:ss" v="ISingapholo"/>
+  <tag k="name:su" v="Singapura"/>
+  <tag k="name:sv" v="Singapore"/>
+  <tag k="name:sw" v="Singapuri"/>
+  <tag k="name:szl" v="Singapur"/>
+  <tag k="name:ta" v="சிங்கப்பூர்"/>
+  <tag k="name:te" v="సింగపూరు"/>
+  <tag k="name:tg" v="Сингапур"/>
+  <tag k="name:th" v="ประเทศสิงคโปร์"/>
+  <tag k="name:tk" v="Singapur"/>
+  <tag k="name:tl" v="Singapore"/>
+  <tag k="name:tr" v="Singapur"/>
+  <tag k="name:tt" v="Сингапур"/>
+  <tag k="name:tzl" v="Singapura"/>
+  <tag k="name:udm" v="Сингапур"/>
+  <tag k="name:ug" v="سىنگاپور"/>
+  <tag k="name:uk" v="Сінгапур"/>
+  <tag k="name:ur" v="سنگاپور"/>
+  <tag k="name:uz" v="Singapur"/>
+  <tag k="name:vec" v="Singapore"/>
+  <tag k="name:vep" v="Singapur"/>
+  <tag k="name:vi" v="Singapore"/>
+  <tag k="name:vlca" v="Singapur"/>
+  <tag k="name:vls" v="Singapore"/>
+  <tag k="name:vo" v="Singapurän"/>
+  <tag k="name:vro" v="Singapur"/>
+  <tag k="name:war" v="Singgapura"/>
+  <tag k="name:wo" v="Singapoor"/>
+  <tag k="name:wuu" v="新加坡"/>
+  <tag k="name:xal" v="Сингапурмудин Орн"/>
+  <tag k="name:yi" v="סינגאפור"/>
+  <tag k="name:yo" v="Singapore"/>
+  <tag k="name:yue" v="星架坡"/>
+  <tag k="name:zh" v="新加坡"/>
+  <tag k="name:zh-Hans" v="新加坡"/>
+  <tag k="name:zh-Hant" v="新加坡"/>
+  <tag k="official_name" v="Republic of Singapore"/>
+  <tag k="official_name:ar" v="جمهورية سنغافورة"/>
+  <tag k="official_name:ca" v="República de Singapur"/>
+  <tag k="official_name:cs" v="Singapurská republika"/>
+  <tag k="official_name:de" v="Republik Singapur"/>
+  <tag k="official_name:en" v="Republic of Singapore"/>
+  <tag k="official_name:fr" v="République de Singapour"/>
+  <tag k="official_name:gn" v="Tavakuairetã Singapur"/>
+  <tag k="official_name:hu" v="Szingapúri Köztársaság"/>
+  <tag k="official_name:pt" v="República de Singapura"/>
+  <tag k="official_name:ur" v="جمہوریہ سنگاپور"/>
+  <tag k="official_name:vls" v="Republiek Singapore"/>
+  <tag k="population" v="4839400"/>
+  <tag k="ref:LOCODE" v="SGSIN"/>
+  <tag k="route" v="horse"/>
+  <tag k="timezone" v="Asia/Singapore"/>
+  <tag k="type" v="boundary"/>
+  <tag k="wikidata" v="Q334"/>
+  <tag k="wikimedia_commons" v="Category:Singapore"/>
+  <tag k="wikipedia" v="en:Singapore"/>
+ </relation>
+ <relation id="3831712" visible="true" version="46" changeset="175587929" timestamp="2025-12-06T14:18:58Z" user="kenken234" uid="17241816">
+  <member type="node" ref="13353864301" role="admin_centre"/>
+  <member type="way" ref="1396530680" role="outer"/>
+  <member type="way" ref="1396530684" role="outer"/>
+  <member type="way" ref="1396530685" role="outer"/>
+  <member type="way" ref="1396530687" role="outer"/>
+  <member type="way" ref="1396154315" role="outer"/>
+  <member type="way" ref="1396154312" role="outer"/>
+  <member type="way" ref="1381700506" role="outer"/>
+  <member type="way" ref="795846898" role="outer"/>
+  <member type="way" ref="1389280993" role="outer"/>
+  <member type="way" ref="1389280994" role="outer"/>
+  <member type="way" ref="1389280996" role="outer"/>
+  <member type="way" ref="1389280991" role="outer"/>
+  <member type="way" ref="1389280992" role="outer"/>
+  <member type="way" ref="727300288" role="outer"/>
+  <member type="way" ref="1455811134" role="outer"/>
+  <member type="way" ref="1388253976" role="outer"/>
+  <member type="way" ref="1388253979" role="outer"/>
+  <member type="way" ref="288680806" role="outer"/>
+  <member type="way" ref="288680803" role="outer"/>
+  <member type="way" ref="1388247976" role="outer"/>
+  <member type="way" ref="1388247977" role="outer"/>
+  <member type="way" ref="1388247974" role="outer"/>
+  <member type="way" ref="1388023627" role="outer"/>
+  <member type="way" ref="1388023626" role="outer"/>
+  <member type="way" ref="1414068846" role="outer"/>
+  <member type="way" ref="1387798735" role="outer"/>
+  <member type="way" ref="795846899" role="outer"/>
+  <member type="way" ref="1387819483" role="outer"/>
+  <member type="way" ref="1387819480" role="outer"/>
+  <member type="way" ref="1387798738" role="outer"/>
+  <member type="way" ref="1387825910" role="outer"/>
+  <member type="way" ref="1396181276" role="outer"/>
+  <member type="way" ref="546426160" role="outer"/>
+  <member type="way" ref="1396181275" role="outer"/>
+  <member type="way" ref="1390096277" role="outer"/>
+  <member type="way" ref="1396181277" role="outer"/>
+  <member type="way" ref="1390096276" role="outer"/>
+  <member type="way" ref="1387620210" role="outer"/>
+  <member type="way" ref="1391611879" role="outer"/>
+  <member type="way" ref="1381700510" role="outer"/>
+  <member type="way" ref="1391611884" role="outer"/>
+  <member type="way" ref="1391611885" role="outer"/>
+  <member type="way" ref="1391611886" role="outer"/>
+  <member type="way" ref="1391611889" role="outer"/>
+  <member type="way" ref="1391611891" role="outer"/>
+  <member type="way" ref="1391611890" role="outer"/>
+  <member type="way" ref="1391611875" role="outer"/>
+  <member type="way" ref="1455798804" role="outer"/>
+  <member type="way" ref="1381700497" role="outer"/>
+  <member type="way" ref="1455798805" role="outer"/>
+  <member type="way" ref="288680805" role="outer"/>
+  <member type="way" ref="1414078048" role="outer"/>
+  <member type="way" ref="1414078046" role="outer"/>
+  <member type="way" ref="1414078045" role="outer"/>
+  <member type="way" ref="1409236032" role="outer"/>
+  <member type="way" ref="1395328133" role="outer"/>
+  <member type="way" ref="1396530676" role="outer"/>
+  <member type="way" ref="1396530678" role="outer"/>
+  <member type="way" ref="1396530683" role="outer"/>
+  <tag k="boundary" v="political"/>
+  <tag k="ISO3166-2" v="SG-01"/>
+  <tag k="name" v="Central Singapore Community Development Council"/>
+  <tag k="name:en" v="Central Singapore Community Development Council"/>
+  <tag k="name:zh" v="中区"/>
+  <tag k="political_division" v="SG:CDC"/>
+  <tag k="short_name" v="Central Singapore CDC"/>
+  <tag k="source" v="https://www.cdc.org.sg/CentralSingapore/About_Us/Our_District"/>
+  <tag k="type" v="boundary"/>
+  <tag k="wikidata" v="Q2544592"/>
+  <tag k="wikipedia" v="en:Central Singapore Community Development Council"/>
+ </relation>
+ <relation id="3831713" visible="true" version="24" changeset="175587929" timestamp="2025-12-06T14:18:58Z" user="kenken234" uid="17241816">
+  <member type="node" ref="13353789500" role="admin_centre"/>
+  <member type="way" ref="1391152773" role="outer"/>
+  <member type="way" ref="1391152764" role="outer"/>
+  <member type="way" ref="1391152765" role="outer"/>
+  <member type="way" ref="1391611869" role="outer"/>
+  <member type="way" ref="1391611864" role="outer"/>
+  <member type="way" ref="727299823" role="outer"/>
+  <member type="way" ref="1391611873" role="outer"/>
+  <member type="way" ref="1391611871" role="outer"/>
+  <member type="way" ref="1396201353" role="outer"/>
+  <member type="way" ref="1396201352" role="outer"/>
+  <member type="way" ref="795846901" role="outer"/>
+  <member type="way" ref="1390096276" role="outer"/>
+  <member type="way" ref="1396181277" role="outer"/>
+  <member type="way" ref="1390096277" role="outer"/>
+  <member type="way" ref="1396181275" role="outer"/>
+  <member type="way" ref="546426160" role="outer"/>
+  <member type="way" ref="1396181276" role="outer"/>
+  <member type="way" ref="1387825910" role="outer"/>
+  <member type="way" ref="1387798738" role="outer"/>
+  <member type="way" ref="1387819480" role="outer"/>
+  <member type="way" ref="1387819483" role="outer"/>
+  <member type="way" ref="795846899" role="outer"/>
+  <member type="way" ref="1387798735" role="outer"/>
+  <member type="way" ref="1414068846" role="outer"/>
+  <member type="way" ref="1388023626" role="outer"/>
+  <member type="way" ref="1388023627" role="outer"/>
+  <member type="way" ref="1388247974" role="outer"/>
+  <member type="way" ref="1388247977" role="outer"/>
+  <member type="way" ref="1388247976" role="outer"/>
+  <member type="way" ref="288680802" role="outer"/>
+  <member type="way" ref="288680800" role="outer"/>
+  <member type="way" ref="333364481" role="outer"/>
+  <member type="way" ref="1399285507" role="outer"/>
+  <member type="way" ref="1390984691" role="outer"/>
+  <member type="way" ref="1390984688" role="outer"/>
+  <member type="way" ref="1390984683" role="outer"/>
+  <member type="way" ref="1390984682" role="outer"/>
+  <member type="way" ref="1390984694" role="outer"/>
+  <member type="way" ref="1390984681" role="outer"/>
+  <tag k="boundary" v="political"/>
+  <tag k="description" v="As of GE2025, the North East district consists of the following constituencies: Aljunied GRC, Pasir Ris-Changi GRC, Punggol GRC, Sengkang GRC, Tampines GRC, Hougang SMC and Tampines Changkat SMC"/>
+  <tag k="ISO3166-2" v="SG-02"/>
+  <tag k="name" v="North East Community Development Council"/>
+  <tag k="name:en" v="North East Community Development Council"/>
+  <tag k="name:zh" v="东北区"/>
+  <tag k="political_division" v="SG:CDC"/>
+  <tag k="short_name" v="North East CDC"/>
+  <tag k="source" v="https://www.cdc.org.sg/NorthEast/About_Us/About_NECDC"/>
+  <tag k="type" v="boundary"/>
+  <tag k="wikidata" v="Q3710534"/>
+  <tag k="wikipedia" v="en:North East Community Development Council"/>
+ </relation>
+ <relation id="3831714" visible="true" version="35" changeset="175508561" timestamp="2025-12-04T17:32:12Z" user="kenken234" uid="17241816">
+  <member type="node" ref="13353789497" role="admin_centre"/>
+  <member type="way" ref="1395999638" role="outer"/>
+  <member type="way" ref="1395999645" role="outer"/>
+  <member type="way" ref="1396051262" role="outer"/>
+  <member type="way" ref="1395999646" role="outer"/>
+  <member type="way" ref="1396051270" role="outer"/>
+  <member type="way" ref="1455778326" role="outer"/>
+  <member type="way" ref="1396051272" role="outer"/>
+  <member type="way" ref="1396051271" role="outer"/>
+  <member type="way" ref="1396051263" role="outer"/>
+  <member type="way" ref="1455778330" role="outer"/>
+  <member type="way" ref="1396775166" role="outer"/>
+  <member type="way" ref="795846896" role="outer"/>
+  <member type="way" ref="1396802881" role="outer"/>
+  <member type="way" ref="1396775176" role="outer"/>
+  <member type="way" ref="1455767025" role="outer"/>
+  <member type="way" ref="1396775177" role="outer"/>
+  <member type="way" ref="1396530670" role="outer"/>
+  <member type="way" ref="1396530674" role="outer"/>
+  <member type="way" ref="1396530678" role="outer"/>
+  <member type="way" ref="1396530683" role="outer"/>
+  <member type="way" ref="1396530680" role="outer"/>
+  <member type="way" ref="1396530684" role="outer"/>
+  <member type="way" ref="1396530685" role="outer"/>
+  <member type="way" ref="1396530687" role="outer"/>
+  <member type="way" ref="1396154315" role="outer"/>
+  <member type="way" ref="1396154312" role="outer"/>
+  <member type="way" ref="1381700506" role="outer"/>
+  <member type="way" ref="795846898" role="outer"/>
+  <member type="way" ref="1389280993" role="outer"/>
+  <member type="way" ref="1389280994" role="outer"/>
+  <member type="way" ref="1389280996" role="outer"/>
+  <member type="way" ref="1389280991" role="outer"/>
+  <member type="way" ref="1389280992" role="outer"/>
+  <member type="way" ref="727300288" role="outer"/>
+  <member type="way" ref="1455811134" role="outer"/>
+  <member type="way" ref="1388253976" role="outer"/>
+  <member type="way" ref="1388253979" role="outer"/>
+  <member type="way" ref="288680806" role="outer"/>
+  <member type="way" ref="727301316" role="outer"/>
+  <member type="way" ref="1455785333" role="outer"/>
+  <member type="way" ref="1455785334" role="outer"/>
+  <member type="way" ref="1395999633" role="outer"/>
+  <member type="way" ref="1323834851" role="outer"/>
+  <member type="way" ref="727300489" role="outer"/>
+  <tag k="boundary" v="political"/>
+  <tag k="description" v="As of GE2025, the North West district consists of the following constituencies: Holland-Bukit Timah GRC, Marsiling-Yew Tee GRC, Nee Soon GRC, Sembawang GRC, Bukit Panjang SMC and Sembawang West SMC"/>
+  <tag k="ISO3166-2" v="SG-03"/>
+  <tag k="name" v="North West Community Development Council"/>
+  <tag k="name:en" v="North West Community Development Council"/>
+  <tag k="name:zh" v="西北区"/>
+  <tag k="political_division" v="SG:CDC"/>
+  <tag k="short_name" v="North West CDC"/>
+  <tag k="source" v="https://www.cdc.org.sg/NorthWest/About_Us/Our_District"/>
+  <tag k="type" v="boundary"/>
+  <tag k="wikidata" v="Q5784118"/>
+  <tag k="wikipedia" v="en:North West Community Development Council"/>
+ </relation>
+ <relation id="3831715" visible="true" version="29" changeset="175508561" timestamp="2025-12-04T17:32:12Z" user="kenken234" uid="17241816">
+  <member type="node" ref="13353789499" role="admin_centre"/>
+  <member type="way" ref="1391152773" role="outer"/>
+  <member type="way" ref="1391152764" role="outer"/>
+  <member type="way" ref="1391152765" role="outer"/>
+  <member type="way" ref="1391611869" role="outer"/>
+  <member type="way" ref="1391611864" role="outer"/>
+  <member type="way" ref="727299823" role="outer"/>
+  <member type="way" ref="1391611873" role="outer"/>
+  <member type="way" ref="1391611871" role="outer"/>
+  <member type="way" ref="1396201353" role="outer"/>
+  <member type="way" ref="1396201352" role="outer"/>
+  <member type="way" ref="795846901" role="outer"/>
+  <member type="way" ref="1387620210" role="outer"/>
+  <member type="way" ref="1391611879" role="outer"/>
+  <member type="way" ref="1381700510" role="outer"/>
+  <member type="way" ref="1391611884" role="outer"/>
+  <member type="way" ref="1391611885" role="outer"/>
+  <member type="way" ref="1391611886" role="outer"/>
+  <member type="way" ref="1391611889" role="outer"/>
+  <member type="way" ref="1391611891" role="outer"/>
+  <member type="way" ref="1391611890" role="outer"/>
+  <member type="way" ref="1391611875" role="outer"/>
+  <member type="way" ref="1455798804" role="outer"/>
+  <member type="way" ref="1381700497" role="outer"/>
+  <member type="way" ref="1455798805" role="outer"/>
+  <member type="way" ref="288680805" role="outer"/>
+  <member type="way" ref="288680799" role="outer"/>
+  <member type="way" ref="1399285507" role="outer"/>
+  <member type="way" ref="1390984691" role="outer"/>
+  <member type="way" ref="1390984688" role="outer"/>
+  <member type="way" ref="1390984683" role="outer"/>
+  <member type="way" ref="1390984682" role="outer"/>
+  <member type="way" ref="1390984694" role="outer"/>
+  <member type="way" ref="1390984681" role="outer"/>
+  <tag k="boundary" v="political"/>
+  <tag k="ISO3166-2" v="SG-04"/>
+  <tag k="name" v="South East Community Development Council"/>
+  <tag k="name:en" v="South East Community Development Council"/>
+  <tag k="name:zh" v="东南区"/>
+  <tag k="political_division" v="SG:CDC"/>
+  <tag k="short_name" v="South East CDC"/>
+  <tag k="source" v="https://www.cdc.org.sg/SouthEast/Who_We_Are/Introduction"/>
+  <tag k="type" v="boundary"/>
+  <tag k="wikidata" v="Q1687545"/>
+  <tag k="wikipedia" v="en:South East Community Development Council"/>
+ </relation>
+ <relation id="3831716" visible="true" version="30" changeset="175508561" timestamp="2025-12-04T17:32:12Z" user="kenken234" uid="17241816">
+  <member type="node" ref="13353789498" role="admin_centre"/>
+  <member type="way" ref="1396775166" role="outer"/>
+  <member type="way" ref="1455778330" role="outer"/>
+  <member type="way" ref="1396051263" role="outer"/>
+  <member type="way" ref="1396051271" role="outer"/>
+  <member type="way" ref="1396051272" role="outer"/>
+  <member type="way" ref="1455778326" role="outer"/>
+  <member type="way" ref="1396051270" role="outer"/>
+  <member type="way" ref="1395999646" role="outer"/>
+  <member type="way" ref="1396051262" role="outer"/>
+  <member type="way" ref="1395999645" role="outer"/>
+  <member type="way" ref="1395999638" role="outer"/>
+  <member type="way" ref="727300489" role="outer"/>
+  <member type="way" ref="1323834851" role="outer"/>
+  <member type="way" ref="1395999633" role="outer"/>
+  <member type="way" ref="333364480" role="outer"/>
+  <member type="way" ref="53549914" role="outer"/>
+  <member type="way" ref="190681125" role="outer"/>
+  <member type="way" ref="1414078046" role="outer"/>
+  <member type="way" ref="1414078045" role="outer"/>
+  <member type="way" ref="1409236032" role="outer"/>
+  <member type="way" ref="1395328133" role="outer"/>
+  <member type="way" ref="1396530676" role="outer"/>
+  <member type="way" ref="1396530674" role="outer"/>
+  <member type="way" ref="1396530670" role="outer"/>
+  <member type="way" ref="1396775177" role="outer"/>
+  <member type="way" ref="1455767025" role="outer"/>
+  <member type="way" ref="1396775176" role="outer"/>
+  <member type="way" ref="1396802881" role="outer"/>
+  <member type="way" ref="795846896" role="outer"/>
+  <tag k="boundary" v="political"/>
+  <tag k="ISO3166-2" v="SG-05"/>
+  <tag k="name" v="South West Community Development Council"/>
+  <tag k="name:en" v="South West Community Development Council"/>
+  <tag k="name:zh" v="西南区"/>
+  <tag k="political_division" v="SG:CDC"/>
+  <tag k="short_name" v="South West CDC"/>
+  <tag k="source" v="https://cdc.org.sg/SouthWest/About-Us/About-the-CDC"/>
+  <tag k="type" v="boundary"/>
+  <tag k="wikidata" v="Q5784126"/>
+  <tag k="wikipedia" v="en:South West Community Development Council"/>
+ </relation>
+</osm>
