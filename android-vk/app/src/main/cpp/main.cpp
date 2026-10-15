@@ -200,7 +200,7 @@ Mat4 computeViewProj(const AppState& st, float aspect) {
     const Mat4 view = mat4LookAt(eye, st.target, Vec3{0.0f, 1.0f, 0.0f});
     // Near plane scales with distance so depth stays precise from street level to the whole island.
     const float zNear = std::min(std::max(st.dist * 0.05f, 1.0f), 2000.0f);
-    const Mat4 proj = mat4Perspective(kFovY, aspect, zNear, 1.5e6f);
+    const Mat4 proj = mat4Perspective(kFovY, aspect, zNear, 3.0e6f);
     return mat4Mul(proj, view);
 }
 

@@ -9,6 +9,11 @@ bool inside(const Rect& r, float x, float z) {
     return x >= r.x0 && x <= r.x1 && z >= r.z0 && z <= r.z1;
 }
 
+// True if the whole cell [x0,x1]x[z0,z1] lies inside the rectangle.
+bool containsCell(const Rect& r, float x0, float z0, float x1, float z1) {
+    return x0 >= r.x0 && x1 <= r.x1 && z0 >= r.z0 && z1 <= r.z1;
+}
+
 Vertex vertexAt(float x, float north, float h, const float* rgb) {
     Vertex v;
     v.pos[0] = x;
@@ -57,8 +62,9 @@ void buildIslandMesh(const District& island, const Rect& exclude, MeshBlob& out)
         }
         for (uint32_t j = 0; j + 1 < th; ++j) {
             for (uint32_t i = 0; i + 1 < tw; ++i) {
-                const float cx = (i + 0.5f) * cell, cz = (j + 0.5f) * cell;
-                if (inside(exclude, cx, cz)) continue;
+                // Removed only when fully inside the pilot: a cell that straddles the pilot edge is kept,
+                // so the island surface never leaves a gap next to the pilot.
+                if (containsCell(exclude, i * cell, j * cell, (i + 1) * cell, (j + 1) * cell)) continue;
                 const uint32_t a = gridIndex[static_cast<size_t>(j) * tw + i];
                 const uint32_t b = gridIndex[static_cast<size_t>(j) * tw + i + 1];
                 const uint32_t c = gridIndex[static_cast<size_t>(j + 1) * tw + i];
@@ -66,6 +72,24 @@ void buildIslandMesh(const District& island, const Rect& exclude, MeshBlob& out)
                 out.indices.insert(out.indices.end(), {a, c, b, b, c, d});
             }
         }
+    }
+
+    // Sea plane: a large flat surface 60 m below sea level, under the island and beyond its edges,
+    // so the island sits in the sea instead of on a floating tile.
+    {
+        constexpr float kApron = 2000000.0f, kSeaY = -60.0f;
+        float seaRgb[3];
+        terrainColour(0.0f, seaRgb);
+        const float x0 = -kApron, x1 = island.sizeX + kApron;
+        const float z0 = -island.sizeZ - kApron, z1 = kApron;
+        const uint32_t s0 = static_cast<uint32_t>(out.vertices.size());
+        Vertex corners[4];
+        corners[0] = vertexAt(x0, -z0, kSeaY, seaRgb);  // placed via north = -z in vertexAt
+        corners[1] = vertexAt(x1, -z0, kSeaY, seaRgb);
+        corners[2] = vertexAt(x1, -z1, kSeaY, seaRgb);
+        corners[3] = vertexAt(x0, -z1, kSeaY, seaRgb);
+        for (const Vertex& v : corners) out.vertices.push_back(v);
+        out.indices.insert(out.indices.end(), {s0, s0 + 1, s0 + 2, s0, s0 + 2, s0 + 3});
     }
 
     // Buildings: roof (triangulated), walls as quads. Walls get their own vertices so they

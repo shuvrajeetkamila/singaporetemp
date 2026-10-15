@@ -186,11 +186,37 @@ static void testText() {
     CHECK(blank, "too-long line changed pixels");
 }
 
+// Island cut-out at the pilot edge must not leave a gap; the sea plane must sit below sea level.
+static void testSeamAndSea() {
+    District d;
+    d.tw = 5;
+    d.th = 5;
+    d.cell = 60.0f;
+    d.sizeX = 240.0f;
+    d.sizeZ = 240.0f;
+    d.heights.assign(25, 0.0f);
+    // Pilot rectangle not aligned to the 60 m grid: only the cell [60,120]^2 lies fully inside it.
+    MeshBlob m;
+    buildIslandMesh(d, Rect{30.0f, 30.0f, 150.0f, 150.0f}, m);
+    const size_t terrainIdx = m.indices.size() - 6;  // last six indices are the sea plane
+    CHECK(terrainIdx == 15 * 6, "terrain cells kept %zu, expected 15 (only one cell is fully inside)",
+          terrainIdx / 6);
+
+    // The sea plane is the last four vertices: 60 m below sea level, sea colour.
+    const size_t n = m.vertices.size();
+    CHECK(n >= 4, "no sea plane vertices");
+    for (size_t k = n - 4; k < n && n >= 4; ++k) {
+        CHECK(std::fabs(m.vertices[k].pos[1] + 60.0f) < 1e-3f, "sea plane not at -60 m");
+        CHECK(m.vertices[k].rgba[2] > m.vertices[k].rgba[0], "sea plane not blue");
+    }
+}
+
 int main(int argc, char** argv) {
     std::string dir = argc > 1 ? argv[1] : "app/src/main/assets/district";
     std::printf("data dir: %s\n", dir.c_str());
 
     testText();
+    testSeamAndSea();
     testConcaveRoof();
     testMatrices();
     testLayoutParse();
