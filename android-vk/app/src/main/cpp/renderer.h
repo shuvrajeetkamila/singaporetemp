@@ -37,8 +37,10 @@ public:
     void destroy();
 
     // Draws one frame. Meshes are drawn with their own offsets; agents with `agentOffset`.
+    // `hud` is in normalised device coordinates and is drawn last, on top of the scene.
     // Returns false when the frame was skipped (for example, a minimised window).
-    bool drawFrame(const Mat4& viewProj, const float agentOffset[3], const std::vector<Vertex>& agents);
+    bool drawFrame(const Mat4& viewProj, const float agentOffset[3], const std::vector<Vertex>& agents,
+                   const std::vector<Vertex>& hud);
 
 private:
     struct Buffer {
@@ -110,6 +112,7 @@ private:
     VkSemaphore imageAvailable_[kFramesInFlight] = {VK_NULL_HANDLE, VK_NULL_HANDLE};
     VkFence inFlight_[kFramesInFlight] = {VK_NULL_HANDLE, VK_NULL_HANDLE};
     Buffer agents_[kFramesInFlight];
+    Buffer hud_[kFramesInFlight];
     int frame_ = 0;
 
     std::vector<GpuMesh> meshes_;

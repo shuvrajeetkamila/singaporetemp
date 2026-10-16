@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <cstring>
 
+#include "hud.h"
+
 #define LOG_TAG "VkIsland"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
@@ -488,6 +490,11 @@ bool Renderer::createFrameResources() {
                           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, agents_[i])) {
             return false;
         }
+        if (!createBuffer(static_cast<VkDeviceSize>(kMaxHudVertices) * sizeof(Vertex),
+                          VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+                          VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, hud_[i])) {
+            return false;
+        }
     }
     return true;
 }
@@ -674,7 +681,8 @@ void Renderer::destroySwapchain() {
     swapchain_ = VK_NULL_HANDLE;
 }
 
-bool Renderer::drawFrame(const Mat4& viewProj, const float agentOffset[3], const std::vector<Vertex>& agents) {
+bool Renderer::drawFrame(const Mat4& viewProj, const float agentOffset[3], const std::vector<Vertex>& agents,
+                         const std::vector<Vertex>& hud) {
     if (!ready_) return false;
     if (needsRecreate_) {
         vkDeviceWaitIdle(device_);
@@ -711,6 +719,8 @@ bool Renderer::drawFrame(const Mat4& viewProj, const float agentOffset[3], const
     const uint32_t agentVerts =
         static_cast<uint32_t>(std::min<size_t>(agents.size(), static_cast<size_t>(kMaxAgentVertices)));
     if (agentVerts > 0) std::memcpy(agents_[f].mapped, agents.data(), agentVerts * sizeof(Vertex));
+    const uint32_t hudVerts = static_cast<uint32_t>(std::min<size_t>(hud.size(), kMaxHudVertices));
+    if (hudVerts > 0) std::memcpy(hud_[f].mapped, hud.data(), hudVerts * sizeof(Vertex));
 
     VkCommandBuffer cb = cmd_[f];
     vkResetCommandBuffer(cb, 0);
@@ -759,6 +769,15 @@ bool Renderer::drawFrame(const Mat4& viewProj, const float agentOffset[3], const
             vkCmdPushConstants(cb, pipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushData), &pd);
             vkCmdBindVertexBuffers(cb, 0, 1, &agents_[f].buf, &offset);
             vkCmdDraw(cb, agentVerts, 1, 0, 0);
+        }
+        if (hudVerts > 0) {
+            // HUD: already in clip space, so the view-projection is the identity and the offset is zero.
+            const Mat4 id = mat4Identity();
+            std::memcpy(pd.viewProj, id.m, sizeof(pd.viewProj));
+            pd.offset[0] = pd.offset[1] = pd.offset[2] = pd.offset[3] = 0.0f;
+            vkCmdPushConstants(cb, pipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushData), &pd);
+            vkCmdBindVertexBuffers(cb, 0, 1, &hud_[f].buf, &offset);
+            vkCmdDraw(cb, hudVerts, 1, 0, 0);
         }
     }
     vkCmdEndRenderPass(cb);
@@ -817,6 +836,7 @@ void Renderer::destroy() {
             imageAvailable_[i] = VK_NULL_HANDLE;
             inFlight_[i] = VK_NULL_HANDLE;
             freeBuffer(device_, agents_[i].buf, agents_[i].mem, agents_[i].mapped);
+            freeBuffer(device_, hud_[i].buf, hud_[i].mem, hud_[i].mapped);
         }
         if (cmdPool_) vkDestroyCommandPool(device_, cmdPool_, nullptr);
         cmdPool_ = VK_NULL_HANDLE;

@@ -22,6 +22,8 @@
 #include "camera.h"
 #include "core_math.h"
 #include "diag.h"
+#include "geo.h"
+#include "hud.h"
 #include "island.h"
 #include "renderer.h"
 #include "sim.h"
@@ -64,6 +66,17 @@ struct AppState {
     bool gestureValid = false;
     int gesturePointers = 0;
     float g0x = 0.0f, g0y = 0.0f, g1x = 0.0f, g1y = 0.0f;
+
+    // Tap to read a position: a short touch with little movement picks the ground under it.
+    bool tapActive = false;
+    bool tapMoved = false;
+    int64_t tapDownNs = 0;
+    float tapDownX = 0.0f, tapDownY = 0.0f;
+    bool tapPending = false;
+    float tapX = 0.0f, tapY = 0.0f;
+    bool havePick = false;
+    LatLon pickLL;
+    std::vector<Vertex> hud;
 };
 
 bool readAsset(AAssetManager* mgr, const char* name, std::vector<uint8_t>& out) {
@@ -278,18 +291,67 @@ void onAppCmd(android_app* app, int32_t cmd) {
     }
 }
 
+// SVY21 of the pilot district origin (from the district metadata). The island frame origin is the
+// pilot origin minus the layout offset (dx, dn), which is zero when the island layer is absent.
+constexpr double kPilotOriginE = 29631.518;
+constexpr double kPilotOriginN = 28494.117;
+
+SceneGround sceneGround(const AppState& st) {
+    SceneGround g;
+    g.pilot = &st.pilot;
+    g.pilotOffset[0] = st.pilotOffset[0];
+    g.pilotOffset[1] = st.pilotOffset[1];
+    g.pilotOffset[2] = st.pilotOffset[2];
+    g.island = st.islandLoaded ? &st.island : nullptr;
+    return g;
+}
+
+Vec3 eyeOf(const AppState& st) {
+    const float cp = std::cos(st.pitch), sp = std::sin(st.pitch);
+    const float sy = std::sin(st.yaw), cy = std::cos(st.yaw);
+    return st.target + Vec3{cp * sy, sp, cp * cy} * st.dist;
+}
+
+LatLon sceneLatLon(const AppState& st, float x, float z) {
+    double e = 0.0, n = 0.0;
+    sceneToSvy21(x, z, kPilotOriginE - st.layout.dx, kPilotOriginN - st.layout.dn, e, n);
+    return svy21ToWgs84(e, n);
+}
+
 int32_t onInput(android_app* app, AInputEvent* event) {
     AppState* st = static_cast<AppState*>(app->userData);
     if (!st || AInputEvent_getType(event) != AINPUT_EVENT_TYPE_MOTION) return 0;
 
     const int32_t masked = AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK;
     switch (masked) {
-        case AMOTION_EVENT_ACTION_DOWN:
-        case AMOTION_EVENT_ACTION_UP:
-        case AMOTION_EVENT_ACTION_POINTER_DOWN:
+        case AMOTION_EVENT_ACTION_DOWN:  // first finger down: may become a tap
+            st->gestureValid = false;
+            st->tapActive = true;
+            st->tapMoved = false;
+            st->tapDownNs = AMotionEvent_getEventTime(event);
+            st->tapDownX = AMotionEvent_getX(event, 0);
+            st->tapDownY = AMotionEvent_getY(event, 0);
+            return 1;
+        case AMOTION_EVENT_ACTION_POINTER_DOWN:  // a second finger: never a tap
+            st->gestureValid = false;
+            st->tapActive = false;
+            return 1;
         case AMOTION_EVENT_ACTION_POINTER_UP:
+            st->gestureValid = false;
+            return 1;
+        case AMOTION_EVENT_ACTION_UP:
+            if (st->tapActive && !st->tapMoved &&
+                AMotionEvent_getEventTime(event) - st->tapDownNs < 400000000LL) {
+                st->tapPending = true;
+                st->tapX = AMotionEvent_getX(event, 0);
+                st->tapY = AMotionEvent_getY(event, 0);
+            }
+            st->tapActive = false;
+            st->gestureValid = false;
+            return 1;
         case AMOTION_EVENT_ACTION_CANCEL:
-            st->gestureValid = false;  // pointer set changed: take a new baseline on the next move
+            st->tapActive = false;
+            st->gestureValid = false;
             return 1;
         case AMOTION_EVENT_ACTION_MOVE:
             break;
@@ -302,15 +364,22 @@ int32_t onInput(android_app* app, AInputEvent* event) {
     const float x0 = AMotionEvent_getX(event, 0), y0 = AMotionEvent_getY(event, 0);
     const float x1 = n == 2 ? AMotionEvent_getX(event, 1) : x0;
     const float y1 = n == 2 ? AMotionEvent_getY(event, 1) : y0;
+    if (st->tapActive && std::hypot(x0 - st->tapDownX, y0 - st->tapDownY) > 16.0f) st->tapMoved = true;
 
     if (st->gestureValid && st->gesturePointers == n) {
+        const float h = ANativeWindow_getHeight(app->window) > 0
+                            ? static_cast<float>(ANativeWindow_getHeight(app->window))
+                            : 1000.0f;
+        const float sy = std::sin(st->yaw), cy = std::cos(st->yaw);
+        const Vec3 right{cy, 0.0f, -sy};
+        const Vec3 fwdH{-sy, 0.0f, -cy};
         if (n == 1) {
-            // One finger: orbit.
+            // One finger: pan. The ground moves with the finger.
             const float dx = x0 - st->g0x, dy = y0 - st->g0y;
-            st->yaw -= dx * 0.006f;
-            st->pitch = std::min(std::max(st->pitch + dy * 0.004f, 0.2f), 1.45f);
+            const float scale = st->dist * 0.933f / h;  // approx. metres per pixel at the target
+            st->target = st->target - right * (dx * scale) - fwdH * (dy * scale);
         } else {
-            // Two fingers: pinch to zoom, move both to pan.
+            // Two fingers: pinch to zoom; moving both sideways turns the view, up and down tilts it.
             const float dPrev = std::hypot(st->g1x - st->g0x, st->g1y - st->g0y);
             const float dNow = std::hypot(x1 - x0, y1 - y0);
             if (dPrev > 1.0f && dNow > 1.0f) {
@@ -318,14 +387,8 @@ int32_t onInput(android_app* app, AInputEvent* event) {
             }
             const float mx = ((x0 + x1) - (st->g0x + st->g1x)) * 0.5f;
             const float my = ((y0 + y1) - (st->g0y + st->g1y)) * 0.5f;
-            const float h = ANativeWindow_getHeight(app->window) > 0
-                                ? static_cast<float>(ANativeWindow_getHeight(app->window))
-                                : 1000.0f;
-            const float scale = st->dist * 0.933f / h;  // approx. metres per pixel at the target
-            const float sy = std::sin(st->yaw), cy = std::cos(st->yaw);
-            const Vec3 right{cy, 0.0f, -sy};
-            const Vec3 fwdH{-sy, 0.0f, -cy};
-            st->target = st->target - right * (mx * scale) - fwdH * (my * scale);
+            st->yaw -= mx * 0.006f;
+            st->pitch = std::min(std::max(st->pitch + my * 0.004f, 0.2f), 1.45f);
         }
     }
 
@@ -384,7 +447,33 @@ void android_main(struct android_app* app) {
             LOGI("island start distance %.0f m for aspect %.2f", st.dist, aspect);
         }
         updateCamera(st);
-        if (!st.renderer.drawFrame(computeViewProj(st, aspect), st.pilotOffset, st.agentMesh)) {
+        if (st.tapPending && w > 0 && h > 0) {
+            st.tapPending = false;
+            const Vec3 eye = eyeOf(st);
+            const Vec3 dir = screenRayDir(eye, st.target, kFovY, aspect, st.tapX, st.tapY,
+                                          static_cast<float>(w), static_cast<float>(h));
+            Vec3 hit{};
+            if (pickGround(sceneGround(st), eye, dir, 400000.0f, hit)) {
+                st.havePick = true;
+                st.pickLL = sceneLatLon(st, hit.x, hit.z);
+            }
+        }
+        {
+            // On-screen readout: the centre of the view, and the last tapped point.
+            const LatLon centre = sceneLatLon(st, st.target.x, st.target.z);
+            char l1[96], l2[96], l3[96], l4[96];
+            std::snprintf(l1, sizeof l1, "CENTRE %.5f N %.5f E", centre.lat, centre.lon);
+            if (st.havePick) {
+                std::snprintf(l2, sizeof l2, "TAP %.5f N %.5f E", st.pickLL.lat, st.pickLL.lon);
+            } else {
+                std::snprintf(l2, sizeof l2, "TAP A PLACE TO READ IT");
+            }
+            std::snprintf(l3, sizeof l3, "DRAG: MOVE   PINCH: ZOOM");
+            std::snprintf(l4, sizeof l4, "TWO FINGERS: TURN AND TILT");
+            const char* lines[] = {l1, l2, l3, l4};
+            buildHudText(lines, 4, w, h, st.hud);
+        }
+        if (!st.renderer.drawFrame(computeViewProj(st, aspect), st.pilotOffset, st.agentMesh, st.hud)) {
             // Rendering stopped with an error: show it as text instead of leaving a frozen or blank screen.
             if (!st.renderer.ready() && !st.stoppedShown) {
                 st.stoppedShown = true;

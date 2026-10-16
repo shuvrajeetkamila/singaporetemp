@@ -24,6 +24,9 @@ void fillPixels(const PixelBuffer& b, uint32_t colour);
 // Unknown characters are drawn as blanks. Returns the pixel scale used (0 if nothing was drawn).
 int drawTextLines(const PixelBuffer& b, const char* const* lines, int count, uint32_t colour);
 
+// The 7 rows of the 5x7 glyph for `c` ('#' = ink), or nullptr if there is none.
+const char* const* glyphRows(char c);
+
 // True if the 5x7 font has a glyph for `c` (letters are case-insensitive).
 bool hasGlyph(char c);
 

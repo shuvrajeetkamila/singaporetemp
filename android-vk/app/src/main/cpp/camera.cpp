@@ -1,5 +1,6 @@
 #include "camera.h"
 
+#include <algorithm>
 #include <cmath>
 
 float groundHeight(const SceneGround& g, float x, float z) {
@@ -36,4 +37,41 @@ float keepEyeAboveGround(const SceneGround& g, Vec3 target, float yaw, float pit
         d *= 1.15f;
     }
     return d;
+}
+
+Vec3 screenRayDir(Vec3 eye, Vec3 target, float fovy, float aspect, float px, float py, float w, float h) {
+    const Vec3 fwd = normalize(target - eye);
+    const Vec3 right = normalize(cross(fwd, Vec3{0.0f, 1.0f, 0.0f}));
+    const Vec3 up = cross(right, fwd);
+    const float ndcX = (w > 0.0f) ? 2.0f * px / w - 1.0f : 0.0f;
+    const float ndcY = (h > 0.0f) ? 2.0f * py / h - 1.0f : 0.0f;  // -1 at the top of the screen
+    const float t = std::tan(fovy * 0.5f);
+    return normalize(fwd + right * (ndcX * t * aspect) + up * (-ndcY * t));
+}
+
+bool pickGround(const SceneGround& g, Vec3 eye, Vec3 dir, float maxDist, Vec3& hit) {
+    // March outwards in steps that grow with distance, then bisect the first crossing below the ground.
+    float prev = 0.0f;
+    float s = 0.5f;
+    bool above = true;
+    while (s <= maxDist) {
+        const Vec3 p = eye + dir * s;
+        if (p.y <= groundHeight(g, p.x, p.z)) {
+            above = false;
+            break;
+        }
+        prev = s;
+        s += std::max(0.5f, s * 0.01f);
+    }
+    if (above) return false;
+    float lo = prev, hi = s;
+    for (int i = 0; i < 40; ++i) {
+        const float mid = 0.5f * (lo + hi);
+        const Vec3 p = eye + dir * mid;
+        if (p.y <= groundHeight(g, p.x, p.z)) hi = mid;
+        else lo = mid;
+    }
+    hit = eye + dir * hi;
+    hit.y = groundHeight(g, hit.x, hit.z);
+    return true;
 }

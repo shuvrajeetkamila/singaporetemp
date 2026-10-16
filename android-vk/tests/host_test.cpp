@@ -12,6 +12,8 @@
 
 #include "agents.h"
 #include "camera.h"
+#include "geo.h"
+#include "hud.h"
 #include "diag.h"
 #include "core_math.h"
 #include "island.h"
@@ -284,12 +286,67 @@ static void testCameraGround() {
           "camera inside the hill was not pulled out (eye y %.1f, ground %.1f)", eye.y, ground);
 }
 
+// Map readout and tap: SVY21 matches the reference values; a ground point projected to the screen is
+// picked back at the same place; the HUD is well-formed quads.
+static void testGeoPickHud() {
+    // Pilot origin (SVY21 29631.518, 28494.117) = 1.273965133 N 103.847978354 E (pyproj reference).
+    const LatLon o = svy21ToWgs84(29631.518, 28494.117);
+    CHECK(std::fabs(o.lat - 1.273965133) < 1e-6 && std::fabs(o.lon - 103.847978354) < 1e-6,
+          "svy21 origin %.9f %.9f", o.lat, o.lon);
+    const LatLon far = svy21ToWgs84(40000.0, 40000.0);
+    CHECK(std::fabs(far.lat - 1.378017854) < 1e-6 && std::fabs(far.lon - 103.941147325) < 1e-6,
+          "svy21 far point %.9f %.9f", far.lat, far.lon);
+
+    District pilot;
+    pilot.tw = 5;
+    pilot.th = 5;
+    pilot.cell = 30.0f;
+    pilot.sizeX = 120.0f;
+    pilot.sizeZ = 120.0f;
+    pilot.heights.assign(25, 40.0f);
+    SceneGround g;
+    g.pilot = &pilot;
+
+    const float w = 1000.0f, h = 500.0f, aspect = w / h, fovy = 0.87266f;
+    const Vec3 target{60.0f, 40.0f, -60.0f};
+    const float yaw = 0.4f, pitch = 0.7f, dist = 300.0f;
+    const float cp = std::cos(pitch), sp = std::sin(pitch), sy = std::sin(yaw), cy = std::cos(yaw);
+    const Vec3 eye = target + Vec3{cp * sy, sp, cp * cy} * dist;
+    const Mat4 vp = mat4Mul(mat4Perspective(fovy, aspect, 1.0f, 3.0e6f),
+                            mat4LookAt(eye, target, Vec3{0.0f, 1.0f, 0.0f}));
+    const Vec3 P{70.0f, 40.0f, -50.0f};  // ground point near the target
+    const float x = P.x, y = P.y, z = P.z;
+    const float cx = vp.m[0] * x + vp.m[4] * y + vp.m[8] * z + vp.m[12];
+    const float cyy = vp.m[1] * x + vp.m[5] * y + vp.m[9] * z + vp.m[13];
+    const float cw = vp.m[3] * x + vp.m[7] * y + vp.m[11] * z + vp.m[15];
+    const float px = (cx / cw + 1.0f) * 0.5f * w;
+    const float py = (cyy / cw + 1.0f) * 0.5f * h;  // Vulkan: NDC y = -1 is the top row
+    const Vec3 dir = screenRayDir(eye, target, fovy, aspect, px, py, w, h);
+    const Vec3 want = normalize(P - eye);
+    CHECK(dot(dir, want) > 0.99999f, "pick ray points away from the tapped point (dot %.7f)", dot(dir, want));
+    Vec3 hit{};
+    CHECK(pickGround(g, eye, dir, 1.0e5f, hit), "tapped ground point not found");
+    CHECK(std::fabs(hit.x - P.x) < 0.5f && std::fabs(hit.z - P.z) < 0.5f && std::fabs(hit.y - 40.0f) < 0.5f,
+          "picked (%.2f, %.2f, %.2f) not at (%.1f, %.1f, %.1f)", hit.x, hit.y, hit.z, P.x, P.y, P.z);
+
+    const char* lines[] = {"CENTRE 1.27397 N 103.84798 E", "TAP A PLACE TO READ IT"};
+    std::vector<Vertex> hud;
+    const size_t n = buildHudText(lines, 2, 1000, 500, hud);
+    CHECK(n > 6 && n == hud.size() && n % 6 == 0, "hud vertex count %zu", n);
+    bool inside = true;
+    for (const Vertex& v : hud) {
+        inside = inside && v.pos[0] >= -1.0001f && v.pos[0] <= 1.0001f && v.pos[1] >= -1.0001f && v.pos[1] <= 1.0001f;
+    }
+    CHECK(inside, "hud quad outside the screen");
+}
+
 int main(int argc, char** argv) {
     std::string dir = argc > 1 ? argv[1] : "app/src/main/assets/district";
     std::printf("data dir: %s\n", dir.c_str());
 
     testText();
     testCameraGround();
+    testGeoPickHud();
     testSeamAndSea();
     testConcaveRoof();
     testMatrices();

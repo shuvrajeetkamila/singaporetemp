@@ -13,6 +13,8 @@ add_library(vkisland SHARED
     island.cpp
     diag.cpp
     camera.cpp
+    geo.cpp
+    hud.cpp
     diag_android.cpp
     sim.cpp
     agents.cpp

@@ -85,6 +85,11 @@ void fillRect(const PixelBuffer& b, int x0, int y0, int w, int h, uint32_t colou
 
 }  // namespace
 
+const char* const* glyphRows(char c) {
+    const Glyph* g = findGlyph(c);
+    return g ? g->rows : nullptr;
+}
+
 bool hasGlyph(char c) {
     return findGlyph(c) != nullptr;
 }
