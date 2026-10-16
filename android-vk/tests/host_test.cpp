@@ -381,6 +381,49 @@ static void testZoomAnchor() {
     CHECK(std::fabs(d3 - 400000.0f) < 1e-2f, "zoom clamp %.3f", d3);
 }
 
+// Touch mapping and one-finger pan on a flat world: the ground under the finger must follow it.
+static void testTouchAndPan() {
+    float px1 = 0.0f, py1 = 0.0f, px2 = 0.0f, py2 = 0.0f;
+    // A finger moved up (touch x falls by 100) moves the picture up (py falls by 100), nothing sideways.
+    touchToPicture(1000.0f, 500.0f, 2240.0f, px1, py1);
+    touchToPicture(900.0f, 500.0f, 2240.0f, px2, py2);
+    CHECK(std::fabs((py2 - py1) + 100.0f) < 1e-3f, "finger up: py change %f\n", py2 - py1);
+    CHECK(std::fabs(px2 - px1) < 1e-3f, "finger up: px changed %f\n", px2 - px1);
+    // A finger moved right (touch y rises by 100) moves px by 100 in the other direction.
+    touchToPicture(500.0f, 1000.0f, 2240.0f, px1, py1);
+    touchToPicture(500.0f, 1100.0f, 2240.0f, px2, py2);
+    CHECK(std::fabs((px2 - px1) + 100.0f) < 1e-3f, "finger y: px change %f\n", px2 - px1);
+
+    SceneGround g;  // no grids: flat sea at height 0
+    const float W = 2240.0f, H = 1080.0f, aspect = W / H;
+    const float yaw = 0.4f, pitch = 0.6f, dist = 1000.0f;
+    const Vec3 target{0.0f, 0.0f, 0.0f};
+    auto pick = [&](Vec3 t, float x, float y, Vec3& hit) {
+        const Vec3 eye = orbitEye(t, yaw, pitch, dist);
+        const Vec3 dir = screenRayDir(eye, t, 0.87266f, aspect, x, y, W, H);
+        return pickGround(g, eye, dir, 400000.0f, hit);
+    };
+    const float fx = 1120.0f, fy = 800.0f;  // finger position
+    Vec3 a{};
+    CHECK(pick(target, fx, fy, a), "no ground under the finger\n");
+    const float scale = dist * 0.933f / H;
+
+    // Drag up by 100 px: the ground point under the finger should now be 100 px higher on screen.
+    const Vec3 upT = panTargetForDrag(target, yaw, 0.0f, -100.0f, scale);
+    Vec3 c1{}, c2{};
+    CHECK(pick(upT, fx, fy - 100.0f, c1), "pan up: no ground\n");
+    CHECK(pick(upT, fx, fy + 100.0f, c2), "pan up: no ground\n");
+    const float e1 = std::hypot(c1.x - a.x, c1.z - a.z), e2 = std::hypot(c2.x - a.x, c2.z - a.z);
+    CHECK(e1 < 0.25f * e2, "pan up goes the wrong way: errors %.1f vs %.1f m\n", e1, e2);
+
+    // Drag right by 100 px: the ground point should now be 100 px further right.
+    const Vec3 rightT = panTargetForDrag(target, yaw, 100.0f, 0.0f, scale);
+    CHECK(pick(rightT, fx + 100.0f, fy, c1), "pan right: no ground\n");
+    CHECK(pick(rightT, fx - 100.0f, fy, c2), "pan right: no ground\n");
+    const float f1 = std::hypot(c1.x - a.x, c1.z - a.z), f2 = std::hypot(c2.x - a.x, c2.z - a.z);
+    CHECK(f1 < 0.25f * f2, "pan right goes the wrong way: errors %.1f vs %.1f m\n", f1, f2);
+}
+
 int main(int argc, char** argv) {
     std::string dir = argc > 1 ? argv[1] : "app/src/main/assets/district";
     std::printf("data dir: %s\n", dir.c_str());
@@ -389,6 +432,7 @@ int main(int argc, char** argv) {
     testCameraGround();
     testGeoPickHud();
     testZoomAnchor();
+    testTouchAndPan();
     testSeamAndSea();
     testConcaveRoof();
     testMatrices();

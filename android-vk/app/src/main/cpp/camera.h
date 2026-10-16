@@ -2,6 +2,8 @@
 // Scene frame: x east, y up, z = -north, metres.
 #pragma once
 
+#include <cmath>
+
 #include "core_math.h"
 #include "world.h"
 
@@ -37,3 +39,22 @@ bool pickGround(const SceneGround& g, Vec3 eye, Vec3 dir, float maxDist, Vec3& h
 void zoomAboutPixel(const SceneGround& g, Vec3 target, float yaw, float pitch, float dist, float k, float px,
                     float py, float w, float h, float fovy, float minDist, float maxDist, Vec3& outTarget,
                     float& outDist);
+
+// Phone touch positions come in the phone's upright (portrait) frame, but the picture is landscape.
+// Maps a touch (tx, ty) to a picture pixel (px, py). The touch frame is about 2340 px long, and the
+// picture is pictureWidth px wide, so the unused strip (about 100 px, shown black) sits at the picture's left.
+// Checked on build 16 with the drag test: a finger dragged up must move the picture up.
+inline void touchToPicture(float tx, float ty, float pictureWidth, float& px, float& py) {
+    px = pictureWidth - ty;
+    py = tx;
+}
+
+// New orbit target after a one-finger drag of (dxPx, dyPx) screen pixels. The ground under the finger
+// follows it: a drag up (dyPx < 0) moves the view toward the far side (forward), a drag right moves it left.
+// metresPerPixel is the ground size of one pixel at the target.
+inline Vec3 panTargetForDrag(Vec3 target, float yaw, float dxPx, float dyPx, float metresPerPixel) {
+    const float sy = std::sin(yaw), cy = std::cos(yaw);
+    const Vec3 right{cy, 0.0f, -sy};
+    const Vec3 fwdH{-sy, 0.0f, -cy};
+    return target - right * (dxPx * metresPerPixel) + fwdH * (dyPx * metresPerPixel);
+}

@@ -343,6 +343,19 @@ int32_t onInput(android_app* app, AInputEvent* event) {
     AppState* st = static_cast<AppState*>(app->userData);
     if (!st || AInputEvent_getType(event) != AINPUT_EVENT_TYPE_MOTION) return 0;
 
+    // Touch positions in picture pixels (see touchToPicture in camera.h).
+    const float picW = st->renderer.displayWidth() > 0 ? static_cast<float>(st->renderer.displayWidth()) : 2240.0f;
+    auto touchX = [&](size_t i) {
+        float px = 0.0f, py = 0.0f;
+        touchToPicture(AMotionEvent_getX(event, i), AMotionEvent_getY(event, i), picW, px, py);
+        return px;
+    };
+    auto touchY = [&](size_t i) {
+        float px = 0.0f, py = 0.0f;
+        touchToPicture(AMotionEvent_getX(event, i), AMotionEvent_getY(event, i), picW, px, py);
+        return py;
+    };
+
     const int32_t masked = AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK;
     switch (masked) {
         case AMOTION_EVENT_ACTION_DOWN:  // first finger down: may become a tap; the user takes over the view
@@ -350,8 +363,8 @@ int32_t onInput(android_app* app, AInputEvent* event) {
             st->tapActive = true;
             st->tapMoved = false;
             st->tapDownNs = AMotionEvent_getEventTime(event);
-            st->tapDownX = AMotionEvent_getX(event, 0);
-            st->tapDownY = AMotionEvent_getY(event, 0);
+            st->tapDownX = touchX(0);
+            st->tapDownY = touchY(0);
             return 1;
         case AMOTION_EVENT_ACTION_POINTER_DOWN:  // a second finger: never a tap
             st->gestureValid = false;
@@ -364,8 +377,8 @@ int32_t onInput(android_app* app, AInputEvent* event) {
             if (st->tapActive && !st->tapMoved &&
                 AMotionEvent_getEventTime(event) - st->tapDownNs < 500000000LL) {
                 st->tapPending = true;
-                st->tapX = AMotionEvent_getX(event, 0);
-                st->tapY = AMotionEvent_getY(event, 0);
+                st->tapX = touchX(0);
+                st->tapY = touchY(0);
                 const int64_t now = AMotionEvent_getEventTime(event);
                 if (st->lastTapNs != 0 && now - st->lastTapNs < 500000000LL &&
                     std::hypot(st->tapX - st->lastTapX, st->tapY - st->lastTapY) < 60.0f) {
@@ -394,9 +407,9 @@ int32_t onInput(android_app* app, AInputEvent* event) {
 
     const size_t count = AMotionEvent_getPointerCount(event);
     const int n = count >= 2 ? 2 : 1;
-    const float x0 = AMotionEvent_getX(event, 0), y0 = AMotionEvent_getY(event, 0);
-    const float x1 = n == 2 ? AMotionEvent_getX(event, 1) : x0;
-    const float y1 = n == 2 ? AMotionEvent_getY(event, 1) : y0;
+    const float x0 = touchX(0), y0 = touchY(0);
+    const float x1 = n == 2 ? touchX(1) : x0;
+    const float y1 = n == 2 ? touchY(1) : y0;
     if (st->tapActive && std::hypot(x0 - st->tapDownX, y0 - st->tapDownY) > 24.0f) st->tapMoved = true;
 
     if (st->gestureValid && st->gesturePointers == n) {
@@ -408,12 +421,11 @@ int32_t onInput(android_app* app, AInputEvent* event) {
                             : 1000.0f;
         const float sy = std::sin(st->goalYaw), cy = std::cos(st->goalYaw);
         const Vec3 right{cy, 0.0f, -sy};
-        const Vec3 fwdH{-sy, 0.0f, -cy};
         if (n == 1) {
             // One finger: pan. The ground moves with the finger.
             const float dx = x0 - st->g0x, dy = y0 - st->g0y;
             const float scale = st->goalDist * 0.933f / h;  // approx. metres per pixel at the target
-            st->goalTarget = st->goalTarget - right * (dx * scale) - fwdH * (dy * scale);
+            st->goalTarget = panTargetForDrag(st->goalTarget, st->goalYaw, dx, dy, scale);
         } else {
             // Two fingers: pinch zooms about the midpoint, sideways drift pans, twist turns, vertical drift tilts.
             const float g0x = st->g0x, g0y = st->g0y, g1x = st->g1x, g1y = st->g1y;
