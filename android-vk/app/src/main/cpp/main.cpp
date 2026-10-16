@@ -566,8 +566,6 @@ void android_main(struct android_app* app) {
             const char* lines[] = {l1, l2, l3, l4, l5, l6};
             buildHudText(lines, 6, w, h, st.hud);
         }
-            buildHudText(lines, 5, w, h, st.hud);
-        }
         if (!st.renderer.drawFrame(computeViewProj(st, aspect), st.pilotOffset, st.agentMesh, st.hud)) {
             // Rendering stopped with an error: show it as text instead of leaving a frozen or blank screen.
             if (!st.renderer.ready() && !st.stoppedShown) {
