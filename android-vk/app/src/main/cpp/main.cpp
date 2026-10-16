@@ -564,7 +564,8 @@ void android_main(struct android_app* app) {
             std::snprintf(l5, sizeof l5, "SCREEN %dX%d TURN %d", w, h, st.renderer.displayRotation());
             std::snprintf(l6, sizeof l6, "FPS %d  TAPS %d", static_cast<int>(st.fps + 0.5f), st.tapCount);
             const char* lines[] = {l1, l2, l3, l4, l5, l6};
-            buildHudText(lines, 6, w, h, st.hud);
+            // The text is laid out for the landscape screen (long side across), whatever the stored orientation.
+            buildHudText(lines, 6, std::max(w, h), std::min(w, h), st.hud);
         }
         if (!st.renderer.drawFrame(computeViewProj(st, aspect), st.pilotOffset, st.agentMesh, st.hud)) {
             // Rendering stopped with an error: show it as text instead of leaving a frozen or blank screen.

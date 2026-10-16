@@ -42,7 +42,7 @@ size_t buildHudText(const char* const* lines, int count, int w, int h, std::vect
     if (w <= 0 || h <= 0 || count <= 0) return 0;
     Frame f{w, h, &out, kMaxHudVertices};
 
-    const int s = std::max(3, h / 180);  // pixels per glyph dot
+    const int s = std::max(3, h / 270);  // pixels per glyph dot: about 4 on a 1080-pixel-high screen
     const int pad = 2 * s;
     const int advance = 6 * s;           // 5 dots plus one gap
     const int lineH = 9 * s;             // 7 rows plus a gap
