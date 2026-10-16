@@ -820,8 +820,10 @@ bool Renderer::drawFrame(const Mat4& viewProj, const float agentOffset[3], const
             vkCmdDraw(cb, agentVerts, 1, 0, 0);
         }
         if (hudVerts > 0) {
-            // HUD: screen coordinates with no offset, same transform as the scene.
-            const Mat4 hudPre = pre;
+            // HUD: screen coordinates with no offset. Build 15 showed the HUD text sideways (bottom to top)
+            // with no extra turn; build 14 showed it upright with a 270 degree turn (180 then 90), so the HUD
+            // gets that turn here. The scene keeps its own transform (identity).
+            const Mat4 hudPre = preRotation(270);
             std::memcpy(pd.viewProj, hudPre.m, sizeof(pd.viewProj));
             pd.offset[0] = pd.offset[1] = pd.offset[2] = pd.offset[3] = 0.0f;
             vkCmdPushConstants(cb, pipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushData), &pd);
