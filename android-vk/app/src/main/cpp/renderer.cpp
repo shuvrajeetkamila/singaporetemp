@@ -574,12 +574,15 @@ bool Renderer::createDepthBuffer() {
     return true;
 }
 
+// Experiment (build 15): the swapchain is already the landscape size of the screen, so the picture uses
+// its width and height as they are, with no extra turn. Earlier builds swapped them, which gave a portrait
+// size for a landscape picture (the island looked flattened and touches were mirrored).
 uint32_t Renderer::displayWidth() const {
-    return (rotationDeg_ == 90 || rotationDeg_ == 270) ? extent_.height : extent_.width;
+    return extent_.width;
 }
 
 uint32_t Renderer::displayHeight() const {
-    return (rotationDeg_ == 90 || rotationDeg_ == 270) ? extent_.width : extent_.height;
+    return extent_.height;
 }
 
 namespace {
@@ -792,7 +795,7 @@ bool Renderer::drawFrame(const Mat4& viewProj, const float agentOffset[3], const
         vkCmdSetScissor(cb, 0, 1, &sc);
 
         // The scene is built for the upright picture; pre-rotate it into the stored picture.
-        const Mat4 pre = preRotation(rotationDeg_);
+        const Mat4 pre = mat4Identity();  // experiment: no extra turn (see displayWidth)
         const Mat4 sceneViewProj = mat4Mul(pre, viewProj);
         PushData pd{};
         std::memcpy(pd.viewProj, sceneViewProj.m, sizeof(pd.viewProj));
@@ -817,9 +820,8 @@ bool Renderer::drawFrame(const Mat4& viewProj, const float agentOffset[3], const
             vkCmdDraw(cb, agentVerts, 1, 0, 0);
         }
         if (hudVerts > 0) {
-            // HUD: screen coordinates with no offset. On the test phones the HUD came out turned half a turn
-            // relative to the scene, so it gets one extra half turn. The scene keeps its own transform.
-            const Mat4 hudPre = mat4Mul(preRotation(180), pre);
+            // HUD: screen coordinates with no offset, same transform as the scene.
+            const Mat4 hudPre = pre;
             std::memcpy(pd.viewProj, hudPre.m, sizeof(pd.viewProj));
             pd.offset[0] = pd.offset[1] = pd.offset[2] = pd.offset[3] = 0.0f;
             vkCmdPushConstants(cb, pipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushData), &pd);
