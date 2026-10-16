@@ -77,6 +77,16 @@ struct AppState {
     bool havePick = false;
     LatLon pickLL;
     std::vector<Vertex> hud;
+
+    // Double tap zooms in on the tapped ground point. The move eases over a short time.
+    bool doubleTapPending = false;
+    float dtX = 0.0f, dtY = 0.0f;
+    int64_t lastTapNs = 0;
+    float lastTapX = 0.0f, lastTapY = 0.0f;
+    bool animating = false;
+    float animT = 0.0f;
+    Vec3 animFromT{}, animToT{};
+    float animFromD = 0.0f, animToD = 0.0f;
 };
 
 bool readAsset(AAssetManager* mgr, const char* name, std::vector<uint8_t>& out) {
@@ -318,13 +328,35 @@ LatLon sceneLatLon(const AppState& st, float x, float z) {
     return svy21ToWgs84(e, n);
 }
 
+constexpr float kMinDist = 60.0f;
+constexpr float kMaxDist = 400000.0f;
+
+// Target and distance after zooming by factor k (new distance / old) so that the ground under pixel
+// (px, py) stays under that pixel. If there is no ground under it, the zoom is about the centre.
+void zoomGoal(const AppState& st, float px, float py, float k, Vec3& target, float& dist) {
+    dist = std::min(std::max(st.dist * k, kMinDist), kMaxDist);
+    const float kk = dist / st.dist;
+    target = st.target;
+    const float w = static_cast<float>(st.renderer.displayWidth());
+    const float h = static_cast<float>(st.renderer.displayHeight());
+    if (w <= 0.0f || h <= 0.0f) return;
+    const Vec3 eye = eyeOf(st);
+    const Vec3 dir = screenRayDir(eye, st.target, kFovY, w / h, px, py, w, h);
+    Vec3 hit{};
+    if (pickGround(sceneGround(st), eye, dir, kMaxDist, hit)) {
+        // Eye and target both scale about the hit point, so the ray through (px, py) is unchanged.
+        target = hit + (st.target - hit) * kk;
+    }
+}
+
 int32_t onInput(android_app* app, AInputEvent* event) {
     AppState* st = static_cast<AppState*>(app->userData);
     if (!st || AInputEvent_getType(event) != AINPUT_EVENT_TYPE_MOTION) return 0;
 
     const int32_t masked = AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK;
     switch (masked) {
-        case AMOTION_EVENT_ACTION_DOWN:  // first finger down: may become a tap
+        case AMOTION_EVENT_ACTION_DOWN:  // first finger down: may become a tap; the user takes over the view
+            st->animating = false;
             st->gestureValid = false;
             st->tapActive = true;
             st->tapMoved = false;
@@ -345,6 +377,18 @@ int32_t onInput(android_app* app, AInputEvent* event) {
                 st->tapPending = true;
                 st->tapX = AMotionEvent_getX(event, 0);
                 st->tapY = AMotionEvent_getY(event, 0);
+                const int64_t now = AMotionEvent_getEventTime(event);
+                if (st->lastTapNs != 0 && now - st->lastTapNs < 350000000LL &&
+                    std::hypot(st->tapX - st->lastTapX, st->tapY - st->lastTapY) < 60.0f) {
+                    st->doubleTapPending = true;
+                    st->dtX = st->tapX;
+                    st->dtY = st->tapY;
+                    st->lastTapNs = 0;
+                } else {
+                    st->lastTapNs = now;
+                    st->lastTapX = st->tapX;
+                    st->lastTapY = st->tapY;
+                }
             }
             st->tapActive = false;
             st->gestureValid = false;
@@ -367,8 +411,8 @@ int32_t onInput(android_app* app, AInputEvent* event) {
     if (st->tapActive && std::hypot(x0 - st->tapDownX, y0 - st->tapDownY) > 16.0f) st->tapMoved = true;
 
     if (st->gestureValid && st->gesturePointers == n) {
-        const float h = ANativeWindow_getHeight(app->window) > 0
-                            ? static_cast<float>(ANativeWindow_getHeight(app->window))
+        const float h = st->renderer.displayHeight() > 0
+                            ? static_cast<float>(st->renderer.displayHeight())
                             : 1000.0f;
         const float sy = std::sin(st->yaw), cy = std::cos(st->yaw);
         const Vec3 right{cy, 0.0f, -sy};
@@ -382,8 +426,14 @@ int32_t onInput(android_app* app, AInputEvent* event) {
             // Two fingers: pinch to zoom; moving both sideways turns the view, up and down tilts it.
             const float dPrev = std::hypot(st->g1x - st->g0x, st->g1y - st->g0y);
             const float dNow = std::hypot(x1 - x0, y1 - y0);
+            // The zoom keeps the ground under the previous midpoint of the fingers in place.
+            const float pmx = (st->g0x + st->g1x) * 0.5f, pmy = (st->g0y + st->g1y) * 0.5f;
             if (dPrev > 1.0f && dNow > 1.0f) {
-                st->dist = std::min(std::max(st->dist * dPrev / dNow, 60.0f), 400000.0f);
+                Vec3 t{};
+                float d = 0.0f;
+                zoomGoal(*st, pmx, pmy, dPrev / dNow, t, d);
+                st->target = t;
+                st->dist = d;
             }
             const float mx = ((x0 + x1) - (st->g0x + st->g1x)) * 0.5f;
             const float my = ((y0 + y1) - (st->g0y + st->g1y)) * 0.5f;
@@ -438,8 +488,28 @@ void android_main(struct android_app* app) {
             st.agentMesh.clear();
         }
 
-        const int32_t w = ANativeWindow_getWidth(app->window);
-        const int32_t h = ANativeWindow_getHeight(app->window);
+        // The picture is laid out for the screen orientation, not the stored swapchain orientation.
+        const int32_t w = static_cast<int32_t>(st.renderer.displayWidth());
+        const int32_t h = static_cast<int32_t>(st.renderer.displayHeight());
+        if (st.doubleTapPending && w > 0 && h > 0) {
+            st.doubleTapPending = false;
+            Vec3 t{};
+            float d = 0.0f;
+            zoomGoal(st, st.dtX, st.dtY, 0.4f, t, d);
+            st.animFromT = st.target;
+            st.animFromD = st.dist;
+            st.animToT = t;
+            st.animToD = d;
+            st.animT = 0.0f;
+            st.animating = true;
+        }
+        if (st.animating) {
+            st.animT = std::min(st.animT + dt / 0.35f, 1.0f);
+            const float u = 1.0f - (1.0f - st.animT) * (1.0f - st.animT) * (1.0f - st.animT);  // ease out
+            st.target = st.animFromT + (st.animToT - st.animFromT) * u;
+            st.dist = st.animFromD + (st.animToD - st.animFromD) * u;
+            if (st.animT >= 1.0f) st.animating = false;
+        }
         const float aspect = (w > 0 && h > 0) ? static_cast<float>(w) / static_cast<float>(h) : 1.0f;
         if (st.islandLoaded && !st.distFitted && w > 0 && h > 0) {
             st.dist = islandFitDistance(st.island, aspect);
@@ -470,8 +540,10 @@ void android_main(struct android_app* app) {
             }
             std::snprintf(l3, sizeof l3, "DRAG: MOVE   PINCH: ZOOM");
             std::snprintf(l4, sizeof l4, "TWO FINGERS: TURN AND TILT");
-            const char* lines[] = {l1, l2, l3, l4};
-            buildHudText(lines, 4, w, h, st.hud);
+            char l5[96];
+            std::snprintf(l5, sizeof l5, "SCREEN %dX%d TURN %d", w, h, st.renderer.displayRotation());
+            const char* lines[] = {l1, l2, l3, l4, l5};
+            buildHudText(lines, 5, w, h, st.hud);
         }
         if (!st.renderer.drawFrame(computeViewProj(st, aspect), st.pilotOffset, st.agentMesh, st.hud)) {
             // Rendering stopped with an error: show it as text instead of leaving a frozen or blank screen.

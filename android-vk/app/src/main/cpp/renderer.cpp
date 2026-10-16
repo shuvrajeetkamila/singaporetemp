@@ -574,9 +574,52 @@ bool Renderer::createDepthBuffer() {
     return true;
 }
 
+uint32_t Renderer::displayWidth() const {
+    return (rotationDeg_ == 90 || rotationDeg_ == 270) ? extent_.height : extent_.width;
+}
+
+uint32_t Renderer::displayHeight() const {
+    return (rotationDeg_ == 90 || rotationDeg_ == 270) ? extent_.width : extent_.height;
+}
+
+namespace {
+
+// Clip-space map from the upright picture to the stored picture: the presentation engine turns the stored
+// picture clockwise by `deg`, so the stored picture is drawn turned counter-clockwise by `deg`. Only x and y
+// change, so depth and w are untouched. Column-major, as Mat4 is.
+Mat4 preRotation(int deg) {
+    Mat4 r = mat4Identity();
+    switch (deg) {
+        case 90:  // (x, y) -> (y, -x)
+            r.m[0] = 0.0f; r.m[4] = 1.0f; r.m[1] = -1.0f; r.m[5] = 0.0f;
+            break;
+        case 180:  // (x, y) -> (-x, -y)
+            r.m[0] = -1.0f; r.m[5] = -1.0f;
+            break;
+        case 270:  // (x, y) -> (-y, x)
+            r.m[0] = 0.0f; r.m[4] = -1.0f; r.m[1] = 1.0f; r.m[5] = 0.0f;
+            break;
+        default:
+            break;
+    }
+    return r;
+}
+
+}  // namespace
+
 bool Renderer::buildSwapchain() {
     VkSurfaceCapabilitiesKHR caps{};
     VK_TRY(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_, surface_, &caps), "surface capabilities");
+
+    // How the presentation engine turns the stored picture for the screen (Vulkan: ROTATE_90 is clockwise).
+    switch (caps.currentTransform) {
+        case VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR: rotationDeg_ = 90; break;
+        case VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR: rotationDeg_ = 180; break;
+        case VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR: rotationDeg_ = 270; break;
+        default: rotationDeg_ = 0; break;
+    }
+    LOGI("surface transform %d (%d deg), currentExtent %ux%u", static_cast<int>(caps.currentTransform),
+         rotationDeg_, caps.currentExtent.width, caps.currentExtent.height);
 
     VkExtent2D ext = caps.currentExtent;
     if (ext.width == 0xFFFFFFFFu) {
@@ -748,8 +791,11 @@ bool Renderer::drawFrame(const Mat4& viewProj, const float agentOffset[3], const
         vkCmdSetViewport(cb, 0, 1, &vp);
         vkCmdSetScissor(cb, 0, 1, &sc);
 
+        // The scene is built for the upright picture; pre-rotate it into the stored picture.
+        const Mat4 pre = preRotation(rotationDeg_);
+        const Mat4 sceneViewProj = mat4Mul(pre, viewProj);
         PushData pd{};
-        std::memcpy(pd.viewProj, viewProj.m, sizeof(pd.viewProj));
+        std::memcpy(pd.viewProj, sceneViewProj.m, sizeof(pd.viewProj));
         VkDeviceSize offset = 0;
         for (const GpuMesh& g : meshes_) {
             pd.offset[0] = g.offset[0];
@@ -771,9 +817,8 @@ bool Renderer::drawFrame(const Mat4& viewProj, const float agentOffset[3], const
             vkCmdDraw(cb, agentVerts, 1, 0, 0);
         }
         if (hudVerts > 0) {
-            // HUD: already in clip space, so the view-projection is the identity and the offset is zero.
-            const Mat4 id = mat4Identity();
-            std::memcpy(pd.viewProj, id.m, sizeof(pd.viewProj));
+            // HUD: upright screen coordinates, so they get the same pre-rotation as the scene and no offset.
+            std::memcpy(pd.viewProj, pre.m, sizeof(pd.viewProj));
             pd.offset[0] = pd.offset[1] = pd.offset[2] = pd.offset[3] = 0.0f;
             vkCmdPushConstants(cb, pipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushData), &pd);
             vkCmdBindVertexBuffers(cb, 0, 1, &hud_[f].buf, &offset);

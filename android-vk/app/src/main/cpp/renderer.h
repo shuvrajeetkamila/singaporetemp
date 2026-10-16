@@ -33,6 +33,14 @@ public:
     }
     bool hasScene() const { return pipeline_ != VK_NULL_HANDLE; }
     bool ready() const { return ready_; }
+
+    // Size of the picture as the user sees it (the screen orientation). The swapchain may be stored
+    // rotated by 90 or 270 degrees; in that case the width and height are swapped here.
+    uint32_t displayWidth() const;
+    uint32_t displayHeight() const;
+    // Clockwise turn the presentation engine applies to the stored picture: 0, 90, 180 or 270 (Vulkan's
+    // currentTransform). The renderer pre-rotates its clip space by the inverse so the picture is upright.
+    int displayRotation() const { return rotationDeg_; }
     const std::string& lastError() const { return err_; }
     void destroy();
 
@@ -98,6 +106,7 @@ private:
 
     VkSwapchainKHR swapchain_ = VK_NULL_HANDLE;
     VkExtent2D extent_{0, 0};
+    int rotationDeg_ = 0;  // clockwise turn of the stored picture, from currentTransform
     std::vector<VkImage> swapImages_;
     std::vector<VkImageView> swapViews_;
     std::vector<VkFramebuffer> framebuffers_;
