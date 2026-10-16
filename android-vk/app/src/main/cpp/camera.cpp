@@ -75,3 +75,19 @@ bool pickGround(const SceneGround& g, Vec3 eye, Vec3 dir, float maxDist, Vec3& h
     hit.y = groundHeight(g, hit.x, hit.z);
     return true;
 }
+
+void zoomAboutPixel(const SceneGround& g, Vec3 target, float yaw, float pitch, float dist, float k, float px,
+                    float py, float w, float h, float fovy, float minDist, float maxDist, Vec3& outTarget,
+                    float& outDist) {
+    outDist = std::min(std::max(dist * k, minDist), maxDist);
+    outTarget = target;
+    if (dist <= 0.0f || w <= 0.0f || h <= 0.0f) return;
+    const float kk = outDist / dist;
+    const Vec3 eye = orbitEye(target, yaw, pitch, dist);
+    const Vec3 dir = screenRayDir(eye, target, fovy, w / h, px, py, w, h);
+    Vec3 hit{};
+    if (pickGround(g, eye, dir, maxDist, hit)) {
+        // Eye and target both scale about the hit point, so the ray through (px, py) is unchanged.
+        outTarget = hit + (target - hit) * kk;
+    }
+}

@@ -29,3 +29,11 @@ Vec3 screenRayDir(Vec3 eye, Vec3 target, float fovy, float aspect, float px, flo
 // First point along the ray where it meets the ground (height 0 outside the grids, so the sea is ground).
 // Returns false if nothing is hit within maxDist.
 bool pickGround(const SceneGround& g, Vec3 eye, Vec3 dir, float maxDist, Vec3& hit);
+
+// Zooms by factor k (new distance / old) about pixel (px, py) of a w x h viewport, with the orbit
+// camera at (target, yaw, pitch, dist) and vertical field of view fovy. The ground under that pixel stays
+// under it. The new distance is clamped to [minDist, maxDist]. If there is no ground under the pixel, the
+// target stays where it is.
+void zoomAboutPixel(const SceneGround& g, Vec3 target, float yaw, float pitch, float dist, float k, float px,
+                    float py, float w, float h, float fovy, float minDist, float maxDist, Vec3& outTarget,
+                    float& outDist);

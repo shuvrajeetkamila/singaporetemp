@@ -78,15 +78,23 @@ struct AppState {
     LatLon pickLL;
     std::vector<Vertex> hud;
 
-    // Double tap zooms in on the tapped ground point. The move eases over a short time.
+    // Double tap zooms in on the tapped ground point (the eased camera follows the goal).
     bool doubleTapPending = false;
     float dtX = 0.0f, dtY = 0.0f;
     int64_t lastTapNs = 0;
     float lastTapX = 0.0f, lastTapY = 0.0f;
-    bool animating = false;
-    float animT = 0.0f;
-    Vec3 animFromT{}, animToT{};
-    float animFromD = 0.0f, animToD = 0.0f;
+    int tapCount = 0;
+    bool tapMiss = false;  // the last tap hit no ground
+
+    // Camera goals: touch moves these; the drawn camera eases toward them so jitter smooths out.
+    bool goalsReady = false;
+    Vec3 goalTarget{};
+    float goalYaw = 0.0f, goalPitch = 0.0f, goalDist = 0.0f;
+
+    // Frame rate for the readout.
+    int frames = 0;
+    float fpsTime = 0.0f;
+    float fps = 0.0f;
 };
 
 bool readAsset(AAssetManager* mgr, const char* name, std::vector<uint8_t>& out) {
@@ -331,24 +339,6 @@ LatLon sceneLatLon(const AppState& st, float x, float z) {
 constexpr float kMinDist = 60.0f;
 constexpr float kMaxDist = 400000.0f;
 
-// Target and distance after zooming by factor k (new distance / old) so that the ground under pixel
-// (px, py) stays under that pixel. If there is no ground under it, the zoom is about the centre.
-void zoomGoal(const AppState& st, float px, float py, float k, Vec3& target, float& dist) {
-    dist = std::min(std::max(st.dist * k, kMinDist), kMaxDist);
-    const float kk = dist / st.dist;
-    target = st.target;
-    const float w = static_cast<float>(st.renderer.displayWidth());
-    const float h = static_cast<float>(st.renderer.displayHeight());
-    if (w <= 0.0f || h <= 0.0f) return;
-    const Vec3 eye = eyeOf(st);
-    const Vec3 dir = screenRayDir(eye, st.target, kFovY, w / h, px, py, w, h);
-    Vec3 hit{};
-    if (pickGround(sceneGround(st), eye, dir, kMaxDist, hit)) {
-        // Eye and target both scale about the hit point, so the ray through (px, py) is unchanged.
-        target = hit + (st.target - hit) * kk;
-    }
-}
-
 int32_t onInput(android_app* app, AInputEvent* event) {
     AppState* st = static_cast<AppState*>(app->userData);
     if (!st || AInputEvent_getType(event) != AINPUT_EVENT_TYPE_MOTION) return 0;
@@ -356,7 +346,6 @@ int32_t onInput(android_app* app, AInputEvent* event) {
     const int32_t masked = AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK;
     switch (masked) {
         case AMOTION_EVENT_ACTION_DOWN:  // first finger down: may become a tap; the user takes over the view
-            st->animating = false;
             st->gestureValid = false;
             st->tapActive = true;
             st->tapMoved = false;
@@ -373,12 +362,12 @@ int32_t onInput(android_app* app, AInputEvent* event) {
             return 1;
         case AMOTION_EVENT_ACTION_UP:
             if (st->tapActive && !st->tapMoved &&
-                AMotionEvent_getEventTime(event) - st->tapDownNs < 400000000LL) {
+                AMotionEvent_getEventTime(event) - st->tapDownNs < 500000000LL) {
                 st->tapPending = true;
                 st->tapX = AMotionEvent_getX(event, 0);
                 st->tapY = AMotionEvent_getY(event, 0);
                 const int64_t now = AMotionEvent_getEventTime(event);
-                if (st->lastTapNs != 0 && now - st->lastTapNs < 350000000LL &&
+                if (st->lastTapNs != 0 && now - st->lastTapNs < 500000000LL &&
                     std::hypot(st->tapX - st->lastTapX, st->tapY - st->lastTapY) < 60.0f) {
                     st->doubleTapPending = true;
                     st->dtX = st->tapX;
@@ -408,37 +397,46 @@ int32_t onInput(android_app* app, AInputEvent* event) {
     const float x0 = AMotionEvent_getX(event, 0), y0 = AMotionEvent_getY(event, 0);
     const float x1 = n == 2 ? AMotionEvent_getX(event, 1) : x0;
     const float y1 = n == 2 ? AMotionEvent_getY(event, 1) : y0;
-    if (st->tapActive && std::hypot(x0 - st->tapDownX, y0 - st->tapDownY) > 16.0f) st->tapMoved = true;
+    if (st->tapActive && std::hypot(x0 - st->tapDownX, y0 - st->tapDownY) > 24.0f) st->tapMoved = true;
 
     if (st->gestureValid && st->gesturePointers == n) {
         const float h = st->renderer.displayHeight() > 0
                             ? static_cast<float>(st->renderer.displayHeight())
                             : 1000.0f;
-        const float sy = std::sin(st->yaw), cy = std::cos(st->yaw);
+        const float w = st->renderer.displayWidth() > 0
+                            ? static_cast<float>(st->renderer.displayWidth())
+                            : 1000.0f;
+        const float sy = std::sin(st->goalYaw), cy = std::cos(st->goalYaw);
         const Vec3 right{cy, 0.0f, -sy};
         const Vec3 fwdH{-sy, 0.0f, -cy};
         if (n == 1) {
             // One finger: pan. The ground moves with the finger.
             const float dx = x0 - st->g0x, dy = y0 - st->g0y;
-            const float scale = st->dist * 0.933f / h;  // approx. metres per pixel at the target
-            st->target = st->target - right * (dx * scale) - fwdH * (dy * scale);
+            const float scale = st->goalDist * 0.933f / h;  // approx. metres per pixel at the target
+            st->goalTarget = st->goalTarget - right * (dx * scale) - fwdH * (dy * scale);
         } else {
-            // Two fingers: pinch to zoom; moving both sideways turns the view, up and down tilts it.
-            const float dPrev = std::hypot(st->g1x - st->g0x, st->g1y - st->g0y);
+            // Two fingers: pinch zooms about the midpoint, sideways drift pans, twist turns, vertical drift tilts.
+            const float g0x = st->g0x, g0y = st->g0y, g1x = st->g1x, g1y = st->g1y;
+            const float dPrev = std::hypot(g1x - g0x, g1y - g0y);
             const float dNow = std::hypot(x1 - x0, y1 - y0);
-            // The zoom keeps the ground under the previous midpoint of the fingers in place.
-            const float pmx = (st->g0x + st->g1x) * 0.5f, pmy = (st->g0y + st->g1y) * 0.5f;
+            const float pmx = (g0x + g1x) * 0.5f, pmy = (g0y + g1y) * 0.5f;
+            const float nmx = (x0 + x1) * 0.5f, nmy = (y0 + y1) * 0.5f;
             if (dPrev > 1.0f && dNow > 1.0f) {
                 Vec3 t{};
                 float d = 0.0f;
-                zoomGoal(*st, pmx, pmy, dPrev / dNow, t, d);
-                st->target = t;
-                st->dist = d;
+                zoomAboutPixel(sceneGround(*st), st->goalTarget, st->goalYaw, st->goalPitch, st->goalDist,
+                               dPrev / dNow, pmx, pmy, w, h, kFovY, kMinDist, kMaxDist, t, d);
+                st->goalTarget = t;
+                st->goalDist = d;
             }
-            const float mx = ((x0 + x1) - (st->g0x + st->g1x)) * 0.5f;
-            const float my = ((y0 + y1) - (st->g0y + st->g1y)) * 0.5f;
-            st->yaw -= mx * 0.006f;
-            st->pitch = std::min(std::max(st->pitch + my * 0.004f, 0.2f), 1.45f);
+            const float scale = st->goalDist * 0.933f / h;
+            st->goalTarget = st->goalTarget - right * ((nmx - pmx) * scale);
+            const float a0 = std::atan2(g1y - g0y, g1x - g0x), a1 = std::atan2(y1 - y0, x1 - x0);
+            float da = a1 - a0;
+            while (da > 3.14159265f) da -= 6.28318531f;
+            while (da < -3.14159265f) da += 6.28318531f;
+            st->goalYaw += da;
+            st->goalPitch = std::min(std::max(st->goalPitch + (nmy - pmy) * 0.004f, 0.2f), 1.45f);
         }
     }
 
@@ -491,58 +489,83 @@ void android_main(struct android_app* app) {
         // The picture is laid out for the screen orientation, not the stored swapchain orientation.
         const int32_t w = static_cast<int32_t>(st.renderer.displayWidth());
         const int32_t h = static_cast<int32_t>(st.renderer.displayHeight());
-        if (st.doubleTapPending && w > 0 && h > 0) {
-            st.doubleTapPending = false;
-            Vec3 t{};
-            float d = 0.0f;
-            zoomGoal(st, st.dtX, st.dtY, 0.4f, t, d);
-            st.animFromT = st.target;
-            st.animFromD = st.dist;
-            st.animToT = t;
-            st.animToD = d;
-            st.animT = 0.0f;
-            st.animating = true;
+        st.frames++;
+        st.fpsTime += dt;
+        if (st.fpsTime >= 0.5f) {
+            st.fps = static_cast<float>(st.frames) / st.fpsTime;
+            st.frames = 0;
+            st.fpsTime = 0.0f;
         }
-        if (st.animating) {
-            st.animT = std::min(st.animT + dt / 0.35f, 1.0f);
-            const float u = 1.0f - (1.0f - st.animT) * (1.0f - st.animT) * (1.0f - st.animT);  // ease out
-            st.target = st.animFromT + (st.animToT - st.animFromT) * u;
-            st.dist = st.animFromD + (st.animToD - st.animFromD) * u;
-            if (st.animT >= 1.0f) st.animating = false;
+        if (!st.goalsReady) {
+            st.goalTarget = st.target;
+            st.goalYaw = st.yaw;
+            st.goalPitch = st.pitch;
+            st.goalDist = st.dist;
+            st.goalsReady = true;
         }
         const float aspect = (w > 0 && h > 0) ? static_cast<float>(w) / static_cast<float>(h) : 1.0f;
         if (st.islandLoaded && !st.distFitted && w > 0 && h > 0) {
             st.dist = islandFitDistance(st.island, aspect);
+            st.goalDist = st.dist;
             st.distFitted = true;
             LOGI("island start distance %.0f m for aspect %.2f", st.dist, aspect);
+        }
+        if (st.doubleTapPending && w > 0 && h > 0) {
+            // Double tap: zoom in by 2.5 on the tapped ground point.
+            st.doubleTapPending = false;
+            Vec3 t{};
+            float d = 0.0f;
+            zoomAboutPixel(sceneGround(st), st.goalTarget, st.goalYaw, st.goalPitch, st.goalDist, 0.4f, st.dtX,
+                           st.dtY, static_cast<float>(w), static_cast<float>(h), kFovY, kMinDist, kMaxDist, t, d);
+            st.goalTarget = t;
+            st.goalDist = d;
+        }
+        {
+            // Goals stay above the ground; the drawn camera eases toward them.
+            const SceneGround g = sceneGround(st);
+            st.goalTarget.y = groundHeight(g, st.goalTarget.x, st.goalTarget.z);
+            st.goalDist = keepEyeAboveGround(g, st.goalTarget, st.goalYaw, st.goalPitch, st.goalDist, 6.0f);
+            const float a = 1.0f - std::exp(-dt * 14.0f);
+            st.target = st.target + (st.goalTarget - st.target) * a;
+            st.yaw += (st.goalYaw - st.yaw) * a;
+            st.pitch += (st.goalPitch - st.pitch) * a;
+            if (st.dist > 0.0f && st.goalDist > 0.0f) st.dist *= std::pow(st.goalDist / st.dist, a);
         }
         updateCamera(st);
         if (st.tapPending && w > 0 && h > 0) {
             st.tapPending = false;
+            st.tapCount++;
             const Vec3 eye = eyeOf(st);
             const Vec3 dir = screenRayDir(eye, st.target, kFovY, aspect, st.tapX, st.tapY,
                                           static_cast<float>(w), static_cast<float>(h));
             Vec3 hit{};
             if (pickGround(sceneGround(st), eye, dir, 400000.0f, hit)) {
                 st.havePick = true;
+                st.tapMiss = false;
                 st.pickLL = sceneLatLon(st, hit.x, hit.z);
+            } else {
+                st.tapMiss = true;
             }
         }
         {
-            // On-screen readout: the centre of the view, and the last tapped point.
+            // On-screen readout: the centre of the view, the last tapped point, and diagnostics.
             const LatLon centre = sceneLatLon(st, st.target.x, st.target.z);
-            char l1[96], l2[96], l3[96], l4[96];
+            char l1[96], l2[96], l3[96], l4[96], l5[96], l6[96];
             std::snprintf(l1, sizeof l1, "CENTRE %.5f N %.5f E", centre.lat, centre.lon);
             if (st.havePick) {
                 std::snprintf(l2, sizeof l2, "TAP %.5f N %.5f E", st.pickLL.lat, st.pickLL.lon);
+            } else if (st.tapMiss) {
+                std::snprintf(l2, sizeof l2, "TAP: NO GROUND UNDER IT");
             } else {
                 std::snprintf(l2, sizeof l2, "TAP A PLACE TO READ IT");
             }
             std::snprintf(l3, sizeof l3, "DRAG: MOVE   PINCH: ZOOM");
             std::snprintf(l4, sizeof l4, "TWO FINGERS: TURN AND TILT");
-            char l5[96];
             std::snprintf(l5, sizeof l5, "SCREEN %dX%d TURN %d", w, h, st.renderer.displayRotation());
-            const char* lines[] = {l1, l2, l3, l4, l5};
+            std::snprintf(l6, sizeof l6, "FPS %d  TAPS %d", static_cast<int>(st.fps + 0.5f), st.tapCount);
+            const char* lines[] = {l1, l2, l3, l4, l5, l6};
+            buildHudText(lines, 6, w, h, st.hud);
+        }
             buildHudText(lines, 5, w, h, st.hud);
         }
         if (!st.renderer.drawFrame(computeViewProj(st, aspect), st.pilotOffset, st.agentMesh, st.hud)) {

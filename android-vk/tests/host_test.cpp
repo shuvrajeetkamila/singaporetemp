@@ -340,6 +340,47 @@ static void testGeoPickHud() {
     CHECK(inside, "hud quad outside the screen");
 }
 
+
+// Zooming about a pixel keeps the ground under that pixel fixed on screen.
+static void testZoomAnchor() {
+    District pilot;
+    pilot.tw = 5;
+    pilot.th = 5;
+    pilot.cell = 30.0f;
+    pilot.sizeX = 120.0f;
+    pilot.sizeZ = 120.0f;
+    pilot.heights.assign(25, 40.0f);
+    SceneGround g;
+    g.pilot = &pilot;
+
+    const float w = 1000.0f, h = 500.0f, fovy = 0.87266f;
+    const Vec3 target{60.0f, 40.0f, -60.0f};
+    const float yaw = 0.4f, pitch = 0.7f, dist = 300.0f;
+    const float px = 400.0f, py = 180.0f;
+    const Vec3 eye = orbitEye(target, yaw, pitch, dist);
+    Vec3 h0{};
+    CHECK(pickGround(g, eye, screenRayDir(eye, target, fovy, w / h, px, py, w, h), 400000.0f, h0),
+          "zoom test: no ground under the test pixel");
+
+    Vec3 t2{};
+    float d2 = 0.0f;
+    zoomAboutPixel(g, target, yaw, pitch, dist, 0.5f, px, py, w, h, fovy, 60.0f, 400000.0f, t2, d2);
+    CHECK(std::fabs(d2 - 150.0f) < 1e-3f, "zoom distance %.3f", d2);
+    const Vec3 eye2 = orbitEye(t2, yaw, pitch, d2);
+    Vec3 h1{};
+    CHECK(pickGround(g, eye2, screenRayDir(eye2, t2, fovy, w / h, px, py, w, h), 400000.0f, h1),
+          "zoom test: no ground after zoom");
+    const float drift = std::sqrt((h1.x - h0.x) * (h1.x - h0.x) + (h1.y - h0.y) * (h1.y - h0.y) +
+                                  (h1.z - h0.z) * (h1.z - h0.z));
+    CHECK(drift < 0.5f, "zoom about pixel moved the ground point by %.3f m", drift);
+
+    // Zooming out is clamped at the maximum distance.
+    Vec3 t3{};
+    float d3 = 0.0f;
+    zoomAboutPixel(g, target, yaw, pitch, dist, 2000.0f, px, py, w, h, fovy, 60.0f, 400000.0f, t3, d3);
+    CHECK(std::fabs(d3 - 400000.0f) < 1e-2f, "zoom clamp %.3f", d3);
+}
+
 int main(int argc, char** argv) {
     std::string dir = argc > 1 ? argv[1] : "app/src/main/assets/district";
     std::printf("data dir: %s\n", dir.c_str());
@@ -347,6 +388,7 @@ int main(int argc, char** argv) {
     testText();
     testCameraGround();
     testGeoPickHud();
+    testZoomAnchor();
     testSeamAndSea();
     testConcaveRoof();
     testMatrices();

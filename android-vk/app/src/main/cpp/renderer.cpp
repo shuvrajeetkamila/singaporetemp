@@ -817,8 +817,10 @@ bool Renderer::drawFrame(const Mat4& viewProj, const float agentOffset[3], const
             vkCmdDraw(cb, agentVerts, 1, 0, 0);
         }
         if (hudVerts > 0) {
-            // HUD: upright screen coordinates, so they get the same pre-rotation as the scene and no offset.
-            std::memcpy(pd.viewProj, pre.m, sizeof(pd.viewProj));
+            // HUD: screen coordinates with no offset. On the test phones the HUD came out turned half a turn
+            // relative to the scene, so it gets one extra half turn. The scene keeps its own transform.
+            const Mat4 hudPre = mat4Mul(preRotation(180), pre);
+            std::memcpy(pd.viewProj, hudPre.m, sizeof(pd.viewProj));
             pd.offset[0] = pd.offset[1] = pd.offset[2] = pd.offset[3] = 0.0f;
             vkCmdPushConstants(cb, pipelineLayout_, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(PushData), &pd);
             vkCmdBindVertexBuffers(cb, 0, 1, &hud_[f].buf, &offset);
