@@ -88,7 +88,7 @@ jobs:
         run: |
           g++ -std=c++17 -O2 -Wall -Wextra -Iapp/src/main/cpp \
             tests/host_test.cpp app/src/main/cpp/world.cpp app/src/main/cpp/sim.cpp \
-            app/src/main/cpp/agents.cpp app/src/main/cpp/island.cpp app/src/main/cpp/diag.cpp \
+            app/src/main/cpp/agents.cpp app/src/main/cpp/island.cpp app/src/main/cpp/diag.cpp app/src/main/cpp/camera.cpp \
             -o /tmp/host_test
           /tmp/host_test app/src/main/assets/district
 

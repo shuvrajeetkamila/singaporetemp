@@ -19,6 +19,7 @@
 #include <vector>
 
 #include "agents.h"
+#include "camera.h"
 #include "core_math.h"
 #include "diag.h"
 #include "island.h"
@@ -57,6 +58,7 @@ struct AppState {
     float pitch = 0.9f;
     float dist = 2200.0f;
     bool distFitted = false;  // island start distance is fitted to the screen aspect once
+    bool stoppedShown = false;  // the runtime Vulkan error is already on screen
 
     // Touch gesture state.
     bool gestureValid = false;
@@ -192,6 +194,20 @@ float islandFitDistance(const District& island, float aspect) {
     return radius / std::sin(half);
 }
 
+// Keeps the orbit target on the ground and the eye above it. Without this the target stayed at sea
+// level, so the camera could end up inside hills (solid green), under water (solid blue) or inside
+// buildings (black) after a low-angle orbit or a pan.
+void updateCamera(AppState& st) {
+    SceneGround g;
+    g.pilot = &st.pilot;
+    g.pilotOffset[0] = st.pilotOffset[0];
+    g.pilotOffset[1] = st.pilotOffset[1];
+    g.pilotOffset[2] = st.pilotOffset[2];
+    g.island = st.islandLoaded ? &st.island : nullptr;
+    st.target.y = groundHeight(g, st.target.x, st.target.z);
+    st.dist = keepEyeAboveGround(g, st.target, st.yaw, st.pitch, st.dist, 6.0f);
+}
+
 Mat4 computeViewProj(const AppState& st, float aspect) {
     const float cp = std::cos(st.pitch), sp = std::sin(st.pitch);
     const float sy = std::sin(st.yaw), cy = std::cos(st.yaw);
@@ -290,7 +306,7 @@ int32_t onInput(android_app* app, AInputEvent* event) {
             // One finger: orbit.
             const float dx = x0 - st->g0x, dy = y0 - st->g0y;
             st->yaw -= dx * 0.006f;
-            st->pitch = std::min(std::max(st->pitch + dy * 0.004f, 0.08f), 1.45f);
+            st->pitch = std::min(std::max(st->pitch + dy * 0.004f, 0.2f), 1.45f);
         } else {
             // Two fingers: pinch to zoom, move both to pan.
             const float dPrev = std::hypot(st->g1x - st->g0x, st->g1y - st->g0y);
@@ -365,7 +381,13 @@ void android_main(struct android_app* app) {
             st.distFitted = true;
             LOGI("island start distance %.0f m for aspect %.2f", st.dist, aspect);
         }
+        updateCamera(st);
         if (!st.renderer.drawFrame(computeViewProj(st, aspect), st.pilotOffset, st.agentMesh)) {
+            // Rendering stopped with an error: show it as text instead of leaving a frozen or blank screen.
+            if (!st.renderer.ready() && !st.stoppedShown) {
+                st.stoppedShown = true;
+                showFailure(st, packRgba(190, 0, 0), "VULKAN STOPPED", st.renderer.lastError().c_str());
+            }
             usleep(16000);  // skipped frame (minimised or resizing); avoid spinning
         }
     }

@@ -1,6 +1,6 @@
 // Host-side tests for the portable core (parsers, meshes, island layer, simulation, camera).
 // Build and run from android-vk/ (one command):
-//   g++ -std=c++17 -O2 -Wall -Wextra -Iapp/src/main/cpp tests/host_test.cpp app/src/main/cpp/world.cpp app/src/main/cpp/sim.cpp app/src/main/cpp/agents.cpp app/src/main/cpp/island.cpp app/src/main/cpp/diag.cpp -o host_test
+//   g++ -std=c++17 -O2 -Wall -Wextra -Iapp/src/main/cpp tests/host_test.cpp app/src/main/cpp/world.cpp app/src/main/cpp/sim.cpp app/src/main/cpp/agents.cpp app/src/main/cpp/island.cpp app/src/main/cpp/diag.cpp app/src/main/cpp/camera.cpp -o host_test
 //   ./host_test <dir containing terrain.bin, buildings.bin, roads.bin>
 #include <algorithm>
 #include <cmath>
@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "agents.h"
+#include "camera.h"
 #include "diag.h"
 #include "core_math.h"
 #include "island.h"
@@ -211,11 +212,67 @@ static void testSeamAndSea() {
     }
 }
 
+// Camera: the ground under the pilot and island is found, and the eye is never below the ground.
+static void testCameraGround() {
+    District pilot;
+    pilot.tw = 5;
+    pilot.th = 5;
+    pilot.cell = 30.0f;
+    pilot.sizeX = 120.0f;
+    pilot.sizeZ = 120.0f;
+    pilot.heights.assign(25, 40.0f);  // a flat 40 m hill
+    District island;
+    island.tw = 5;
+    island.th = 5;
+    island.cell = 60.0f;
+    island.sizeX = 240.0f;
+    island.sizeZ = 240.0f;
+    island.heights.assign(25, 0.0f);  // sea level
+
+    SceneGround g;
+    g.pilot = &pilot;
+    g.pilotOffset[0] = 100.0f;
+    g.pilotOffset[2] = -300.0f;  // pilot north 300..420 m
+    g.island = &island;
+
+    CHECK(std::fabs(groundHeight(g, 160.0f, -360.0f) - 40.0f) < 1e-3f, "pilot centre should be on the hill");
+    CHECK(std::fabs(groundHeight(g, 10.0f, -10.0f)) < 1e-3f, "island point outside the pilot should be sea level");
+
+    // Sweep targets, yaws, pitches and distances. The eye must end at least 6 m above the ground.
+    int violations = 0, cases = 0;
+    for (float tx = 0.0f; tx <= 240.0f; tx += 20.0f) {
+        for (float tz = -240.0f; tz <= 0.0f; tz += 20.0f) {
+            for (float yaw = 0.0f; yaw < 6.3f; yaw += 0.8f) {
+                for (float pitch : {0.2f, 0.6f, 1.4f}) {
+                    for (float dist : {60.0f, 300.0f}) {
+                        const Vec3 target{tx, groundHeight(g, tx, tz), tz};
+                        const float d = keepEyeAboveGround(g, target, yaw, pitch, dist, 6.0f);
+                        const Vec3 eye = orbitEye(target, yaw, pitch, d);
+                        if (eye.y < groundHeight(g, eye.x, eye.z) + 6.0f - 1e-3f) ++violations;
+                        if (d < dist) ++violations;
+                        ++cases;
+                    }
+                }
+            }
+        }
+    }
+    CHECK(violations == 0, "%d of %d camera cases ended below the ground", violations, cases);
+
+    // The old failure: target at sea level inside the hill, low pitch. The camera must be pulled out.
+    const Vec3 inHill{160.0f, 0.0f, -360.0f};
+    const float d = keepEyeAboveGround(g, inHill, 0.6f, 0.2f, 60.0f, 6.0f);
+    const Vec3 eye = orbitEye(inHill, 0.6f, 0.2f, d);
+    const float ground = groundHeight(g, eye.x, eye.z);
+    CHECK(d > 60.0f && eye.y >= ground + 6.0f - 1e-3f,
+          "camera inside the hill was not pulled out (eye y %.1f, ground %.1f)", eye.y, ground);
+}
+
 int main(int argc, char** argv) {
     std::string dir = argc > 1 ? argv[1] : "app/src/main/assets/district";
     std::printf("data dir: %s\n", dir.c_str());
 
     testText();
+    testCameraGround();
     testSeamAndSea();
     testConcaveRoof();
     testMatrices();
