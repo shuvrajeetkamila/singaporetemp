@@ -261,7 +261,9 @@ void onAppCmd(android_app* app, int32_t cmd) {
                 // With the island, the background is the sea colour: the sea plane then runs to the horizon.
                 // Pilot only: sky blue.
                 if (st->islandLoaded) {
-                    st->renderer.setClearColor(0.14f, 0.40f, 0.62f);
+                    float sea[3];
+                    seaShadedColour(sea);
+                    st->renderer.setClearColor(sea[0], sea[1], sea[2]);
                 } else {
                     st->renderer.setClearColor(0.62f, 0.78f, 0.92f);
                 }

@@ -25,3 +25,7 @@ bool parseLayout(const std::vector<uint8_t>& text, IslandLayout& out);
 
 // Builds an indexed mesh for the island terrain and buildings, skipping anything inside `exclude`.
 void buildIslandMesh(const District& island, const Rect& exclude, MeshBlob& out);
+
+// The sea plane's colour as the shader draws it (flat up normal, same light as mesh.frag).
+// Used as the clear colour so the sea has no visible edge against the background.
+void seaShadedColour(float out[3]);

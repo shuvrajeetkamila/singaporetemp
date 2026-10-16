@@ -130,8 +130,8 @@ static void testIslandLayer() {
     buildIslandMesh(island, Rect{1.0f, 1.0f, 0.0f, 0.0f}, all);  // empty rectangle: nothing excluded
     buildIslandMesh(island, Rect{90.0f, 90.0f, 130.0f, 130.0f}, cut);  // pilot rectangle over `inside`
 
-    // Each building adds 3n = 12 vertices (roof, wall top, wall bottom) for n = 4.
-    CHECK(all.vertices.size() - cut.vertices.size() == 12, "excluded building did not drop 12 vertices (%zu vs %zu)",
+    // Each building adds n roof vertices and 4n wall vertices (four per wall quad): 4 + 16 = 20 for n = 4.
+    CHECK(all.vertices.size() - cut.vertices.size() == 20, "excluded building did not drop 20 vertices (%zu vs %zu)",
           all.vertices.size(), cut.vertices.size());
     CHECK(all.indices.size() % 3 == 0 && cut.indices.size() % 3 == 0, "index count not a multiple of 3");
     bool validAll = true, validCut = true;
@@ -209,6 +209,23 @@ static void testSeamAndSea() {
     for (size_t k = n - 4; k < n && n >= 4; ++k) {
         CHECK(std::fabs(m.vertices[k].pos[1] + 60.0f) < 1e-3f, "sea plane not at -60 m");
         CHECK(m.vertices[k].rgba[2] > m.vertices[k].rgba[0], "sea plane not blue");
+    }
+
+    // Every vertex carries a unit normal (snorm8 length close to 127).
+    for (const Vertex& v : m.vertices) {
+        const float len = std::sqrt(static_cast<float>(v.nrm[0]) * v.nrm[0] + static_cast<float>(v.nrm[1]) * v.nrm[1] +
+                                    static_cast<float>(v.nrm[2]) * v.nrm[2]);
+        CHECK(std::fabs(len - 127.0f) < 3.0f, "vertex normal not unit (length %f)", static_cast<double>(len));
+    }
+    // The clear colour matches the shaded sea plane to within one 8-bit step, so there is no edge.
+    float clear[3];
+    seaShadedColour(clear);
+    const Vertex& sv = m.vertices[n - 1];
+    const float facing = 0.8f / std::sqrt(0.45f * 0.45f + 0.8f * 0.8f + 0.4f * 0.4f);
+    const float light = 0.35f + 0.65f * facing;
+    for (int k = 0; k < 3; ++k) {
+        CHECK(std::fabs(clear[k] - sv.rgba[k] / 255.0f * light) < 1.0f / 255.0f,
+              "clear colour does not match the shaded sea (channel %d)", k);
     }
 }
 

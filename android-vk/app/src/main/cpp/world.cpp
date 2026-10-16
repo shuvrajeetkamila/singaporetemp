@@ -80,14 +80,18 @@ Vertex makeVertex(Vec3 p, const float* col) {
     v.rgba[1] = toByte(col[1]);
     v.rgba[2] = toByte(col[2]);
     v.rgba[3] = 255;
+    setNormal(v, 0.0f, 1.0f, 0.0f);
     return v;
 }
 
-// Emit one triangle (non-indexed).
+// Emit one triangle (non-indexed). Each vertex gets the triangle's face normal.
 void pushTriangle(std::vector<Vertex>& out, Vec3 a, Vec3 b, Vec3 c, const float* col) {
-    out.push_back(makeVertex(a, col));
-    out.push_back(makeVertex(b, col));
-    out.push_back(makeVertex(c, col));
+    const Vec3 n = cross(b - a, c - a);
+    for (const Vec3 p : {a, b, c}) {
+        Vertex v = makeVertex(p, col);
+        setNormal(v, n.x, n.y, n.z);
+        out.push_back(v);
+    }
 }
 
 // Scene mapping from district metres: x = east, y = height, z = -north.

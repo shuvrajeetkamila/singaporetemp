@@ -15,7 +15,7 @@ const float kCarColours[4][3] = {
 const float kPersonColour[3] = {0.95f, 0.45f, 0.15f};
 const float kAgentLift = 0.6f;  // agents sit slightly above the road surface
 
-Vertex makeVertex(Vec3 p, const float* col) {
+Vertex makeVertex(Vec3 p, const float* col, Vec3 n) {
     Vertex v;
     v.pos[0] = p.x;
     v.pos[1] = p.y;
@@ -25,6 +25,7 @@ Vertex makeVertex(Vec3 p, const float* col) {
         v.rgba[k] = static_cast<uint8_t>(c * 255.0f + 0.5f);
     }
     v.rgba[3] = 255;
+    setNormal(v, n.x, n.y, n.z);
     return v;
 }
 
@@ -46,12 +47,13 @@ void emitBox(Vec3 base, Vec3 fwd, Vec3 side, Vec3 up, float hl, float hw, float 
                 v[j] = static_cast<float>(corners[m][1]);
                 q[m] = c + ext[0] * v[0] + ext[1] * v[1] + ext[2] * v[2];
             }
-            out.push_back(makeVertex(q[0], col));
-            out.push_back(makeVertex(q[1], col));
-            out.push_back(makeVertex(q[2], col));
-            out.push_back(makeVertex(q[0], col));
-            out.push_back(makeVertex(q[2], col));
-            out.push_back(makeVertex(q[3], col));
+            const Vec3 n = cross(q[1] - q[0], q[2] - q[0]);  // flat face
+            out.push_back(makeVertex(q[0], col, n));
+            out.push_back(makeVertex(q[1], col, n));
+            out.push_back(makeVertex(q[2], col, n));
+            out.push_back(makeVertex(q[0], col, n));
+            out.push_back(makeVertex(q[2], col, n));
+            out.push_back(makeVertex(q[3], col, n));
         }
     }
 }

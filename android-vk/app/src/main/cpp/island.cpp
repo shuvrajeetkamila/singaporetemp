@@ -1,5 +1,6 @@
 #include "island.h"
 
+#include <cmath>
 #include <cstdio>
 #include <string>
 
@@ -24,6 +25,7 @@ Vertex vertexAt(float x, float north, float h, const float* rgb) {
         v.rgba[k] = static_cast<uint8_t>(c * 255.0f + 0.5f);
     }
     v.rgba[3] = 255;
+    setNormal(v, 0.0f, 1.0f, 0.0f);  // up unless the caller sets a face normal
     return v;
 }
 
@@ -38,6 +40,20 @@ bool parseLayout(const std::vector<uint8_t>& text, IslandLayout& out) {
     out.sx = sx;
     out.sz = sz;
     return sx > 0.0f && sz > 0.0f;
+}
+
+void seaShadedColour(float out[3]) {
+    float rgb[3];
+    terrainColour(0.0f, rgb);
+    // Light for an up-facing normal, with the same sun and ambient as mesh.frag.
+    const float Lx = 0.45f, Ly = 0.80f, Lz = 0.40f;
+    const float facing = Ly / std::sqrt(Lx * Lx + Ly * Ly + Lz * Lz);
+    const float light = 0.35f + 0.65f * facing;
+    for (int k = 0; k < 3; ++k) {
+        // The vertex colour is stored as unorm8, so quantise the same way.
+        const float byteVal = std::floor(rgb[k] * 255.0f + 0.5f);
+        out[k] = (byteVal / 255.0f) * light;
+    }
 }
 
 void buildIslandMesh(const District& island, const Rect& exclude, MeshBlob& out) {
@@ -58,6 +74,23 @@ void buildIslandMesh(const District& island, const Rect& exclude, MeshBlob& out)
                 terrainColour(h, rgb);
                 gridIndex[static_cast<size_t>(j) * tw + i] = static_cast<uint32_t>(out.vertices.size());
                 out.vertices.push_back(vertexAt(i * cell, j * cell, h, rgb));
+            }
+        }
+        // Smooth terrain normals from central differences of the height grid (edges clamp).
+        for (uint32_t j = 0; j < th; ++j) {
+            for (uint32_t i = 0; i < tw; ++i) {
+                const uint32_t ip = i + 1 < tw ? i + 1 : i, im = i > 0 ? i - 1 : i;
+                const uint32_t jp = j + 1 < th ? j + 1 : j, jm = j > 0 ? j - 1 : j;
+                const float span_x = static_cast<float>(ip - im) * cell;
+                const float span_n = static_cast<float>(jp - jm) * cell;
+                const float dhdx = span_x > 0.0f
+                    ? (island.heights[static_cast<size_t>(j) * tw + ip] - island.heights[static_cast<size_t>(j) * tw + im]) / span_x
+                    : 0.0f;
+                const float dhdn = span_n > 0.0f
+                    ? (island.heights[static_cast<size_t>(jp) * tw + i] - island.heights[static_cast<size_t>(jm) * tw + i]) / span_n
+                    : 0.0f;
+                // Scene z = -north, so d/dz = -d/dnorth: normal = (-dh/dx, 1, -dh/dz) = (-dhdx, 1, dhdn).
+                setNormal(out.vertices[gridIndex[static_cast<size_t>(j) * tw + i]], -dhdx, 1.0f, dhdn);
             }
         }
         for (uint32_t j = 0; j + 1 < th; ++j) {
@@ -111,21 +144,25 @@ void buildIslandMesh(const District& island, const Rect& exclude, MeshBlob& out)
         const float top = b.base + (b.height > 1.0f ? b.height : 1.0f);
         const uint32_t roofBase = static_cast<uint32_t>(out.vertices.size());
         for (const Vec2f& p : b.ring) out.vertices.push_back(vertexAt(p.x, p.y, top, roofRgb));
-        const uint32_t wallTopBase = static_cast<uint32_t>(out.vertices.size());
-        for (const Vec2f& p : b.ring) out.vertices.push_back(vertexAt(p.x, p.y, top, wallRgb));
-        const uint32_t wallBottomBase = static_cast<uint32_t>(out.vertices.size());
-        for (const Vec2f& p : b.ring) out.vertices.push_back(vertexAt(p.x, p.y, b.base, wallRgb));
-
         tris.clear();
         triangulatePolygon(b.ring, tris);
         for (uint32_t t : tris) out.indices.push_back(roofBase + t);
 
+        // Walls: four vertices per quad, so each wall keeps its own flat normal (corners are not shared).
         for (size_t k = 0; k < n; ++k) {
-            const uint32_t c = static_cast<uint32_t>((k + 1) % n);
-            const uint32_t a = static_cast<uint32_t>(k);
-            const uint32_t bA = wallBottomBase + a, bC = wallBottomBase + c;
-            const uint32_t tA = wallTopBase + a, tC = wallTopBase + c;
-            out.indices.insert(out.indices.end(), {bA, bC, tC, bA, tC, tA});
+            const Vec2f& a = b.ring[k];
+            const Vec2f& c = b.ring[(k + 1) % n];
+            // Horizontal normal of the wall in scene coordinates (x east, z = -north).
+            const float ex = c.x - a.x, ez = -(c.y - a.y);
+            const float wallNx = -ez, wallNz = ex;
+            const uint32_t base0 = static_cast<uint32_t>(out.vertices.size());
+            Vertex q[4] = {vertexAt(a.x, a.y, b.base, wallRgb), vertexAt(c.x, c.y, b.base, wallRgb),
+                           vertexAt(c.x, c.y, top, wallRgb), vertexAt(a.x, a.y, top, wallRgb)};
+            for (Vertex& v : q) {
+                setNormal(v, wallNx, 0.0f, wallNz);
+                out.vertices.push_back(v);
+            }
+            out.indices.insert(out.indices.end(), {base0, base0 + 1, base0 + 2, base0, base0 + 2, base0 + 3});
         }
     }
 }

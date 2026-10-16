@@ -2,6 +2,7 @@
 // Portable C++ (no Android or Vulkan dependencies) so it can be tested on a desktop.
 #pragma once
 
+#include <cmath>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -10,11 +11,33 @@ struct Vec2f {
     float x, y;
 };
 
-// 16 bytes. Normals are not stored: the fragment shader derives them from screen derivatives.
+// 20 bytes. The normal is stored per vertex as signed bytes (snorm8, w unused). Every builder
+// must set it with setNormal(): screen-space derivatives gave streaks at triangle edges.
 struct Vertex {
     float pos[3];
     uint8_t rgba[4];
+    int8_t nrm[4];
 };
+
+// Stores a unit normal in v (a zero vector falls back to up).
+inline void setNormal(Vertex& v, float x, float y, float z) {
+    float len = std::sqrt(x * x + y * y + z * z);
+    if (!(len > 1e-12f)) {
+        x = 0.0f;
+        y = 1.0f;
+        z = 0.0f;
+        len = 1.0f;
+    }
+    auto q = [len](float c) {
+        float n = c / len;
+        n = n < -1.0f ? -1.0f : (n > 1.0f ? 1.0f : n);
+        return static_cast<int8_t>(std::lround(n * 127.0f));
+    };
+    v.nrm[0] = q(x);
+    v.nrm[1] = q(y);
+    v.nrm[2] = q(z);
+    v.nrm[3] = 0;
+}
 
 // A mesh ready for upload. `offset` moves the mesh into the common scene frame (metres).
 struct MeshBlob {

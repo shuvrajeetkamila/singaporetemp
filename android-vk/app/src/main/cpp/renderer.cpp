@@ -9,7 +9,7 @@
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-static_assert(sizeof(Vertex) == 16, "Vertex must be 3 floats + 4 bytes, tightly packed");
+static_assert(sizeof(Vertex) == 20, "Vertex must be 3 floats + 4 colour bytes + 4 normal bytes");
 struct PushData {
     float viewProj[16];
     float offset[4];
@@ -372,15 +372,16 @@ bool Renderer::createPipeline(const ShaderBlobs& shaders) {
     stages[1].pName = "main";
 
     VkVertexInputBindingDescription binding{0, sizeof(Vertex), VK_VERTEX_INPUT_RATE_VERTEX};
-    VkVertexInputAttributeDescription attrs[2] = {
+    VkVertexInputAttributeDescription attrs[3] = {
         {0, 0, VK_FORMAT_R32G32B32_SFLOAT, 0},
         {1, 0, VK_FORMAT_R8G8B8A8_UNORM, 12},
+        {2, 0, VK_FORMAT_R8G8B8A8_SNORM, 16},
     };
     VkPipelineVertexInputStateCreateInfo vis{};
     vis.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vis.vertexBindingDescriptionCount = 1;
     vis.pVertexBindingDescriptions = &binding;
-    vis.vertexAttributeDescriptionCount = 2;
+    vis.vertexAttributeDescriptionCount = 3;
     vis.pVertexAttributeDescriptions = attrs;
 
     VkPipelineInputAssemblyStateCreateInfo ia{};
